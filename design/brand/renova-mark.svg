@@ -1,0 +1,9 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Renova">
+  <!-- Pittogramma Renova — due frecce semicircolari che si rincorrono (ciclo del riuso).
+       Archi r=13, tratto 4,8; punte a triangolo tangenti, base = larghezza dell'arco.
+       Usa currentColor: eredita il colore del testo, come il componente React. -->
+  <path d="M 7.784 15.554 A 13 13 0 0 1 32.216 15.554" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt"/>
+  <path d="M 32.216 24.446 A 13 13 0 0 1 7.784 24.446" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt"/>
+  <polygon points="34.268,21.192 34.471,14.733 29.961,16.375" fill="currentColor"/>
+  <polygon points="5.732,18.808 5.529,25.267 10.039,23.626" fill="currentColor"/>
+</svg>
