@@ -1,5 +1,41 @@
+import type { MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/Logo'
+
+/**
+ * Scroll fluido e volutamente lento verso una sezione (~900ms, easing morbido),
+ * tenendo conto dell'altezza dell'header sticky. Rispetta la preferenza di
+ * sistema "riduci animazioni": in quel caso salta diretto, senza animazione.
+ */
+function scrollToSezione(e: MouseEvent<HTMLAnchorElement>, id: string) {
+  e.preventDefault()
+  const target = document.getElementById(id)
+  if (!target) return
+
+  const header = document.querySelector('header')
+  const offset = header ? header.getBoundingClientRect().height : 0
+  const destY = target.getBoundingClientRect().top + window.scrollY - offset
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo(0, destY)
+    return
+  }
+
+  const startY = window.scrollY
+  const distance = destY - startY
+  const duration = 900 // ms — più alto = più lento
+  let startTime: number | null = null
+
+  function step(now: number) {
+    if (startTime === null) startTime = now
+    const elapsed = now - startTime
+    const t = Math.min(1, elapsed / duration)
+    const eased = 1 - Math.pow(1 - t, 3) // easeOutCubic: parte deciso, frena dolce
+    window.scrollTo(0, startY + distance * eased)
+    if (elapsed < duration) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
 
 /**
  * Landing pubblica di Renova — porta d'ingresso "marketing" mostrata ai
@@ -14,13 +50,25 @@ export function Landing() {
       <header className="sticky top-0 z-20 flex items-center justify-between border-b-[1.5px] border-ink bg-paper/95 px-4 py-3 backdrop-blur">
         <Logo className="text-[21px]" />
         <nav className="hidden items-center gap-7 text-[13px] font-semibold text-ink-soft sm:flex">
-          <a href="#chi-siamo" className="transition hover:text-ink">
+          <a
+            href="#chi-siamo"
+            onClick={(e) => scrollToSezione(e, 'chi-siamo')}
+            className="transition hover:text-ink"
+          >
             Chi siamo
           </a>
-          <a href="#come-funziona" className="transition hover:text-ink">
+          <a
+            href="#come-funziona"
+            onClick={(e) => scrollToSezione(e, 'come-funziona')}
+            className="transition hover:text-ink"
+          >
             Come funziona
           </a>
-          <a href="#contatti" className="transition hover:text-ink">
+          <a
+            href="#contatti"
+            onClick={(e) => scrollToSezione(e, 'contatti')}
+            className="transition hover:text-ink"
+          >
             Contatti
           </a>
         </nav>
