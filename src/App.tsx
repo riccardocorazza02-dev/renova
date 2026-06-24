@@ -30,8 +30,8 @@ function PublicOnly({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Radice "2 in 1": il visitatore anonimo vede la landing pubblica; l'utente
- * autenticato viene portato direttamente nell'app (feed).
+ * Radice "2 in 1" su renovasport.it: il visitatore anonimo vede la landing
+ * pubblica; l'utente autenticato viene portato direttamente nell'app (feed).
  */
 function Home() {
   const { session, loading } = useAuth()

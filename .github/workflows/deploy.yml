@@ -33,22 +33,11 @@ jobs:
       - name: Installa dipendenze
         run: npm ci
 
-      # Calcola il base path: '/' per un repo "utente.github.io",
-      # altrimenti '/<nome-repo>/' per un repo di progetto.
-      - name: Calcola base path
-        id: base
-        run: |
-          REPO="${{ github.event.repository.name }}"
-          OWNER="${{ github.repository_owner }}"
-          if [ "$REPO" = "${OWNER,,}.github.io" ]; then
-            echo "base=/" >> "$GITHUB_OUTPUT"
-          else
-            echo "base=/$REPO/" >> "$GITHUB_OUTPUT"
-          fi
-
+      # Dominio custom (renovasport.it) servito sulla radice → base '/'.
+      # Il file public/CNAME mantiene il dominio su ogni deploy.
       - name: Build
         env:
-          VITE_BASE: ${{ steps.base.outputs.base }}
+          VITE_BASE: /
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SUPABASE_STORAGE_BUCKET: ${{ secrets.VITE_SUPABASE_STORAGE_BUCKET }}
