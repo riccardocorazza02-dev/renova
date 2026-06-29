@@ -1,17 +1,34 @@
 import type { MouseEvent } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Logo } from '../components/Logo'
+import { Logo, RenovaMark } from '../components/Logo'
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Landing pubblica di Renova — versione pre-lancio, rivolta PRIMA ai CLUB
+   (B2B), con CTA primario "Prenota una call" e CTA secondario "sondaggio
+   famiglie". Diversamente dalla web-app (solo mobile), questo sito è
+   RESPONSIVE: si adatta a desktop e mobile.
+
+   Dati ancora da inserire (placeholder evidenti, vedi sotto):
+   - SURVEY_URL   → URL del sondaggio per le famiglie
+   - TELEFONO     → numero per la call
+   Contatti già noti dal progetto: info@renovasport.it · renovasport.it
+   ────────────────────────────────────────────────────────────────────────── */
+
+const EMAIL = 'info@renovasport.it'
+const SITO = 'renovasport.it'
+const TELEFONO: string = '+39 370 3238359'
+const SURVEY_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform'
 
 /**
- * Scroll fluido e volutamente lento verso una sezione (~900ms, easing morbido),
- * tenendo conto dell'altezza dell'header sticky. Rispetta la preferenza di
- * sistema "riduci animazioni": in quel caso salta diretto, senza animazione.
+ * Scroll fluido e volutamente morbido verso una sezione, tenendo conto
+ * dell'header sticky. Rispetta "riduci animazioni".
  */
 function scrollToSezione(e: MouseEvent<HTMLAnchorElement>, id: string) {
   e.preventDefault()
   const target = document.getElementById(id)
   if (!target) return
-
   const header = document.querySelector('header')
   const offset = header ? header.getBoundingClientRect().height : 0
   const destY = target.getBoundingClientRect().top + window.scrollY - offset
@@ -20,328 +37,1362 @@ function scrollToSezione(e: MouseEvent<HTMLAnchorElement>, id: string) {
     window.scrollTo(0, destY)
     return
   }
-
   const startY = window.scrollY
   const distance = destY - startY
-  const duration = 900 // ms — più alto = più lento
+  const duration = 800
   let startTime: number | null = null
-
   function step(now: number) {
     if (startTime === null) startTime = now
     const elapsed = now - startTime
     const t = Math.min(1, elapsed / duration)
-    const eased = 1 - Math.pow(1 - t, 3) // easeOutCubic: parte deciso, frena dolce
+    const eased = 1 - Math.pow(1 - t, 3)
     window.scrollTo(0, startY + distance * eased)
     if (elapsed < duration) requestAnimationFrame(step)
   }
   requestAnimationFrame(step)
 }
 
-/**
- * Landing pubblica di Renova — porta d'ingresso "marketing" mostrata ai
- * visitatori non autenticati su `/`. Da qui si accede alla web-app
- * (login / registrazione). Stile editoriale "Press 2A": superfici avorio,
- * regole nere nette, accento verde eco.
- */
 export function Landing() {
+  const [menuAperto, setMenuAperto] = useState(false)
+
+  const nav = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    setMenuAperto(false)
+    scrollToSezione(e, id)
+  }
+
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col bg-paper">
-      {/* Header */}
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b-[1.5px] border-ink bg-paper/95 px-4 py-3 backdrop-blur">
-        <Logo className="text-[21px]" />
-        <nav className="hidden items-center gap-7 text-[13px] font-semibold text-ink-soft sm:flex">
-          <a
-            href="#chi-siamo"
-            onClick={(e) => scrollToSezione(e, 'chi-siamo')}
-            className="transition hover:text-ink"
-          >
-            Chi siamo
+    <div className="min-h-screen w-full bg-paper text-ink">
+      {/* ── Header ─────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-40 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
+          <a href="#top" onClick={nav('top')} className="shrink-0">
+            <Logo className="text-[22px]" />
           </a>
-          <a
-            href="#come-funziona"
-            onClick={(e) => scrollToSezione(e, 'come-funziona')}
-            className="transition hover:text-ink"
-          >
-            Come funziona
-          </a>
-          <a
-            href="#contatti"
-            onClick={(e) => scrollToSezione(e, 'contatti')}
-            className="transition hover:text-ink"
-          >
-            Contatti
-          </a>
-        </nav>
-        <Link
-          to="/login"
-          className="rounded-lg border border-ink px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper"
-        >
-          Accedi
-        </Link>
-      </header>
 
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="px-5 pb-10 pt-12">
-          <span className="eyebrow">Marketplace sportivo · Seconda mano</span>
-          <h1 className="mt-3 text-[40px] leading-[0.98] text-ink">
-            Rimetti in gioco
-            <br />
-            il tuo materiale
-            <br />
-            <span className="text-eco">tecnico.</span>
-          </h1>
-          <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-soft">
-            Renova è il marketplace delle società sportive: gli atleti scambiano
-            attrezzatura usata e ogni articolo mostra quanta{' '}
-            <span className="font-semibold text-ink">CO₂ e acqua</span> hai
-            risparmiato riusando invece di comprare nuovo.
-          </p>
+          {/* Nav desktop */}
+          <nav className="hidden items-center gap-7 text-[13px] font-semibold text-ink-soft lg:flex">
+            <a href="#come-funziona" onClick={nav('come-funziona')} className="transition hover:text-ink">
+              Come funziona
+            </a>
+            <a href="#partnership" onClick={nav('partnership')} className="transition hover:text-ink">
+              Partnership
+            </a>
+            <a href="#faq" onClick={nav('faq')} className="transition hover:text-ink">
+              FAQ
+            </a>
+          </nav>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/registrazione"
-              className="inline-flex items-center justify-center rounded-lg bg-eco px-6 py-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
+          <div className="flex items-center gap-3">
+            <a
+              href="#contatti"
+              onClick={nav('contatti')}
+              className="hidden rounded-lg bg-eco px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99] sm:inline-flex"
             >
-              Inizia ora
-            </Link>
+              Prenota una call
+            </a>
             <Link
               to="/login"
-              className="inline-flex items-center justify-center rounded-lg border border-ink px-6 py-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper"
+              className="text-[12px] font-semibold text-ink-muted underline-offset-4 transition hover:text-ink hover:underline"
             >
-              Ho già un account
+              Accedi
             </Link>
+            {/* Hamburger mobile */}
+            <button
+              type="button"
+              onClick={() => setMenuAperto((v) => !v)}
+              aria-label="Apri menu"
+              aria-expanded={menuAperto}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-edge text-ink lg:hidden"
+            >
+              <BurgerIcon open={menuAperto} />
+            </button>
           </div>
-          <p className="mt-3 text-[12px] text-ink-muted">
-            Ti serve il <span className="font-semibold">codice di accesso</span>{' '}
-            della tua società sportiva.
-          </p>
-        </section>
+        </div>
 
-        {/* Metriche ESG */}
-        <section className="border-y-[1.5px] border-ink bg-eco-50 px-5 py-7">
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <Metric value="CO₂" label="risparmiata" />
-            <Metric value="Acqua" label="risparmiata" tone="water" />
-            <Metric value="€" label="valore riuso" tone="sun" />
+        {/* Menu mobile a tendina */}
+        {menuAperto && (
+          <div className="border-t border-line bg-paper px-5 py-4 lg:hidden">
+            <nav className="flex flex-col gap-1 text-[15px] font-semibold text-ink">
+              <a href="#come-funziona" onClick={nav('come-funziona')} className="rounded-lg px-2 py-2.5 hover:bg-black/5">
+                Come funziona
+              </a>
+              <a href="#partnership" onClick={nav('partnership')} className="rounded-lg px-2 py-2.5 hover:bg-black/5">
+                Partnership
+              </a>
+              <a href="#faq" onClick={nav('faq')} className="rounded-lg px-2 py-2.5 hover:bg-black/5">
+                FAQ
+              </a>
+              <a
+                href="#contatti"
+                onClick={nav('contatti')}
+                className="mt-2 rounded-lg bg-eco px-4 py-3 text-center text-[13px] font-bold uppercase tracking-[0.06em] text-white"
+              >
+                Prenota una call
+              </a>
+            </nav>
           </div>
-          <p className="mt-4 text-center text-[12px] leading-relaxed text-ink-soft">
-            Stima cradle-to-gate calcolata dalle fibre del capo —
-            deterministica e tracciabile.
-          </p>
-        </section>
+        )}
+      </header>
 
-        {/* Chi siamo — Mission / Vision */}
-        <section
-          id="chi-siamo"
-          className="scroll-mt-20 border-t-[1.5px] border-ink px-5 py-10"
-        >
-          <span className="eyebrow">Chi siamo</span>
-          <h2 className="mt-2 text-[26px] leading-tight text-ink">
-            Lo sport che non si butta via.
-          </h2>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-soft">
-            Renova nasce dentro il mondo delle società sportive, dove ogni
-            stagione tonnellate di materiale ancora valido finiscono in fondo a
-            un armadietto. La nostra idea è semplice: far circolare quel
-            materiale tra chi ne ha bisogno, rendendo visibile il valore
-            ambientale di ogni riuso.
-          </p>
-          <div className="mt-7 grid gap-4 sm:grid-cols-2">
-            <MvCard
-              tag="Mission"
-              title="Dare una seconda vita al materiale tecnico"
-              body="Mettiamo in contatto gli atleti delle stesse società e dello stesso sport per scambiare attrezzatura usata in modo semplice, sicuro e tracciabile — riducendo sprechi e costi per le famiglie."
-            />
-            <MvCard
-              tag="Vision"
-              title="Rendere il riuso lo standard nello sport"
-              body="Immaginiamo una rete di società sportive in cui comprare usato è la prima scelta, non il ripiego: dove ogni scambio si traduce in CO₂ e acqua risparmiate, misurate e condivise dalla comunità."
-            />
-          </div>
-        </section>
-
-        {/* Come funziona + due feed */}
-        <section
-          id="come-funziona"
-          className="scroll-mt-20 border-t-[1.5px] border-ink px-5 py-10"
-        >
-          <span className="eyebrow">Come funziona</span>
-          <h2 className="mt-2 text-[26px] leading-tight text-ink">
-            Dal codice società allo scambio.
-          </h2>
-          <div className="mt-6 flex flex-col gap-5">
-            <Step
-              n="1"
-              title="Entra con il codice società"
-              body="Il codice di accesso ti assegna automaticamente sport e società. Niente configurazioni."
-            />
-            <Step
-              n="2"
-              title="Pubblica o scopri articoli"
-              body="Due feed: quello pubblico del tuo sport e quello riservato ai membri della tua società."
-            />
-            <Step
-              n="3"
-              title="Scambia e misura l'impatto"
-              body="Chatti, concludi lo scambio e vedi crescere il tuo risparmio ambientale."
-            />
-          </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Card
-              title="Feed pubblico"
-              body="Scarpe, protezioni e accessori senza logo, visibili a tutti i praticanti del tuo sport nella tua zona."
-            />
-            <Card
-              title="Feed societario"
-              body="Materiale con il logo della tua società, visibile solo ai membri della stessa squadra."
-            />
-          </div>
-        </section>
-
-        {/* Contatti */}
-        <section
-          id="contatti"
-          className="scroll-mt-20 border-t-[1.5px] border-ink px-5 py-10"
-        >
-          <span className="eyebrow">Contatti</span>
-          <h2 className="mt-2 text-[26px] leading-tight text-ink">Parliamone.</h2>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-soft">
-            Hai bisogno di informazioni o rappresenti una società sportiva
-            interessata al servizio? Scrivici: ti rispondiamo il prima possibile.
-          </p>
-          <div className="mt-7 grid gap-4 sm:grid-cols-2">
-            <ContactCard
-              title="Informazioni generali"
-              body="Per qualsiasi domanda su Renova, sul funzionamento dell'app o sul tuo account."
-              email="info@renovasport.it"
-            />
-            <ContactCard
-              title="Società sportive"
-              body="Vuoi portare Renova nella tua società e dare ai tuoi atleti un codice di accesso dedicato? Contattaci."
-              email="info@renovasport.it"
-              subject="Richiesta società sportiva"
-            />
-          </div>
-        </section>
-
-        {/* CTA finale */}
-        <section className="border-t-[1.5px] border-ink bg-ink px-5 py-12 text-center">
-          <h2 className="text-[28px] leading-tight text-paper">
-            Pronto a far girare
-            <br />
-            il tuo materiale?
-          </h2>
-          <p className="mt-3 text-[15px] text-[#c9c8c2]">
-            Bastano il codice della tua società e un minuto per registrarti.
-          </p>
-          <Link
-            to="/registrazione"
-            className="mt-7 inline-flex items-center justify-center rounded-lg bg-eco px-8 py-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
-          >
-            Crea il tuo account
-          </Link>
-        </section>
+      <main id="top">
+        <Hero />
+        <ComeFunziona />
+        <SocialProof />
+        <FaseDiTest />
+        <Faq />
+        <Contatti />
       </main>
 
-      <footer className="px-5 py-6 text-center text-[11px] text-ink-muted">
-        © 2026 Renova · Marketplace sportivo di seconda mano
-      </footer>
+      <Footer />
     </div>
   )
 }
 
-function Metric({
-  value,
-  label,
-  tone = 'eco',
+/* ════════════════════════════════════════════════════════════════════════
+   1 · HERO
+   ════════════════════════════════════════════════════════════════════════ */
+
+function Hero() {
+  return (
+    <section className="border-b-[1.5px] border-ink">
+      <div className="mx-auto max-w-6xl px-5 py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-20">
+        {/* Colonna sinistra: promessa + CTA */}
+        <div>
+          <span className="eyebrow">Per le società sportive · Pre-lancio Bologna</span>
+          <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
+            Abbatti il costo dello sport per le famiglie del tuo club.
+          </h1>
+          <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
+            Il servizio che le famiglie del tuo club stanno aspettando. Con Renova i tesserati
+            si scambiano gratuitamente il materiale sportivo usato ancora in buone condizioni.
+            Più risparmio per le famiglie, più fidelizzazione per te.{' '}
+            <span className="font-semibold text-ink">Nessuno sforzo organizzativo.</span>
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href="#contatti"
+              onClick={(e) => scrollToSezione(e, 'contatti')}
+              className="inline-flex items-center justify-center rounded-lg bg-eco px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
+            >
+              Prenota una call conoscitiva
+            </a>
+          </div>
+
+          {/* CTA secondario per genitori/tesserati — subordinato */}
+          <div className="mt-5 rounded-xl border border-edge bg-eco-50/60 px-4 py-3.5 sm:max-w-md">
+            <p className="text-[13px] text-ink-soft">
+              Sei un <span className="font-semibold text-ink">genitore o un tesserato</span>? La
+              tua opinione ci serve per costruire Renova.
+            </p>
+            <a
+              href={SURVEY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-bold text-eco-700 underline-offset-4 hover:underline"
+            >
+              Compila il sondaggio per le famiglie
+              <ArrowOutIcon />
+            </a>
+          </div>
+        </div>
+
+        {/* Colonna destra: mockup app */}
+        <div className="mt-12 flex items-center justify-center lg:mt-0">
+          <div className="relative">
+            <PhoneFrame className="max-w-[260px]">
+              <FeedMock />
+            </PhoneFrame>
+            {/* badge ESG fluttuante decorativo */}
+            <div className="absolute -left-3 bottom-10 hidden rotate-[-4deg] rounded-xl border-[1.5px] border-ink bg-paper px-3 py-2 shadow-lg sm:block">
+              <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+                Risparmio misurato
+              </p>
+              <p className="text-[15px] font-extrabold text-eco">CO₂ · Acqua · €</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Le leve */}
+      <div className="border-t-[1.5px] border-ink bg-eco-50/40">
+        <div className="mx-auto max-w-6xl px-5 py-12 lg:px-8">
+          <span className="eyebrow">Perché i club scelgono Renova</span>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+            <Leva
+              icon={<BoltIcon />}
+              n="1"
+              title="Zero sforzo organizzativo per il club"
+              body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiare tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria."
+            />
+            <Leva
+              icon={<PeopleIcon />}
+              n="2"
+              title="Retention e recruiting dei tesserati"
+              body="Gli scambi avvengono di persona, tra famiglie dello stesso club: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta."
+            />
+            <Leva
+              icon={<HeartChatIcon />}
+              n="3"
+              title="Un servizio che le famiglie chiedono davvero"
+              body="Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo."
+            />
+            <Leva
+              icon={<TagIcon />}
+              n="4"
+              title="Costo dello sport più basso per le famiglie"
+              body="Scarpe, divise, attrezzatura: il materiale tecnico è una spesa ricorrente. Con Renova quella spesa si abbassa, perché il materiale ancora buono torna a circolare invece di essere ricomprato da zero. Il risparmio va direttamente alle famiglie."
+            />
+          </div>
+
+          {/* Leva bonus — evidenziata */}
+          <div className="mt-4 rounded-2xl border-[1.5px] border-eco bg-paper p-6 lg:p-7">
+            <div className="flex items-start gap-4">
+              <span className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-eco-50 text-eco">
+                <LeafChartIcon />
+              </span>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-md bg-eco px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+                    Bonus
+                  </span>
+                  <h3 className="text-[18px] lg:text-[19px]">
+                    Materiale che torna a circolare, con i dati in mano
+                  </h3>
+                </div>
+                <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-ink-soft lg:text-[15px]">
+                  Ogni scambio è attrezzatura salvata dall'armadio e un dato misurato: la dashboard
+                  traccia il risparmio generato per le famiglie e l'impatto ambientale evitato —
+                  carbon footprint (CO₂) e water footprint (acqua). Numeri pronti da mostrare a
+                  famiglie, sponsor e istituzioni.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust-strip */}
+          <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border-[1.5px] border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
+            <Stat valore="+90%" testo="degli intervistati è interessato a un servizio di scambio del materiale del proprio club" />
+            <Stat valore="~95%" testo="degli intervistati è disponibile a pubblicare del proprio materiale" />
+            <Stat valore="+35%" testo="spende tra 100 e 200 € a stagione per il materiale sportivo (oltre +20% spende più di 200 €)" />
+            <Stat valore="Gratis" testo="la partecipazione alla fase di test per i primi club" highlight />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Leva({
+  icon,
+  n,
+  title,
+  body,
 }: {
-  value: string
-  label: string
-  tone?: 'eco' | 'water' | 'sun'
+  icon: React.ReactNode
+  n: string
+  title: string
+  body: string
 }) {
-  const color =
-    tone === 'water' ? 'text-water' : tone === 'sun' ? 'text-sun' : 'text-eco'
+  return (
+    <div className="rounded-2xl border border-edge bg-paper p-5 lg:p-6">
+      <div className="flex items-center gap-3">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-eco-50 text-eco">
+          {icon}
+        </span>
+        <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+          Leva {n}
+        </span>
+      </div>
+      <h3 className="mt-3 text-[17px] leading-snug lg:text-[18px]">{title}</h3>
+      <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{body}</p>
+    </div>
+  )
+}
+
+function Stat({
+  valore,
+  testo,
+  highlight = false,
+}: {
+  valore: string
+  testo: string
+  highlight?: boolean
+}) {
+  return (
+    <div className={`px-5 py-5 ${highlight ? 'bg-eco' : 'bg-paper'}`}>
+      <div
+        className={`text-[26px] font-extrabold tracking-[-0.03em] ${highlight ? 'text-white' : 'text-eco'}`}
+      >
+        {valore}
+      </div>
+      <p
+        className={`mt-1 text-[12px] leading-snug ${highlight ? 'text-white/90' : 'text-ink-soft'}`}
+      >
+        {testo}
+      </p>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   2 · COME FUNZIONA
+   ════════════════════════════════════════════════════════════════════════ */
+
+function ComeFunziona() {
+  return (
+    <section id="come-funziona" className="scroll-mt-24 border-b-[1.5px] border-ink">
+      <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
+        <div className="max-w-3xl">
+          <span className="eyebrow">Come funziona</span>
+          <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
+            Dall'attivazione al primo scambio, in pochi tap.
+          </h2>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+            Il club fa una cosa sola; tutto il resto lo gestiscono le famiglie in autonomia.
+          </p>
+        </div>
+
+        <div className="mt-12 flex flex-col gap-16 lg:gap-24">
+          {/* Step 1 */}
+          <StepRow
+            n="1"
+            title="Il club attiva Renova"
+            body="Il club aderisce e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi l'organizzazione è automatica."
+            mock={
+              <PhoneFrame>
+                <CodeMock />
+              </PhoneFrame>
+            }
+          />
+
+          {/* Step 2 — speciale: feed che si sdoppia nei due feed */}
+          <Step2 />
+
+          {/* Step 3 */}
+          <StepRow
+            n="3"
+            reverse
+            title="Si accordano e scambiano, gratis"
+            body="Tramite la chat integrata i tesserati si organizzano in autonomia e si scambiano il materiale di persona, gratuitamente. Come promesso, nessun lavoro per la società."
+            mock={
+              <PhoneFrame>
+                <ChatMock />
+              </PhoneFrame>
+            }
+          />
+
+          {/* Step 4 */}
+          <StepRow
+            n="4"
+            title="Il club vede l'impatto"
+            body="Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare, in ogni momento ed esportabili."
+            mock={
+              <PhoneFrame>
+                <DashboardMock />
+              </PhoneFrame>
+            }
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/** Riga step generica: testo + mockup, alternati su desktop. */
+function StepRow({
+  n,
+  title,
+  body,
+  mock,
+  reverse = false,
+}: {
+  n: string
+  title: string
+  body: string
+  mock: React.ReactNode
+  reverse?: boolean
+}) {
+  return (
+    <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+      <div className={reverse ? 'lg:order-2' : ''}>
+        <div className="flex items-center gap-3">
+          <StepNumber n={n} />
+          <span className="eyebrow">Step {n}</span>
+        </div>
+        <h3 className="mt-4 text-[22px] leading-tight sm:text-[26px]">{title}</h3>
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+          {body}
+        </p>
+      </div>
+      <div className={`flex justify-center ${reverse ? 'lg:order-1' : ''}`}>{mock}</div>
+    </div>
+  )
+}
+
+/** Step 2: il feed del marketplace si sdoppia in feed societario + pubblico. */
+function Step2() {
   return (
     <div>
-      <div className={`text-[26px] font-extrabold tracking-[-0.03em] ${color}`}>
-        {value}
+      <div className="lg:grid lg:grid-cols-2 lg:gap-14">
+        <div>
+          <div className="flex items-center gap-3">
+            <StepNumber n="2" />
+            <span className="eyebrow">Step 2</span>
+          </div>
+          <h3 className="mt-4 text-[22px] leading-tight sm:text-[26px]">
+            I tesserati entrano nel marketplace
+          </h3>
+          <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+            Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il
+            materiale che non usano più. Lo stesso feed si divide automaticamente in due viste,
+            in base alla presenza del logo della società.
+          </p>
+        </div>
       </div>
-      <div className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-soft">
+
+      {/* Diagramma: feed centrale → due frecce → articolo societario / pubblico */}
+      <div className="mt-10 flex flex-col items-center gap-8 lg:mt-12 lg:flex-row lg:items-center lg:justify-center lg:gap-4">
+        {/* Feed sorgente */}
+        <figure className="flex max-w-[220px] flex-col items-center text-center">
+          <PhoneFrame className="max-w-[200px]">
+            <FeedMock dense />
+          </PhoneFrame>
+          <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+            <span className="font-bold text-ink">Marketplace</span>
+            <br />
+            un solo posto dove pubblicare e cercare.
+          </figcaption>
+        </figure>
+
+        {/* Connettore: orizzontale su desktop, verticale su mobile */}
+        <SplitConnector />
+
+        {/* I due feed risultanti */}
+        <div className="flex flex-col gap-8 sm:flex-row lg:flex-col">
+          <figure className="flex max-w-[220px] flex-col items-center text-center">
+            <PhoneFrame className="max-w-[190px]">
+              <ArticleMock variant="societario" />
+            </PhoneFrame>
+            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+              <span className="font-bold text-eco-700">Feed societario</span>
+              <br />
+              articoli col logo del club, visibili solo ai membri.
+            </figcaption>
+          </figure>
+
+          <figure className="flex max-w-[220px] flex-col items-center text-center">
+            <PhoneFrame className="max-w-[190px]">
+              <ArticleMock variant="pubblico" />
+            </PhoneFrame>
+            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+              <span className="font-bold text-ink">Feed pubblico</span>
+              <br />
+              articoli senza logo, aperti ai praticanti dello stesso sport in zona.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Connettore a "Y": linea che si sdoppia in due frecce. */
+function SplitConnector() {
+  return (
+    <>
+      {/* Desktop: orizzontale (sorgente a sinistra → due rami a destra) */}
+      <svg
+        className="hidden h-44 w-20 shrink-0 text-eco lg:block"
+        viewBox="0 0 80 180"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0 90 H30 C45 90 45 45 60 45 H72"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          fill="none"
+        />
+        <path
+          d="M0 90 H30 C45 90 45 135 60 135 H72"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          fill="none"
+        />
+        <polygon points="80,45 70,40 70,50" fill="currentColor" />
+        <polygon points="80,135 70,130 70,140" fill="currentColor" />
+      </svg>
+
+      {/* Mobile: verticale (sorgente sopra → due rami sotto) */}
+      <svg
+        className="h-16 w-40 shrink-0 text-eco lg:hidden"
+        viewBox="0 0 160 64"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M80 0 V18 C80 30 45 30 45 44 V52"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          fill="none"
+        />
+        <path
+          d="M80 0 V18 C80 30 115 30 115 44 V52"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          fill="none"
+        />
+        <polygon points="45,64 40,52 50,52" fill="currentColor" />
+        <polygon points="115,64 110,52 120,52" fill="currentColor" />
+      </svg>
+    </>
+  )
+}
+
+function StepNumber({ n }: { n: string }) {
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-eco text-[16px] font-extrabold text-white">
+      {n}
+    </span>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   3 · SOCIAL PROOF (partnership)
+   ════════════════════════════════════════════════════════════════════════ */
+
+function SocialProof() {
+  return (
+    <section id="partnership" className="scroll-mt-24 border-b-[1.5px] border-ink bg-eco-50/40">
+      <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
+        <div className="max-w-3xl">
+          <span className="eyebrow">Partnership</span>
+          <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
+            Stiamo costruendo Renova con chi lo sport lo vive ogni giorno
+          </h2>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+            Renova nasce dal confronto diretto con i club. Queste sono le società che stanno
+            collaborando allo sviluppo e alla fase di test.
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <LogoPlaceholder key={i} />
+          ))}
+        </div>
+        <p className="mt-6 text-[12px] text-ink-muted">
+          I loghi dei club partner verranno mostrati qui una volta raccolti i consensi.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+function LogoPlaceholder() {
+  return (
+    <div className="flex aspect-[3/2] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-edge bg-paper/60 px-3 text-center">
+      <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-ink-faint text-ink-faint">
+        +
+      </span>
+      <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+        Inserisci qui il tuo logo
+      </span>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   4 · FASE DI TEST
+   ════════════════════════════════════════════════════════════════════════ */
+
+function FaseDiTest() {
+  return (
+    <section className="border-b-[1.5px] border-ink bg-ink text-paper">
+      <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-5 py-14 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:py-16">
+        <div className="max-w-2xl">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-eco">
+            Fase di test · Bologna
+          </span>
+          <h2 className="mt-2 text-[26px] leading-tight text-paper sm:text-[32px]">
+            Stiamo selezionando i primi club di Bologna
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-[#c9c8c2] lg:text-[16px]">
+            Renova è in fase di lancio e parte dal territorio bolognese. Stiamo coinvolgendo un
+            primo gruppo di club della zona per testare il servizio sul campo:{' '}
+            <span className="font-semibold text-paper">la partecipazione è gratuita</span>. È il
+            momento giusto per entrare tra i primi e contribuire a costruire lo strumento.
+          </p>
+        </div>
+        <a
+          href="#contatti"
+          onClick={(e) => scrollToSezione(e, 'contatti')}
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-eco px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
+        >
+          Prenota una call conoscitiva
+        </a>
+      </div>
+    </section>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   5 · FAQ (accordion)
+   ════════════════════════════════════════════════════════════════════════ */
+
+const FAQ: Array<{ q: string; a: string }> = [
+  {
+    q: 'Quanto costa al club?',
+    a: 'In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare il servizio: nessun costo, nessun impegno economico.',
+  },
+  {
+    q: 'È davvero gratis? E dopo la fase di test?',
+    a: 'Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. In futuro potremo introdurre piani per i club, ma chi entra ora tra i primi avrà condizioni dedicate — e in ogni caso lo scambio del materiale tra tesserati resta gratuito.',
+  },
+  {
+    q: 'Cosa deve fare concretamente il club?',
+    a: 'Pochissimo: aderire e distribuire il codice di attivazione ai tesserati. Tutto il resto — pubblicazione del materiale, accordi, scambio — lo gestiscono le famiglie in autonomia. Nessun carico di lavoro sulla società.',
+  },
+  {
+    q: 'Il nostro è un club piccolo: funziona lo stesso?',
+    a: 'Sì. Più tesserati partecipano, più scambi avvengono, ma Renova è pensata anche per realtà piccole: oltre al feed interno del club c’è un feed pubblico che mette in contatto i praticanti dello stesso sport nella stessa area, ampliando le occasioni di scambio anche per le società più piccole.',
+  },
+  {
+    q: 'Come avviene lo scambio? È gratuito o c’è un prezzo?',
+    a: 'La piattaforma fa incontrare domanda e offerta; l’accordo lo prendono le famiglie tramite la chat integrata e lo scambio avviene di persona, tra tesserati. È una scelta voluta: rafforza i rapporti dentro la community del club. Il prezzo che vedi indicato negli articoli riguarda il risparmio economico generato dallo scambio, non un importo da pagare.',
+  },
+  {
+    q: 'Chi vede cosa? Come gestite la privacy?',
+    a: 'Ogni tesserato vede due insiemi separati: il feed societario, visibile solo ai membri dello stesso club e dello stesso sport (qui finiscono gli articoli con il logo della società); e il feed pubblico, con i soli articoli senza logo, visibili agli altri praticanti dello stesso sport nella stessa area. Agli altri utenti sono visibili solo le informazioni minime necessarie ad accordarsi sullo scambio; il resto dei dati personali non è esposto. La separazione è garantita a livello di sistema, non lasciata al caso.',
+  },
+  {
+    q: 'E per i tesserati minorenni?',
+    a: 'L’account di un minore è creato e gestito da un genitore o da un adulto di riferimento, che resta responsabile delle interazioni. Lo scambio avviene di persona e all’interno della community del club, in un ambiente chiuso e riconducibile a tesserati reali — non una piazza aperta a sconosciuti. Stiamo definendo strumenti dedicati per mantenere la chat un ambiente sicuro.',
+  },
+  {
+    q: 'Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?',
+    a: 'Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l’accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l’oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi.',
+  },
+  {
+    q: 'Come accedono i tesserati? Serve scaricare un’app?',
+    a: 'Al momento no: si accede da web con il codice di attivazione del club, dallo smartphone come da computer. Nessuna installazione, nessuna procedura complicata.',
+  },
+  {
+    q: 'Come fate a misurare il risparmio e l’impatto ambientale mostrati nella dashboard?',
+    a: 'Il risparmio nasce dagli scambi reali registrati sulla piattaforma. L’impatto ambientale (CO₂ e acqua) è stimato con un metodo deterministico e tracciabile, calcolato dalle fibre che compongono il capo — non un numero generico, ma una stima documentata con tre livelli di affidabilità a seconda di quanto si conosce del materiale.',
+  },
+]
+
+function Faq() {
+  const [aperta, setAperta] = useState<number | null>(0)
+  return (
+    <section id="faq" className="scroll-mt-24 border-b-[1.5px] border-ink">
+      <div className="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
+        <span className="eyebrow">FAQ</span>
+        <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">Domande frequenti</h2>
+
+        <div className="mt-8 divide-y divide-line border-y border-line">
+          {FAQ.map((item, i) => {
+            const open = aperta === i
+            return (
+              <div key={i}>
+                <button
+                  type="button"
+                  onClick={() => setAperta(open ? null : i)}
+                  aria-expanded={open}
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                >
+                  <span className="text-[16px] font-bold leading-snug text-ink lg:text-[17px]">
+                    {item.q}
+                  </span>
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-edge text-ink transition ${
+                      open ? 'rotate-45 bg-eco text-white' : ''
+                    }`}
+                  >
+                    <PlusIcon />
+                  </span>
+                </button>
+                <div
+                  className={`grid transition-all duration-300 ease-out ${
+                    open ? 'grid-rows-[1fr] pb-5 opacity-100' : 'grid-rows-[0fr] opacity-0'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <p className="max-w-2xl text-[15px] leading-relaxed text-ink-soft">
+                      {item.a}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   6 · CONTATTI + CTA finale (form via mailto)
+   ════════════════════════════════════════════════════════════════════════ */
+
+function Contatti() {
+  const [form, setForm] = useState({
+    nome: '',
+    club: '',
+    ruolo: '',
+    email: '',
+    telefono: '',
+    messaggio: '',
+  })
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }))
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const corpo = [
+      `Nome: ${form.nome}`,
+      `Club / società: ${form.club}`,
+      `Ruolo: ${form.ruolo}`,
+      `Email: ${form.email}`,
+      `Telefono: ${form.telefono}`,
+      '',
+      form.messaggio,
+    ].join('\n')
+    const url = `mailto:${EMAIL}?subject=${encodeURIComponent(
+      `Prenota una call · ${form.club || form.nome || 'Club'}`,
+    )}&body=${encodeURIComponent(corpo)}`
+    window.location.href = url
+  }
+
+  return (
+    <section id="contatti" className="scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-5 py-14 lg:grid lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-20">
+        {/* Testo + contatti diretti */}
+        <div>
+          <span className="eyebrow">Contatti</span>
+          <h2 className="mt-2 text-[28px] leading-tight sm:text-[36px]">
+            Vuoi portare Renova nel tuo club?
+          </h2>
+          <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-ink-soft">
+            Raccontaci del tuo club o facci le tue domande. Ti ricontattiamo per una call senza
+            impegno.
+          </p>
+
+          <div className="mt-8 space-y-4">
+            <ContattoDiretto label="Email" valore={EMAIL} href={`mailto:${EMAIL}`} />
+            <ContattoDiretto
+              label="Telefono"
+              valore={TELEFONO || '[inserisci telefono]'}
+              href={TELEFONO ? `tel:${TELEFONO.replace(/\s/g, '')}` : undefined}
+              placeholder={!TELEFONO}
+            />
+            <ContattoDiretto
+              label="Sito"
+              valore={SITO}
+              href={`https://${SITO}`}
+            />
+          </div>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={onSubmit}
+          className="mt-10 rounded-2xl border-[1.5px] border-ink bg-paper p-6 shadow-sm lg:mt-0 lg:p-7"
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Nome" value={form.nome} onChange={set('nome')} required />
+            <Field label="Club / società" value={form.club} onChange={set('club')} required />
+            <Field label="Ruolo" value={form.ruolo} onChange={set('ruolo')} />
+            <Field label="Email" type="email" value={form.email} onChange={set('email')} required />
+            <div className="sm:col-span-2">
+              <Field label="Telefono" type="tel" value={form.telefono} onChange={set('telefono')} required />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block">
+                <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+                  Messaggio <span className="font-normal text-ink-muted">(opzionale)</span>
+                </span>
+                <textarea
+                  value={form.messaggio}
+                  onChange={set('messaggio')}
+                  rows={4}
+                  placeholder="Domande, suggerimenti, richieste…"
+                  className="mt-1.5 w-full resize-y rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
+                />
+              </label>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="mt-5 inline-flex w-full items-center justify-center rounded-lg bg-eco px-6 py-3.5 text-[14px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
+          >
+            Prenota una call conoscitiva
+          </button>
+          <p className="mt-3 text-center text-[12px] text-ink-muted">
+            Inviando il form aprirai la tua email con i dati già compilati.
+          </p>
+        </form>
+      </div>
+    </section>
+  )
+}
+
+function ContattoDiretto({
+  label,
+  valore,
+  href,
+  placeholder = false,
+}: {
+  label: string
+  valore: string
+  href?: string
+  placeholder?: boolean
+}) {
+  return (
+    <div className="flex items-baseline gap-3">
+      <span className="w-20 shrink-0 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+        {label}
+      </span>
+      {href ? (
+        <a
+          href={href}
+          className="text-[16px] font-semibold text-eco-700 underline-offset-4 hover:underline"
+        >
+          {valore}
+        </a>
+      ) : (
+        <span className={`text-[16px] font-semibold ${placeholder ? 'text-ink-faint italic' : 'text-ink'}`}>
+          {valore}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  type = 'text',
+  required = false,
+}: {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  type?: string
+  required?: boolean
+}) {
+  return (
+    <label className="block">
+      <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+        {label}
+        {required && <span className="text-eco"> *</span>}
+      </span>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="mt-1.5 w-full rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
+      />
+    </label>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────── */
+
+function Footer() {
+  const [email, setEmail] = useState('')
+  return (
+    <footer className="border-t-[1.5px] border-ink bg-eco-50/40">
+      <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-md">
+            <p className="text-[14px] font-semibold text-ink">
+              Non sei ancora pronto a parlarne?
+            </p>
+            <p className="text-[13px] text-ink-soft">
+              Lascia la tua email e ti aggiorniamo sul lancio.
+            </p>
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
+                'Tienimi aggiornato sul lancio',
+              )}&body=${encodeURIComponent(`Email: ${email}`)}`
+            }}
+            className="flex w-full max-w-md gap-2"
+          >
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="La tua email"
+              className="min-w-0 flex-1 rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
+            />
+            <button
+              type="submit"
+              className="shrink-0 rounded-lg border border-ink px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper"
+            >
+              Tienimi aggiornato
+            </button>
+          </form>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
+          <Logo className="text-[18px]" />
+          <p className="text-[11px] text-ink-muted">
+            © 2026 Renova · Marketplace sportivo di seconda mano · {SITO}
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MOCKUP APP — ricreazioni fedeli degli schermi dentro una cornice iPhone
+   ════════════════════════════════════════════════════════════════════════ */
+
+function PhoneFrame({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div className={`relative mx-auto w-full max-w-[250px] ${className}`}>
+      <div className="relative aspect-[9/19] overflow-hidden rounded-[2.2rem] border-[3px] border-ink bg-paper shadow-[0_24px_50px_-20px_rgba(0,0,0,0.45)]">
+        {/* notch */}
+        <div className="absolute left-1/2 top-0 z-20 h-[18px] w-[90px] -translate-x-1/2 rounded-b-2xl bg-ink" />
+        <div className="h-full w-full overflow-hidden">{children}</div>
+      </div>
+    </div>
+  )
+}
+
+/** Dati fittizi del feed (coerenti con il modello: con/senza logo società). */
+const FEED_ITEMS = [
+  { titolo: 'Scarpe da calcio', meta: 'Scarpe · 42 · Buone', co2: '6 kg', h2o: '2.8k L', soc: false },
+  { titolo: 'Divisa Bologna FC', meta: 'Maglia · M · Ottime', co2: '9 kg', h2o: '3.1k L', soc: true },
+  { titolo: 'Parastinchi', meta: 'Protez. · Uni · Buone', co2: '2 kg', h2o: '0.6k L', soc: false },
+  { titolo: 'Borsone sportivo', meta: 'Access. · Uni · Discr.', co2: '4 kg', h2o: '1.2k L', soc: false },
+]
+
+function FeedMock({ dense = false }: { dense?: boolean }) {
+  const items = dense ? FEED_ITEMS.slice(0, 4) : FEED_ITEMS
+  return (
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <div className="h-[18px]" />
+      <div className="flex items-center justify-between border-b-[1.5px] border-ink px-3 py-2">
+        <Logo className="text-[12px]" />
+        <span className="h-5 w-5 rounded-full bg-eco-50" />
+      </div>
+      {/* search */}
+      <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5">
+        <MiniSearchIcon />
+        <span className="text-[8px] text-ink-faint">Cerca prodotti…</span>
+        <span className="ml-auto text-[7px] font-bold uppercase tracking-[0.08em] text-ink">
+          Filtri +
+        </span>
+      </div>
+      {/* tabs */}
+      <div className="flex gap-3 border-b border-line px-3 py-1.5 text-[7px] font-bold uppercase tracking-[0.08em]">
+        <span className="border-b-2 border-eco pb-0.5 text-ink">Tutti</span>
+        <span className="text-ink-faint">Disponibili</span>
+        <span className="text-ink-faint">Prenotati</span>
+      </div>
+      {/* grid */}
+      <div className="grid flex-1 grid-cols-2 gap-px overflow-hidden bg-line">
+        {items.map((it, i) => (
+          <div key={i} className="flex flex-col gap-1 bg-paper p-2">
+            <div className="foto-stripe relative aspect-[4/5] overflow-hidden rounded">
+              <span className="absolute left-1 top-1 bg-eco px-1 py-px text-[5px] font-bold uppercase leading-none text-white">
+                Disp.
+              </span>
+              {it.soc && (
+                <span className="absolute right-1 top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-paper text-eco shadow">
+                  <RenovaMark className="h-2.5 w-2.5" />
+                </span>
+              )}
+            </div>
+            <div className="text-[8px] font-bold leading-tight text-ink">{it.titolo}</div>
+            <div className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+              {it.meta}
+            </div>
+            <div className="flex flex-wrap gap-x-1.5 text-[6px] font-bold uppercase">
+              <span className="text-eco">CO₂ {it.co2}</span>
+              <span className="text-water-600">H₂O {it.h2o}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ArticleMock({ variant }: { variant: 'societario' | 'pubblico' }) {
+  const soc = variant === 'societario'
+  return (
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <div className="h-[18px]" />
+      {/* header */}
+      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+        <BackIcon />
+        <span className="text-[9px] font-bold text-ink">
+          {soc ? 'Feed societario' : 'Feed pubblico'}
+        </span>
+        {soc ? (
+          <span className="ml-auto inline-flex items-center gap-1 rounded bg-eco-50 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-eco-700">
+            <RenovaMark className="h-2 w-2" />
+            Bologna FC
+          </span>
+        ) : (
+          <span className="ml-auto rounded bg-black/5 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-ink-muted">
+            Pubblico
+          </span>
+        )}
+      </div>
+
+      <div className="flex-1 overflow-hidden px-3 py-2.5">
+        {/* foto */}
+        <div className="foto-stripe relative aspect-[4/3] w-full overflow-hidden rounded-lg">
+          <span className="absolute left-1.5 top-1.5 bg-eco px-1.5 py-0.5 text-[6px] font-bold uppercase leading-none text-white">
+            Disponibile
+          </span>
+          {soc && (
+            <span className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-paper text-eco shadow">
+              <RenovaMark className="h-4 w-4" />
+            </span>
+          )}
+        </div>
+
+        <h3 className="mt-2.5 text-[12px] font-extrabold leading-tight text-ink">
+          {soc ? 'Divisa ufficiale Bologna FC' : 'Scarpe da calcio Nike'}
+        </h3>
+        <p className="mt-0.5 text-[7px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+          {soc ? 'Maglia · Taglia M · Ottime' : 'Scarpe · Taglia 42 · Buone'}
+        </p>
+
+        {/* prezzo / risparmio */}
+        <div className="mt-2 flex items-baseline gap-1.5">
+          <span className="text-[14px] font-extrabold text-sun-600">{soc ? '28 €' : '35 €'}</span>
+          <span className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+            risparmio stimato
+          </span>
+        </div>
+
+        {/* ESG */}
+        <div className="mt-2 flex gap-2 text-[7px] font-bold uppercase tracking-[0.04em]">
+          <span className="text-eco">CO₂: {soc ? '9 kg' : '6 kg'}</span>
+          <span className="text-water-600">H₂O: {soc ? '3.1k L' : '2.8k L'}</span>
+        </div>
+
+        {/* composizione */}
+        <p className="mt-2 text-[6.5px] leading-snug text-ink-soft">
+          {soc ? '100% poliestere riciclato' : 'Tomaia sintetica · suola in gomma'}
+        </p>
+
+        {/* CTA */}
+        <div className="mt-2.5 rounded-md bg-eco px-2 py-1.5 text-center text-[7px] font-bold uppercase tracking-[0.08em] text-white">
+          Contatta venditore
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ChatMock() {
+  return (
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <div className="h-[18px]" />
+      {/* header */}
+      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+        <BackIcon />
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-eco-50 text-[8px] font-bold text-eco-700">
+          GM
+        </span>
+        <div className="leading-tight">
+          <div className="text-[9px] font-bold text-ink">Giulia M.</div>
+          <div className="text-[6px] text-ink-muted">Divisa Bologna FC</div>
+        </div>
+      </div>
+
+      {/* messaggi */}
+      <div className="flex flex-1 flex-col gap-2 overflow-hidden px-3 py-3">
+        <Bubble side="left">Ciao! La divisa è ancora disponibile?</Bubble>
+        <Bubble side="right">Sì! Taglia M, ottime condizioni 👍</Bubble>
+        <Bubble side="left">Perfetto. Ci vediamo agli allenamenti di giovedì?</Bubble>
+        <Bubble side="right">Va benissimo, te la porto in campo.</Bubble>
+      </div>
+
+      {/* input */}
+      <div className="flex items-center gap-2 border-t border-line px-3 py-2">
+        <div className="flex-1 rounded-full border border-edge px-2.5 py-1 text-[7px] text-ink-faint">
+          Scrivi un messaggio…
+        </div>
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-eco text-white">
+          <SendIcon />
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function Bubble({ side, children }: { side: 'left' | 'right'; children: React.ReactNode }) {
+  const right = side === 'right'
+  return (
+    <div className={`flex ${right ? 'justify-end' : 'justify-start'}`}>
+      <span
+        className={`max-w-[78%] rounded-2xl px-2.5 py-1.5 text-[8px] leading-snug ${
+          right ? 'rounded-br-sm bg-eco text-white' : 'rounded-bl-sm bg-black/5 text-ink'
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  )
+}
+
+function DashboardMock() {
+  return (
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <div className="h-[18px]" />
+      <div className="flex items-center justify-between border-b-[1.5px] border-ink px-3 py-2">
+        <span className="text-[11px] font-extrabold tracking-[-0.02em] text-ink">Impatto</span>
+        <span className="text-[6px] font-bold uppercase tracking-[0.08em] text-eco-700">
+          Esporta
+        </span>
+      </div>
+
+      <div className="flex-1 overflow-hidden px-3 py-3">
+        <p className="text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+          Risparmio del club · stagione
+        </p>
+
+        {/* metriche */}
+        <div className="mt-2 grid grid-cols-3 gap-1.5">
+          <MetricTile valore="1.240 €" label="alle famiglie" tone="sun" />
+          <MetricTile valore="312 kg" label="CO₂" tone="eco" />
+          <MetricTile valore="98k L" label="acqua" tone="water" />
+        </div>
+
+        {/* mini grafico a barre */}
+        <p className="mt-3 text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+          Scambi per mese
+        </p>
+        <div className="mt-1.5 flex h-14 items-end gap-1.5">
+          {[40, 55, 35, 70, 60, 90].map((h, i) => (
+            <div key={i} className="flex-1 rounded-t bg-eco" style={{ height: `${h}%` }} />
+          ))}
+        </div>
+
+        {/* lista */}
+        <p className="mt-3 text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+          Materiale rimesso in circolo
+        </p>
+        <div className="mt-1.5 space-y-1">
+          {['47 articoli scambiati', '128 articoli pubblicati', '63 famiglie attive'].map(
+            (t, i) => (
+              <div key={i} className="flex items-center gap-1.5 text-[7.5px] text-ink-soft">
+                <span className="h-1 w-1 rounded-full bg-eco" />
+                {t}
+              </div>
+            ),
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MetricTile({
+  valore,
+  label,
+  tone,
+}: {
+  valore: string
+  label: string
+  tone: 'eco' | 'water' | 'sun'
+}) {
+  const color = tone === 'water' ? 'text-water-600' : tone === 'sun' ? 'text-sun-600' : 'text-eco'
+  return (
+    <div className="rounded-md border border-edge bg-paper px-1.5 py-1.5 text-center">
+      <div className={`text-[10px] font-extrabold leading-none ${color}`}>{valore}</div>
+      <div className="mt-1 text-[5.5px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
         {label}
       </div>
     </div>
   )
 }
 
-function Step({ n, title, body }: { n: string; title: string; body: string }) {
+function CodeMock() {
   return (
-    <div className="flex gap-4">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink text-[15px] font-extrabold text-ink">
-        {n}
-      </span>
-      <div>
-        <h3 className="text-[17px] text-ink">{title}</h3>
-        <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{body}</p>
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <div className="h-[18px]" />
+      <div className="flex items-center justify-center border-b-[1.5px] border-ink px-3 py-2">
+        <Logo className="text-[12px]" />
+      </div>
+
+      <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-eco-50 text-eco">
+          <RenovaMark className="h-7 w-7" />
+        </span>
+        <p className="mt-4 text-[7px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+          Codice di attivazione
+        </p>
+        <div className="mt-2 rounded-lg border-[1.5px] border-ink px-4 py-2.5">
+          <span className="text-[20px] font-extrabold tracking-[0.06em] text-ink">BFC-CAL</span>
+        </div>
+        <p className="mt-2 text-[8px] font-semibold text-ink-soft">Bologna FC · Calcio</p>
+        <p className="mt-3 max-w-[150px] text-[7px] leading-snug text-ink-muted">
+          Distribuiscilo ai tesserati: con questo codice accedono al marketplace del club.
+        </p>
+        <div className="mt-4 w-full rounded-md bg-eco px-3 py-2 text-[8px] font-bold uppercase tracking-[0.08em] text-white">
+          Condividi con i tesserati
+        </div>
       </div>
     </div>
   )
 }
 
-function Card({ title, body }: { title: string; body: string }) {
+/* ──────────────────────────────────────────────────────────────────────────
+   Icone inline
+   ────────────────────────────────────────────────────────────────────────── */
+
+function BurgerIcon({ open }: { open: boolean }) {
   return (
-    <div className="rounded-xl border border-edge bg-paper p-5">
-      <h3 className="text-[17px] text-ink">{title}</h3>
-      <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{body}</p>
-    </div>
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      {open ? (
+        <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      ) : (
+        <path
+          d="M4 7h16M4 12h16M4 17h16"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      )}
+    </svg>
   )
 }
 
-function MvCard({
-  tag,
-  title,
-  body,
-}: {
-  tag: string
-  title: string
-  body: string
-}) {
+function PlusIcon() {
   return (
-    <div className="rounded-xl border border-edge bg-paper p-6">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-eco">
-        {tag}
-      </span>
-      <h3 className="mt-2 text-[19px] text-ink">{title}</h3>
-      <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{body}</p>
-    </div>
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
   )
 }
 
-function ContactCard({
-  title,
-  body,
-  email,
-  subject,
-}: {
-  title: string
-  body: string
-  email: string
-  subject?: string
-}) {
-  const href = subject
-    ? `mailto:${email}?subject=${encodeURIComponent(subject)}`
-    : `mailto:${email}`
+function ArrowOutIcon() {
   return (
-    <div className="rounded-xl border border-edge bg-paper p-6">
-      <h3 className="text-[18px] text-ink">{title}</h3>
-      <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{body}</p>
-      <a
-        href={href}
-        className="mt-4 inline-block border-b-2 border-eco-50 font-bold text-eco-700 transition hover:border-eco"
-      >
-        {email}
-      </a>
-    </div>
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" aria-hidden="true">
+      <path
+        d="M7 17 17 7M9 7h8v8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function MiniSearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-ink" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.5" />
+      <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function BackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3 w-3 text-ink" fill="none" aria-hidden="true">
+      <path d="m15 6-6 6 6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function SendIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" aria-hidden="true">
+      <path d="M4 12 20 4l-6 16-3-7-7-1Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+function BoltIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+      <path
+        d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function PeopleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M16 11a3 3 0 1 0-1-5.8M21 20c0-2.5-1.5-4.6-3.6-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function HeartChatIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+      <path
+        d="M4 5h16v11H8l-4 4V5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 13c-2-1.3-3.2-2.4-3.2-3.7 0-1 .8-1.6 1.6-1.6.6 0 1.2.3 1.6.9.4-.6 1-.9 1.6-.9.8 0 1.6.6 1.6 1.6 0 1.3-1.2 2.4-3.2 3.7Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function TagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+      <path
+        d="M3 12V4h8l9 9-7 7-9-9Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <circle cx="7.5" cy="7.5" r="1.4" fill="currentColor" />
+    </svg>
+  )
+}
+
+function LeafChartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+      <path d="M4 20h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="5" y="12" width="3" height="6" stroke="currentColor" strokeWidth="1.6" />
+      <rect x="10.5" y="8" width="3" height="10" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M19 6c-3 0-5 2-5 5 3 0 5-2 5-5Z" fill="currentColor" />
+    </svg>
   )
 }
