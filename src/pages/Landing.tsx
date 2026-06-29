@@ -268,9 +268,9 @@ function Hero() {
 
           {/* Trust-strip */}
           <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border-[1.5px] border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
+            <Stat valore="+55%" testo="degli intervistati ha dichiarato che ogni stagione si trova in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato" />
             <Stat valore="+90%" testo="degli intervistati è interessato a un servizio di scambio del materiale del proprio club" />
-            <Stat valore="~95%" testo="degli intervistati è disponibile a pubblicare del proprio materiale" />
-            <Stat valore="+35%" testo="spende tra 100 e 200 € a stagione per il materiale sportivo (oltre +20% spende più di 200 €)" />
+            <Stat valore="+55%" testo="degli intervistati spende più di 100€ ogni stagione sportiva soltanto il materiale sportivo (di cui +20% spende più di 200€)" />
             <Stat valore="Gratis" testo="la partecipazione alla fase di test per i primi club" highlight />
           </div>
         </div>
@@ -340,7 +340,8 @@ function ComeFunziona() {
             Dall'attivazione al primo scambio, in pochi tap.
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            Il club fa una cosa sola; tutto il resto lo gestiscono le famiglie in autonomia.
+            Il club fa una cosa sola; tutto il resto lo gestiscono le famiglie in autonomia. Ecco
+            come funziona in 4 semplici step:
           </p>
         </div>
 
@@ -349,7 +350,7 @@ function ComeFunziona() {
           <StepRow
             n="1"
             title="Il club attiva Renova"
-            body="Il club aderisce e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi l'organizzazione è automatica."
+            body="Il club aderisce al servizio e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi gli sforzi organizzativi della società sono finiti."
             mock={
               <PhoneFrame>
                 <CodeMock />
@@ -445,7 +446,7 @@ function Step2() {
         {/* Feed sorgente */}
         <figure className="flex max-w-[220px] flex-col items-center text-center">
           <PhoneFrame className="max-w-[200px]">
-            <FeedMock dense />
+            <FeedMock />
           </PhoneFrame>
           <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
             <span className="font-bold text-ink">Marketplace</span>
@@ -466,7 +467,7 @@ function Step2() {
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-eco-700">Feed societario</span>
               <br />
-              articoli col logo del club, visibili solo ai membri.
+              articoli col logo societario, visibili solo ai tesserati del club stesso.
             </figcaption>
           </figure>
 
@@ -477,7 +478,7 @@ function Step2() {
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-ink">Feed pubblico</span>
               <br />
-              articoli senza logo, aperti ai praticanti dello stesso sport in zona.
+              articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
             </figcaption>
           </figure>
         </div>
@@ -609,7 +610,7 @@ function FaseDiTest() {
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[#c9c8c2] lg:text-[16px]">
             Renova è in fase di lancio e parte dal territorio bolognese. Stiamo coinvolgendo un
-            primo gruppo di club della zona per testare il servizio sul campo:{' '}
+            primo gruppo di club del territorio per testare il servizio sul campo:{' '}
             <span className="font-semibold text-paper">la partecipazione è gratuita</span>. È il
             momento giusto per entrare tra i primi e contribuire a costruire lo strumento.
           </p>
@@ -637,15 +638,15 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: 'È davvero gratis? E dopo la fase di test?',
-    a: 'Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. In futuro potremo introdurre piani per i club, ma chi entra ora tra i primi avrà condizioni dedicate — e in ogni caso lo scambio del materiale tra tesserati resta gratuito.',
+    a: 'Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di revenue è ancora in corso di definizione ma in ogni caso lo scambio del materiale tra tesserati resta gratuito.',
   },
   {
     q: 'Cosa deve fare concretamente il club?',
-    a: 'Pochissimo: aderire e distribuire il codice di attivazione ai tesserati. Tutto il resto — pubblicazione del materiale, accordi, scambio — lo gestiscono le famiglie in autonomia. Nessun carico di lavoro sulla società.',
+    a: 'Pochissimo: aderire, distribuire il codice di attivazione ai tesserati e prendersi i meriti dell’iniziativa. Tutto il resto — pubblicazione del materiale, accordi, scambio — lo gestiscono le famiglie in autonomia. Nessun carico di lavoro sulla società.',
   },
   {
     q: 'Il nostro è un club piccolo: funziona lo stesso?',
-    a: 'Sì. Più tesserati partecipano, più scambi avvengono, ma Renova è pensata anche per realtà piccole: oltre al feed interno del club c’è un feed pubblico che mette in contatto i praticanti dello stesso sport nella stessa area, ampliando le occasioni di scambio anche per le società più piccole.',
+    a: 'Sì. Più tesserati partecipano, più scambi avvengono, ma Renova è pensata anche per realtà piccole: oltre al feed interno del club c’è un feed pubblico che mette in contatto i praticanti dello stesso sport nella stessa area geografica, ampliando le occasioni di scambio anche per le società più piccole.',
   },
   {
     q: 'Come avviene lo scambio? È gratuito o c’è un prezzo?',
@@ -653,7 +654,7 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: 'Chi vede cosa? Come gestite la privacy?',
-    a: 'Ogni tesserato vede due insiemi separati: il feed societario, visibile solo ai membri dello stesso club e dello stesso sport (qui finiscono gli articoli con il logo della società); e il feed pubblico, con i soli articoli senza logo, visibili agli altri praticanti dello stesso sport nella stessa area. Agli altri utenti sono visibili solo le informazioni minime necessarie ad accordarsi sullo scambio; il resto dei dati personali non è esposto. La separazione è garantita a livello di sistema, non lasciata al caso.',
+    a: 'Ogni tesserato vede due insiemi separati: il feed societario, visibile solo ai membri dello stesso club (qui finiscono gli articoli con il logo della società); e il feed pubblico, con i soli articoli senza logo, visibili a tutti gli altri praticanti dello stesso sport nella stessa area geografica. Agli altri utenti sono visibili solo le informazioni minime necessarie ad accordarsi sullo scambio; il resto dei dati personali non è esposto. La separazione è garantita a livello di sistema, non lasciata al caso.',
   },
   {
     q: 'E per i tesserati minorenni?',
@@ -661,7 +662,7 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: 'Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?',
-    a: 'Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l’accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l’oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi.',
+    a: 'Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l’accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l’oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi. Bisogna immaginare Renova come uno spazio pubblico, il cui buon funzionamento è una responsabilità condivisa.',
   },
   {
     q: 'Come accedono i tesserati? Serve scaricare un’app?',
@@ -938,7 +939,7 @@ function Footer() {
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
           <Logo className="text-[18px]" />
           <p className="text-[11px] text-ink-muted">
-            © 2026 Renova · Marketplace sportivo di seconda mano · {SITO}
+            © 2026 Renova · Il marketplace second hand per ASD e SSD · {SITO}
           </p>
         </div>
       </div>
@@ -968,23 +969,84 @@ function PhoneFrame({
   )
 }
 
-/** Dati fittizi del feed (coerenti con il modello: con/senza logo società). */
-const FEED_ITEMS = [
-  { titolo: 'Scarpe da calcio', meta: 'Scarpe · 42 · Buone', co2: '6 kg', h2o: '2.8k L', soc: false },
-  { titolo: 'Divisa Bologna FC', meta: 'Maglia · M · Ottime', co2: '9 kg', h2o: '3.1k L', soc: true },
-  { titolo: 'Parastinchi', meta: 'Protez. · Uni · Buone', co2: '2 kg', h2o: '0.6k L', soc: false },
-  { titolo: 'Borsone sportivo', meta: 'Access. · Uni · Discr.', co2: '4 kg', h2o: '1.2k L', soc: false },
-]
-
-function FeedMock({ dense = false }: { dense?: boolean }) {
-  const items = dense ? FEED_ITEMS.slice(0, 4) : FEED_ITEMS
+/** Barra superiore comune a tutti gli schermi: marchio + pill della società. */
+function PhoneHeader() {
   return (
-    <div className="flex h-full flex-col bg-paper text-ink">
+    <>
       <div className="h-[18px]" />
       <div className="flex items-center justify-between border-b-[1.5px] border-ink px-3 py-2">
         <Logo className="text-[12px]" />
-        <span className="h-5 w-5 rounded-full bg-eco-50" />
+        <span className="rounded-md border border-edge px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+          Bologna FC
+        </span>
       </div>
+    </>
+  )
+}
+
+type NavKey = 'market' | 'impatto' | 'chat' | 'profilo'
+
+/** Navigazione inferiore dell'app (Market · Impatto · Chat · Profilo) con il
+ *  bottone "+" centrale rialzato, come negli schermi reali. */
+function BottomNav({ active }: { active: NavKey }) {
+  const Item = ({ k, label, icon }: { k: NavKey; label: string; icon: React.ReactNode }) => (
+    <div
+      className={`flex flex-1 flex-col items-center gap-0.5 ${
+        active === k ? 'text-eco' : 'text-ink-faint'
+      }`}
+    >
+      {icon}
+      <span className="text-[5px] font-bold uppercase tracking-[0.08em]">{label}</span>
+    </div>
+  )
+  return (
+    <div className="relative mt-auto border-t border-line bg-paper px-2 pb-1.5 pt-2">
+      <div className="flex items-end">
+        <Item k="market" label="Market" icon={<GridIcon />} />
+        <Item k="impatto" label="Impatto" icon={<LeafNavIcon />} />
+        <div className="w-7 shrink-0" />
+        <Item k="chat" label="Chat" icon={<ChatBubbleIcon />} />
+        <Item k="profilo" label="Profilo" icon={<PersonIcon />} />
+      </div>
+      <span className="absolute left-1/2 top-0 flex h-7 w-7 -translate-x-1/2 -translate-y-1/3 items-center justify-center rounded-full bg-eco text-white shadow-md">
+        <PlusIcon />
+      </span>
+    </div>
+  )
+}
+
+/** Badge di stato (Disponibile · Prenotato · Scambiato) sovrapposto alla foto. */
+function StatoBadge({ stato, big = false }: { stato: string; big?: boolean }) {
+  const tone =
+    stato === 'Scambiato'
+      ? 'bg-ink'
+      : stato === 'Prenotato'
+        ? 'bg-sun'
+        : 'bg-eco'
+  return (
+    <span
+      className={`absolute font-bold uppercase leading-none text-white ${tone} ${
+        big ? 'left-2 top-2 px-1.5 py-0.5 text-[6px]' : 'left-1 top-1 px-1 py-px text-[5px]'
+      }`}
+    >
+      {stato}
+    </span>
+  )
+}
+
+/** Dati fittizi del feed: nomi generici, nessuna foto reale (placeholder a
+ *  righe), stati e metriche ESG nel formato «≥» dell'app. */
+const FEED_ITEMS = [
+  { titolo: 'Zaino sportivo', meta: 'Zaino · Unica · Buono', co2: '9 KG', h2o: '300 L', stato: 'Disponibile' },
+  { titolo: 'Scarpe da calcio', meta: 'Scarpe · 41 · Ottimo', co2: '14 KG', h2o: '1,3K L', stato: 'Scambiato' },
+  { titolo: 'Giacca sportiva', meta: 'Giacca · M · Ottimo', co2: '1 KG', h2o: '19 L', stato: 'Disponibile' },
+  { titolo: 'Maglia allenamento', meta: 'Maglia · S · Perfetto', co2: '4 KG', h2o: '600 L', stato: 'Prenotato' },
+]
+
+function FeedMock() {
+  return (
+    <div className="flex h-full flex-col bg-paper text-ink">
+      <PhoneHeader />
       {/* search */}
       <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5">
         <MiniSearchIcon />
@@ -994,107 +1056,100 @@ function FeedMock({ dense = false }: { dense?: boolean }) {
         </span>
       </div>
       {/* tabs */}
-      <div className="flex gap-3 border-b border-line px-3 py-1.5 text-[7px] font-bold uppercase tracking-[0.08em]">
+      <div className="flex gap-2.5 border-b border-line px-3 py-1.5 text-[7px] font-bold uppercase tracking-[0.06em]">
         <span className="border-b-2 border-eco pb-0.5 text-ink">Tutti</span>
         <span className="text-ink-faint">Disponibili</span>
         <span className="text-ink-faint">Prenotati</span>
+        <span className="text-ink-faint">Scambiati</span>
       </div>
       {/* grid */}
-      <div className="grid flex-1 grid-cols-2 gap-px overflow-hidden bg-line">
-        {items.map((it, i) => (
+      <div className="grid flex-1 grid-cols-2 content-start gap-px overflow-hidden bg-line">
+        {FEED_ITEMS.map((it, i) => (
           <div key={i} className="flex flex-col gap-1 bg-paper p-2">
             <div className="foto-stripe relative aspect-[4/5] overflow-hidden rounded">
-              <span className="absolute left-1 top-1 bg-eco px-1 py-px text-[5px] font-bold uppercase leading-none text-white">
-                Disp.
-              </span>
-              {it.soc && (
-                <span className="absolute right-1 top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-paper text-eco shadow">
-                  <RenovaMark className="h-2.5 w-2.5" />
-                </span>
-              )}
+              <StatoBadge stato={it.stato} />
             </div>
             <div className="text-[8px] font-bold leading-tight text-ink">{it.titolo}</div>
             <div className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
               {it.meta}
             </div>
             <div className="flex flex-wrap gap-x-1.5 text-[6px] font-bold uppercase">
-              <span className="text-eco">CO₂ {it.co2}</span>
-              <span className="text-water-600">H₂O {it.h2o}</span>
+              <span className="text-eco">CO₂: ≥ {it.co2}</span>
+              <span className="text-water-600">H₂O: ≥ {it.h2o}</span>
             </div>
           </div>
         ))}
       </div>
+      <BottomNav active="market" />
     </div>
   )
 }
 
 function ArticleMock({ variant }: { variant: 'societario' | 'pubblico' }) {
   const soc = variant === 'societario'
+  const tags = soc
+    ? ['Giacca sportiva', 'Taglia M', 'Ottimo', 'Capo societario']
+    : ['Scarpe da calcio', 'Taglia 41', 'Ottimo', 'Feed pubblico']
   return (
     <div className="flex h-full flex-col bg-paper text-ink">
-      <div className="h-[18px]" />
-      {/* header */}
-      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+      <PhoneHeader />
+      {/* breadcrumb */}
+      <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5 text-[8px] font-bold">
         <BackIcon />
-        <span className="text-[9px] font-bold text-ink">
-          {soc ? 'Feed societario' : 'Feed pubblico'}
-        </span>
-        {soc ? (
-          <span className="ml-auto inline-flex items-center gap-1 rounded bg-eco-50 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-eco-700">
-            <RenovaMark className="h-2 w-2" />
-            Bologna FC
-          </span>
-        ) : (
-          <span className="ml-auto rounded bg-black/5 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-ink-muted">
-            Pubblico
-          </span>
-        )}
+        <span className="text-ink">Indietro</span>
+        <span className="text-eco-700">Marketplace</span>
       </div>
 
-      <div className="flex-1 overflow-hidden px-3 py-2.5">
+      <div className="flex flex-1 flex-col overflow-hidden">
         {/* foto */}
-        <div className="foto-stripe relative aspect-[4/3] w-full overflow-hidden rounded-lg">
-          <span className="absolute left-1.5 top-1.5 bg-eco px-1.5 py-0.5 text-[6px] font-bold uppercase leading-none text-white">
-            Disponibile
-          </span>
-          {soc && (
-            <span className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-paper text-eco shadow">
-              <RenovaMark className="h-4 w-4" />
-            </span>
-          )}
+        <div className="foto-stripe relative aspect-[5/4] w-full shrink-0 overflow-hidden">
+          <StatoBadge stato={soc ? 'Disponibile' : 'Scambiato'} big />
         </div>
 
-        <h3 className="mt-2.5 text-[12px] font-extrabold leading-tight text-ink">
-          {soc ? 'Divisa ufficiale Bologna FC' : 'Scarpe da calcio Nike'}
-        </h3>
-        <p className="mt-0.5 text-[7px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
-          {soc ? 'Maglia · Taglia M · Ottime' : 'Scarpe · Taglia 42 · Buone'}
-        </p>
+        <div className="px-3 py-2">
+          <h3 className="text-[12px] font-extrabold leading-tight text-ink">
+            {soc ? 'Giacca da rappresentanza' : 'Scarpe da calcio'}
+          </h3>
+          {/* chips */}
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="rounded border border-edge px-1 py-0.5 text-[5px] font-bold uppercase tracking-[0.04em] text-ink-muted"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
 
-        {/* prezzo / risparmio */}
-        <div className="mt-2 flex items-baseline gap-1.5">
-          <span className="text-[14px] font-extrabold text-sun-600">{soc ? '28 €' : '35 €'}</span>
-          <span className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
-            risparmio stimato
-          </span>
-        </div>
+          {/* CTA */}
+          <div
+            className={`mt-2 flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-[7px] font-bold uppercase tracking-[0.06em] text-white ${
+              soc ? 'bg-eco' : 'bg-eco-300'
+            }`}
+          >
+            <ChatBubbleIcon className="h-2.5 w-2.5" />
+            {soc ? 'Chiedi informazioni' : 'Articolo già scambiato'}
+          </div>
 
-        {/* ESG */}
-        <div className="mt-2 flex gap-2 text-[7px] font-bold uppercase tracking-[0.04em]">
-          <span className="text-eco">CO₂: {soc ? '9 kg' : '6 kg'}</span>
-          <span className="text-water-600">H₂O: {soc ? '3.1k L' : '2.8k L'}</span>
-        </div>
-
-        {/* composizione */}
-        <p className="mt-2 text-[6.5px] leading-snug text-ink-soft">
-          {soc ? '100% poliestere riciclato' : 'Tomaia sintetica · suola in gomma'}
-        </p>
-
-        {/* CTA */}
-        <div className="mt-2.5 rounded-md bg-eco px-2 py-1.5 text-center text-[7px] font-bold uppercase tracking-[0.08em] text-white">
-          Contatta venditore
+          {/* card impatto */}
+          <div className="mt-2 rounded-lg border border-eco-100 bg-eco-50/50 px-2 py-1.5">
+            <div className="text-[6px] font-bold uppercase tracking-[0.06em] text-ink">
+              Impatto del riuso rispetto al nuovo
+            </div>
+            <div className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[6px] font-bold uppercase">
+              <span className="text-eco">CO₂: ≥ {soc ? '0,9 KG' : '14 KG'}</span>
+              <span className="text-water-600">H₂O: ≥ {soc ? '18,6 L' : '1,3K L'}</span>
+              <span className="text-sun-600">Valore: {soc ? '45,00 €' : '215,00 €'}</span>
+            </div>
+            <p className="mt-1 text-[5px] leading-snug text-ink-soft">
+              <span className="font-bold">≥</span> significa «almeno»: è una stima prudenziale, il
+              risparmio reale è almeno questo.
+            </p>
+          </div>
         </div>
       </div>
+      <BottomNav active="market" />
     </div>
   )
 }
@@ -1102,50 +1157,86 @@ function ArticleMock({ variant }: { variant: 'societario' | 'pubblico' }) {
 function ChatMock() {
   return (
     <div className="flex h-full flex-col bg-paper text-ink">
-      <div className="h-[18px]" />
-      {/* header */}
-      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+      <PhoneHeader />
+      {/* riga "Chat" */}
+      <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5 text-[8px] font-bold text-ink">
         <BackIcon />
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-eco-50 text-[8px] font-bold text-eco-700">
-          GM
-        </span>
+        Chat
+      </div>
+      {/* contesto articolo + interlocutore */}
+      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+        <div className="foto-stripe h-7 w-7 shrink-0 overflow-hidden rounded" />
         <div className="leading-tight">
-          <div className="text-[9px] font-bold text-ink">Giulia M.</div>
-          <div className="text-[6px] text-ink-muted">Divisa Bologna FC</div>
+          <div className="text-[9px] font-bold text-ink">Maglia da allenamento</div>
+          <div className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+            Con Marco B.
+          </div>
         </div>
+        <span className="ml-auto rounded border border-edge px-1.5 py-0.5 text-[5px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+          Articolo
+        </span>
       </div>
 
       {/* messaggi */}
       <div className="flex flex-1 flex-col gap-2 overflow-hidden px-3 py-3">
-        <Bubble side="left">Ciao! La divisa è ancora disponibile?</Bubble>
-        <Bubble side="right">Sì! Taglia M, ottime condizioni 👍</Bubble>
-        <Bubble side="left">Perfetto. Ci vediamo agli allenamenti di giovedì?</Bubble>
-        <Bubble side="right">Va benissimo, te la porto in campo.</Bubble>
+        <DateDivider>22 Giugno 2026</DateDivider>
+        <Bubble side="right" time="19:59">
+          Ciao, è ancora disponibile la maglia?
+        </Bubble>
+        <DateDivider>23 Giugno 2026</DateDivider>
+        <Bubble side="left" time="11:10">
+          Sì, te la sto tenendo da parte. La porto mercoledì all'allenamento?
+        </Bubble>
       </div>
 
       {/* input */}
       <div className="flex items-center gap-2 border-t border-line px-3 py-2">
+        <ImageIcon />
         <div className="flex-1 rounded-full border border-edge px-2.5 py-1 text-[7px] text-ink-faint">
           Scrivi un messaggio…
         </div>
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-eco text-white">
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-eco-300 text-white">
           <SendIcon />
         </span>
       </div>
+      <BottomNav active="chat" />
     </div>
   )
 }
 
-function Bubble({ side, children }: { side: 'left' | 'right'; children: React.ReactNode }) {
+function DateDivider({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-center text-[5px] font-bold uppercase tracking-[0.08em] text-ink-faint">
+      {children}
+    </div>
+  )
+}
+
+function Bubble({
+  side,
+  time,
+  children,
+}: {
+  side: 'left' | 'right'
+  time?: string
+  children: React.ReactNode
+}) {
   const right = side === 'right'
   return (
     <div className={`flex ${right ? 'justify-end' : 'justify-start'}`}>
       <span
-        className={`max-w-[78%] rounded-2xl px-2.5 py-1.5 text-[8px] leading-snug ${
-          right ? 'rounded-br-sm bg-eco text-white' : 'rounded-bl-sm bg-black/5 text-ink'
+        className={`max-w-[82%] rounded-2xl px-2.5 py-1.5 text-[8px] leading-snug ${
+          right ? 'rounded-br-sm bg-eco text-white' : 'rounded-bl-sm border border-line bg-paper text-ink'
         }`}
       >
         {children}
+        {time && (
+          <span
+            className={`mt-0.5 block text-right text-[6px] ${right ? 'text-white/70' : 'text-ink-faint'}`}
+          >
+            {time}
+          </span>
+        )}
       </span>
     </div>
   )
@@ -1157,13 +1248,13 @@ function Bubble({ side, children }: { side: 'left' | 'right'; children: React.Re
 function ImpattoMock() {
   return (
     <div className="flex h-full flex-col bg-paper text-ink">
-      <div className="h-[18px]" />
+      <PhoneHeader />
       {/* intestazione editoriale */}
-      <div className="border-b-[1.5px] border-ink px-3 pb-2 pt-1">
+      <div className="border-b-[1.5px] border-ink px-3 pb-2 pt-1.5">
         <div className="text-[6px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
           Il risparmio generato dal riuso
         </div>
-        <div className="text-[28px] font-extrabold leading-[0.9] tracking-[-0.03em] text-ink">
+        <div className="text-[26px] font-extrabold leading-[0.9] tracking-[-0.03em] text-ink">
           Impatto
         </div>
       </div>
@@ -1190,7 +1281,7 @@ function ImpattoMock() {
           unit="L"
           eq="1.225 docce · 754 caffè (acqua nascosta)"
         />
-        <ImpattoMetrica dot="bg-sun" label="Valore risparmiato" num="1.240" unit="€" />
+        <ImpattoMetrica dot="bg-sun" label="Valore risparmiato" num="4.300" unit="€" />
         <p className="border-t border-line px-3 py-1.5 text-[5px] leading-relaxed tracking-[0.03em] text-ink-faint">
           Equivalenze indicative · 47 scambi conclusi · metodo nel profilo
         </p>
@@ -1199,6 +1290,7 @@ function ImpattoMock() {
           <ChevronDownIcon />
         </div>
       </div>
+      <BottomNav active="impatto" />
     </div>
   )
 }
@@ -1335,6 +1427,65 @@ function ChevronDownIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-ink-soft" fill="none" aria-hidden="true">
       <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/* ── Icone della navigazione inferiore dei mockup ── */
+
+function GridIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  )
+}
+
+function LeafNavIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <path
+        d="M20 4C9 4 4 9 4 18c0 0 0 2 0 2M5 17C5 9 12 6 20 4c0 8-3 15-11 15-2 0-4-2-4-2Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function ChatBubbleIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <path
+        d="M4 5h16v11H9l-4 4V5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function PersonIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <circle cx="12" cy="8" r="3.4" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ImageIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-ink-faint" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="8.5" cy="9" r="1.6" fill="currentColor" />
+      <path d="m4 18 5-5 4 4 3-3 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
     </svg>
   )
 }
