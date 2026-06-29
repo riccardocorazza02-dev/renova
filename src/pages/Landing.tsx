@@ -221,25 +221,21 @@ function Hero() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
             <Leva
               icon={<BoltIcon />}
-              n="1"
               title="Zero sforzo organizzativo per il club"
               body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiare tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria."
             />
             <Leva
               icon={<PeopleIcon />}
-              n="2"
               title="Retention e recruiting dei tesserati"
               body="Gli scambi avvengono di persona, tra famiglie dello stesso club: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta."
             />
             <Leva
               icon={<HeartChatIcon />}
-              n="3"
               title="Un servizio che le famiglie chiedono davvero"
               body="Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo."
             />
             <Leva
               icon={<TagIcon />}
-              n="4"
               title="Costo dello sport più basso per le famiglie"
               body="Scarpe, divise, attrezzatura: il materiale tecnico è una spesa ricorrente. Con Renova quella spesa si abbassa, perché il materiale ancora buono torna a circolare invece di essere ricomprato da zero. Il risparmio va direttamente alle famiglie."
             />
@@ -285,12 +281,10 @@ function Hero() {
 
 function Leva({
   icon,
-  n,
   title,
   body,
 }: {
   icon: React.ReactNode
-  n: string
   title: string
   body: string
 }) {
@@ -300,12 +294,9 @@ function Leva({
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-eco-50 text-eco">
           {icon}
         </span>
-        <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
-          Leva {n}
-        </span>
+        <h3 className="text-[17px] leading-snug lg:text-[18px]">{title}</h3>
       </div>
-      <h3 className="mt-3 text-[17px] leading-snug lg:text-[18px]">{title}</h3>
-      <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{body}</p>
+      <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{body}</p>
     </div>
   )
 }
@@ -389,7 +380,7 @@ function ComeFunziona() {
             body="Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare, in ogni momento ed esportabili."
             mock={
               <PhoneFrame>
-                <DashboardMock />
+                <ImpattoMock />
               </PhoneFrame>
             }
           />
@@ -416,12 +407,11 @@ function StepRow({
   return (
     <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
       <div className={reverse ? 'lg:order-2' : ''}>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <StepNumber n={n} />
-          <span className="eyebrow">Step {n}</span>
+          <h3 className="text-[22px] leading-tight sm:text-[26px]">{title}</h3>
         </div>
-        <h3 className="mt-4 text-[22px] leading-tight sm:text-[26px]">{title}</h3>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+        <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
           {body}
         </p>
       </div>
@@ -436,14 +426,13 @@ function Step2() {
     <div>
       <div className="lg:grid lg:grid-cols-2 lg:gap-14">
         <div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <StepNumber n="2" />
-            <span className="eyebrow">Step 2</span>
+            <h3 className="text-[22px] leading-tight sm:text-[26px]">
+              I tesserati entrano nel marketplace
+            </h3>
           </div>
-          <h3 className="mt-4 text-[22px] leading-tight sm:text-[26px]">
-            I tesserati entrano nel marketplace
-          </h3>
-          <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
             Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il
             materiale che non usano più. Lo stesso feed si divide automaticamente in due viste,
             in base alla presenza del logo della società.
@@ -1162,74 +1151,84 @@ function Bubble({ side, children }: { side: 'left' | 'right'; children: React.Re
   )
 }
 
-function DashboardMock() {
+/** Ricostruzione fedele della pagina "Impatto" reale dell'app (vista "La
+ *  società"): occhiello + titolone "Impatto", tab, blocchi metrica con pallino
+ *  colorato, numero grande + unità e le equivalenze, riga di nota, scheda Fonti. */
+function ImpattoMock() {
   return (
     <div className="flex h-full flex-col bg-paper text-ink">
       <div className="h-[18px]" />
-      <div className="flex items-center justify-between border-b-[1.5px] border-ink px-3 py-2">
-        <span className="text-[11px] font-extrabold tracking-[-0.02em] text-ink">Impatto</span>
-        <span className="text-[6px] font-bold uppercase tracking-[0.08em] text-eco-700">
-          Esporta
-        </span>
+      {/* intestazione editoriale */}
+      <div className="border-b-[1.5px] border-ink px-3 pb-2 pt-1">
+        <div className="text-[6px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
+          Il risparmio generato dal riuso
+        </div>
+        <div className="text-[28px] font-extrabold leading-[0.9] tracking-[-0.03em] text-ink">
+          Impatto
+        </div>
       </div>
 
-      <div className="flex-1 overflow-hidden px-3 py-3">
-        <p className="text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
-          Risparmio del club · stagione
-        </p>
+      {/* tab: La società ↔ Il mio contributo */}
+      <div className="flex gap-4 border-b border-line px-3 py-1.5 text-[7px] uppercase tracking-[0.06em]">
+        <span className="border-b-2 border-eco pb-0.5 font-bold text-ink">La società</span>
+        <span className="font-semibold text-ink-faint">Il mio contributo</span>
+      </div>
 
-        {/* metriche */}
-        <div className="mt-2 grid grid-cols-3 gap-1.5">
-          <MetricTile valore="1.240 €" label="alle famiglie" tone="sun" />
-          <MetricTile valore="312 kg" label="CO₂" tone="eco" />
-          <MetricTile valore="98k L" label="acqua" tone="water" />
-        </div>
-
-        {/* mini grafico a barre */}
-        <p className="mt-3 text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
-          Scambi per mese
+      {/* blocchi metrica */}
+      <div className="flex-1 overflow-hidden">
+        <ImpattoMetrica
+          dot="bg-eco"
+          label="CO₂ risparmiata"
+          num="312"
+          unit="kg"
+          eq="2.496 km in auto evitati · 104.000 ricariche smartphone"
+        />
+        <ImpattoMetrica
+          dot="bg-water"
+          label="Acqua risparmiata"
+          num="98.000"
+          unit="L"
+          eq="1.225 docce · 754 caffè (acqua nascosta)"
+        />
+        <ImpattoMetrica dot="bg-sun" label="Valore risparmiato" num="1.240" unit="€" />
+        <p className="border-t border-line px-3 py-1.5 text-[5px] leading-relaxed tracking-[0.03em] text-ink-faint">
+          Equivalenze indicative · 47 scambi conclusi · metodo nel profilo
         </p>
-        <div className="mt-1.5 flex h-14 items-end gap-1.5">
-          {[40, 55, 35, 70, 60, 90].map((h, i) => (
-            <div key={i} className="flex-1 rounded-t bg-eco" style={{ height: `${h}%` }} />
-          ))}
-        </div>
-
-        {/* lista */}
-        <p className="mt-3 text-[6.5px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
-          Materiale rimesso in circolo
-        </p>
-        <div className="mt-1.5 space-y-1">
-          {['47 articoli scambiati', '128 articoli pubblicati', '63 famiglie attive'].map(
-            (t, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-[7.5px] text-ink-soft">
-                <span className="h-1 w-1 rounded-full bg-eco" />
-                {t}
-              </div>
-            ),
-          )}
+        <div className="flex items-center justify-between border-y border-line px-3 py-2 text-[6px] font-bold uppercase tracking-[0.08em] text-ink">
+          <span>Fonti delle equivalenze</span>
+          <ChevronDownIcon />
         </div>
       </div>
     </div>
   )
 }
 
-function MetricTile({
-  valore,
+function ImpattoMetrica({
+  dot,
   label,
-  tone,
+  num,
+  unit,
+  eq,
 }: {
-  valore: string
+  dot: string
   label: string
-  tone: 'eco' | 'water' | 'sun'
+  num: string
+  unit: string
+  eq?: string
 }) {
-  const color = tone === 'water' ? 'text-water-600' : tone === 'sun' ? 'text-sun-600' : 'text-eco'
   return (
-    <div className="rounded-md border border-edge bg-paper px-1.5 py-1.5 text-center">
-      <div className={`text-[10px] font-extrabold leading-none ${color}`}>{valore}</div>
-      <div className="mt-1 text-[5.5px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+    <div className="border-t border-line px-3 py-2">
+      <div className="flex items-center gap-1.5 text-[6px] font-semibold uppercase tracking-[0.1em] text-ink-muted">
+        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
         {label}
       </div>
+      <div className="mt-0.5 flex items-baseline gap-1">
+        <span className="text-[30px] font-extrabold leading-[0.85] tracking-[-0.03em] text-ink">
+          {num}
+        </span>
+        <span className="text-[13px] font-bold text-ink">{unit}</span>
+      </div>
+      {eq && <p className="mt-1 text-[6px] leading-snug text-ink-soft">{eq}</p>}
     </div>
   )
 }
@@ -1328,6 +1327,14 @@ function SendIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" aria-hidden="true">
       <path d="M4 12 20 4l-6 16-3-7-7-1Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-ink-soft" fill="none" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
