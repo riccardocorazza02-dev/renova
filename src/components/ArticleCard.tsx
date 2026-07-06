@@ -56,7 +56,7 @@ export function ArticleCard({ articolo }: { articolo: ArticoloFeed }) {
 
         {/* Indicatori ESG: verde CO₂ + azzurro Acqua. Stima da sola categoria
             (fonte_impatto = 'categoria') → prudenziale "≥". */}
-        {haEsg && (
+        {haEsg ? (
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <EsgBadge
               variante="co2"
@@ -71,6 +71,10 @@ export function ArticleCard({ articolo }: { articolo: ArticoloFeed }) {
               minimo={articolo.fonte_impatto === 'categoria'}
             />
           </div>
+        ) : (
+          <span className="text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
+            Impatto non calcolato
+          </span>
         )}
       </div>
     </Link>

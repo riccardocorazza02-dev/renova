@@ -178,6 +178,9 @@ export function ArticleDetail() {
           }
   // Mostriamo «≥» solo quando il numero è davvero il pavimento prudenziale (L0).
   const impattoMinimo = livello.tag === 'L0'
+  // Voci non tessili a materiale ignoto (es. «Accessorio»): impatto non calcolato.
+  const impattoCalcolato =
+    Number(articolo.co2) > 0 || Number(articolo.acqua) > 0
 
   return (
     <div className="space-y-4">
@@ -300,12 +303,27 @@ export function ArticleDetail() {
           Impatto del riuso rispetto al nuovo
         </h2>
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1.5">
-          <EsgBadge variante="co2" valore={Number(articolo.co2)} minimo={impattoMinimo} />
-          <EsgBadge variante="acqua" valore={Number(articolo.acqua)} minimo={impattoMinimo} />
+          {impattoCalcolato ? (
+            <>
+              <EsgBadge variante="co2" valore={Number(articolo.co2)} minimo={impattoMinimo} />
+              <EsgBadge variante="acqua" valore={Number(articolo.acqua)} minimo={impattoMinimo} />
+            </>
+          ) : (
+            <span className="text-[11px] font-bold uppercase tracking-[0.04em] text-ink-muted">
+              Impatto ambientale non calcolato
+            </span>
+          )}
           <EsgBadge variante="economia" valore={Number(articolo.prezzo)} />
         </div>
 
-        {impattoMinimo && (
+        {!impattoCalcolato && (
+          <p className="text-[11px] leading-relaxed text-ink-soft">
+            Per questo accessorio non conosciamo il materiale, quindi non stimiamo
+            carbon e water footprint (per non attribuire un beneficio non documentato).
+          </p>
+        )}
+
+        {impattoMinimo && impattoCalcolato && (
           <p className="text-[11px] leading-relaxed text-ink-soft">
             <span className="font-semibold text-ink">≥</span> significa{' '}
             <span className="font-semibold text-ink">«almeno»</span>: è una stima

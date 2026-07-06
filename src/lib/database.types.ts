@@ -21,26 +21,12 @@ export type TipoTaglia = 'calzatura' | 'abbigliamento' | 'unica'
 
 /** Macro-gruppo di una categoria, usato per raggruppare il picker in upload. */
 export type MacroCategoria =
-  | 'Maglie e t-shirt'
-  | 'Polo'
-  | 'Felpe'
-  | 'Pantaloni e pantaloncini'
-  | 'Giacche e tute'
-  | 'Calze'
-  | 'Calzature'
-  | 'Protezioni'
+  | 'Abbigliamento'
   | 'Accessori'
 
 /** Ordine di visualizzazione delle macro-categorie nel menù di upload. */
 export const MACRO_CATEGORIE_ORDINE: MacroCategoria[] = [
-  'Maglie e t-shirt',
-  'Polo',
-  'Felpe',
-  'Pantaloni e pantaloncini',
-  'Giacche e tute',
-  'Calze',
-  'Calzature',
-  'Protezioni',
+  'Abbigliamento',
   'Accessori',
 ]
 
@@ -87,7 +73,6 @@ export interface Societa {
   id: number
   nome: string
   provincia: string
-  codice_invito: string | null
   created_at: string
 }
 
@@ -120,14 +105,9 @@ export interface CategoriaItem {
   tipo_taglia: TipoTaglia
   /** valore economico unico di riferimento; NULL per gli item a prezzo manuale */
   valore: number | null
-  co2_min: number
+  /** baseline d'impatto della categoria (profilo L0 × peso, o valore fisso) */
   co2_tipico: number
-  co2_max: number
-  acqua_min: number
   acqua_tipico: number
-  acqua_max: number
-  valore_min: number
-  valore_max: number
   fonte: string
   /** peso tipico del capo (kg); null = categoria non tessile a valore fisso */
   peso_kg: number | null
