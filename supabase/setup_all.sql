@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · setup_all.sql — Schema COMPLETO (migrazioni 0001 → 0018)
+-- Loop · setup_all.sql — Schema COMPLETO (migrazioni 0001 → 0018)
 -- ════════════════════════════════════════════════════════════════
 -- File generato concatenando, in ordine, tutte le migrazioni di
 -- `supabase/migrations/`. Eseguilo UNA volta nel SQL Editor di un
@@ -19,7 +19,7 @@
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0001 — Schema iniziale
+-- Loop · Migrazione 0001 — Schema iniziale
 -- ════════════════════════════════════════════════════════════════
 -- Marketplace B2B2C per lo scambio di materiale tecnico sportivo di
 -- seconda mano tra utenti della stessa società, con metriche ESG.
@@ -156,7 +156,7 @@ create trigger on_auth_user_created
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0002 — Row Level Security
+-- Loop · Migrazione 0002 — Row Level Security
 -- ════════════════════════════════════════════════════════════════
 -- La REGOLA DI BUSINESS centrale ("un utente vede solo gli articoli
 -- della propria società") è applicata qui a livello di database, così
@@ -287,7 +287,7 @@ create policy "articoli: delete proprio"
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0003 — Dati di esempio (seed) [STORICO]
+-- Loop · Migrazione 0003 — Dati di esempio (seed) [STORICO]
 -- ════════════════════════════════════════════════════════════════
 -- ⚠️ STORICO: questo seed appartiene al modello pre-sport. Le tabelle
 -- `metriche_esg` e `catalogo_societa` vengono rimosse dalla 0004, e le
@@ -314,7 +314,7 @@ on conflict (nome_categoria) do nothing;
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0004 — Sport, feed pubblico/societario, impatto
+-- Loop · Migrazione 0004 — Sport, feed pubblico/societario, impatto
 -- ════════════════════════════════════════════════════════════════
 -- Introduce:
 --   • la dimensione SPORT (Calcio/Pallavolo/Basket);
@@ -358,7 +358,7 @@ create table if not exists public.categorie_item (
   acqua_max       numeric(10,2) not null default 0,
   valore_min      numeric(10,2) not null default 0,
   valore_max      numeric(10,2) not null default 0,
-  fonte           text not null default 'Stima Renova (cradle-to-gate). Fonti: MIT (2013) per le calzature; WWF/Water Footprint Network per il cotone; fattori LCA poliestere/nylon. Vedi documento metodologico.',
+  fonte           text not null default 'Stima Loop (cradle-to-gate). Fonti: MIT (2013) per le calzature; WWF/Water Footprint Network per il cotone; fattori LCA poliestere/nylon. Vedi documento metodologico.',
   unique (sport, nome)
 );
 
@@ -498,7 +498,7 @@ create index if not exists idx_codici_societa     on public.codici_accesso (id_s
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0005 — Row Level Security per i due feed
+-- Loop · Migrazione 0005 — Row Level Security per i due feed
 -- ════════════════════════════════════════════════════════════════
 -- REGOLE DI BUSINESS (applicate nel DB, non solo lato client):
 --
@@ -585,7 +585,7 @@ create policy "articoli: delete proprio"
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0006 — Seed: categorie di riferimento + società BO
+-- Loop · Migrazione 0006 — Seed: categorie di riferimento + società BO
 -- ════════════════════════════════════════════════════════════════
 -- Le categorie ricalcano le tre liste del documento metodologico.
 -- co2_tipico / acqua_tipico = punto medio dell'intervallo min–max.
@@ -699,7 +699,7 @@ on conflict (codice) do nothing;
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0007 — Hardening delle funzioni SECURITY DEFINER
+-- Loop · Migrazione 0007 — Hardening delle funzioni SECURITY DEFINER
 -- ════════════════════════════════════════════════════════════════
 -- Le funzioni-trigger non devono essere invocabili via API REST (/rpc).
 -- Vengono eseguite dai trigger a prescindere dai privilegi del chiamante,
@@ -721,7 +721,7 @@ revoke execute on function public.set_articolo_context()  from public, anon, aut
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0008 — Prezzo manuale e tipo di taglia per categoria
+-- Loop · Migrazione 0008 — Prezzo manuale e tipo di taglia per categoria
 -- ════════════════════════════════════════════════════════════════
 -- `richiede_prezzo`: se true, in fase di upload l'utente DEVE indicare il
 --   valore d'acquisto (scarpe, guanti, parastinchi). Per le altre categorie
@@ -761,7 +761,7 @@ update public.categorie_item set richiede_prezzo = true
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0009 — Foto multiple + default logo accessori
+-- Loop · Migrazione 0009 — Foto multiple + default logo accessori
 -- ════════════════════════════════════════════════════════════════
 -- 1) Un articolo può avere fino a 3 foto. `foto_url` resta la copertina
 --    (prima foto) per le card; `foto_urls` contiene tutte le foto.
@@ -781,7 +781,7 @@ update public.categorie_item set default_ha_logo = true
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0010 — Valore unico, split canotta basket, condizione
+-- Loop · Migrazione 0010 — Valore unico, split canotta basket, condizione
 -- ════════════════════════════════════════════════════════════════
 -- 1) `categorie_item.valore`: valore economico UNICO (sostituisce min–max
 --    nell'uso applicativo). NULL per gli item a prezzo manuale (l'utente
@@ -862,7 +862,7 @@ alter table public.articoli add column if not exists condizione text
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0011 — Storage bucket per le foto degli articoli
+-- Loop · Migrazione 0011 — Storage bucket per le foto degli articoli
 -- ════════════════════════════════════════════════════════════════
 -- Senza il bucket l'upload in Upload.tsx fallisce in silenzio e l'app
 -- ripiega sul placeholder: nel feed non si vede mai la foto caricata.
@@ -919,7 +919,7 @@ create policy "articoli storage: delete proprio"
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0012 — Chat tra utenti + scambio degli articoli
+-- Loop · Migrazione 0012 — Chat tra utenti + scambio degli articoli
 -- ════════════════════════════════════════════════════════════════
 -- Introduce la messaggistica che organizza lo scambio:
 --
@@ -1153,7 +1153,7 @@ exception when duplicate_object then null; when undefined_object then null; end 
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0013 — Foto nei messaggi + auto-pulizia delle chat
+-- Loop · Migrazione 0013 — Foto nei messaggi + auto-pulizia delle chat
 -- ════════════════════════════════════════════════════════════════
 -- 1) I messaggi possono contenere una FOTO (oltre/anziché il testo). Le foto
 --    sono caricate nel bucket `articoli` sotto `<auth.uid()>/chat/<conv>/…`,
@@ -1269,7 +1269,7 @@ select cron.schedule(
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0014 — Tracciamento scambi, impatto personale,
+-- Loop · Migrazione 0014 — Tracciamento scambi, impatto personale,
 --                          recensioni a stelle
 -- ════════════════════════════════════════════════════════════════
 -- Finora "Scambiato" era solo uno stato dell'articolo: non restava traccia
@@ -1347,7 +1347,7 @@ create index if not exists idx_recensioni_destinatario on public.recensioni (id_
 --    Ridefiniamo set_scambiato_at (cfr. 0013) aggiungendo due guardie:
 --      a) "Scambiato" è IRREVERSIBILE (non si torna a Disponibile/Prenotato);
 --      b) si entra in "Scambiato" SOLO tramite registra_scambio(), che
---         imposta il flag transazionale `renova.scambio_ok`.
+--         imposta il flag transazionale `loop.scambio_ok`.
 -- ─────────────────────────────────────────────
 create or replace function public.set_scambiato_at()
 returns trigger
@@ -1362,7 +1362,7 @@ begin
 
   -- (b) la transizione a "Scambiato" è ammessa solo dalla RPC registra_scambio.
   if new.stato = 'Scambiato' and old.stato is distinct from 'Scambiato' then
-    if current_setting('renova.scambio_ok', true) is distinct from '1' then
+    if current_setting('loop.scambio_ok', true) is distinct from '1' then
       raise exception 'Per concludere uno scambio usa la conferma di scambio'
         using errcode = '42501';
     end if;
@@ -1443,9 +1443,9 @@ begin
   select nome_completo into v_acq_nome   from public.utenti where id = p_id_acquirente;
 
   -- autorizza la transizione di stato per il solo update qui sotto
-  perform set_config('renova.scambio_ok', '1', true);
+  perform set_config('loop.scambio_ok', '1', true);
   update public.articoli set stato = 'Scambiato' where id = p_id_articolo;
-  perform set_config('renova.scambio_ok', '0', true);
+  perform set_config('loop.scambio_ok', '0', true);
 
   insert into public.scambi
     (id_articolo, id_venditore, id_acquirente, nome_venditore, nome_acquirente,
@@ -1561,7 +1561,7 @@ revoke execute on function public.impatto_societa()                   from publi
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0015 — Stima d'impatto a livelli (fibre + blend)
+-- Loop · Migrazione 0015 — Stima d'impatto a livelli (fibre + blend)
 -- ════════════════════════════════════════════════════════════════
 -- Sostituisce la stima "valore fisso di categoria" con il modello a livelli:
 --   • L0  — priore di categoria (profilo sintetico) = pavimento prudenziale;
@@ -1574,7 +1574,7 @@ revoke execute on function public.impatto_societa()                   from publi
 -- valore fisso di categoria già presente.
 --
 -- Regola fibre senza dato: l'elastan e il poliuretano hanno la CO₂ (inclusa)
--- ma non l'acqua → il loro contributo idrico è zero (vedi renova_impatto_blend).
+-- ma non l'acqua → il loro contributo idrico è zero (vedi loop_impatto_blend).
 -- ════════════════════════════════════════════════════════════════
 
 -- ─────────────────────────────────────────────
@@ -1622,10 +1622,10 @@ comment on column public.categorie_item.materiali is
   'Opzioni del tap L0+1: [{chiave,label,hint,blend}]. [] = nessun tap.';
 
 -- ─────────────────────────────────────────────
--- 3. renova_impatto_blend — impatto di un blend per un dato peso (kg)
+-- 3. loop_impatto_blend — impatto di un blend per un dato peso (kg)
 --    Acqua: le fibre con dato mancante (acqua NULL) contribuiscono 0.
 -- ─────────────────────────────────────────────
-create or replace function public.renova_impatto_blend(p_blend jsonb, p_peso numeric)
+create or replace function public.loop_impatto_blend(p_blend jsonb, p_peso numeric)
 returns table (co2 numeric, acqua numeric)
 language sql stable set search_path = public
 as $$
@@ -1753,12 +1753,12 @@ where nome = 'Berretto / cuffia';
 --    co2/acqua_tipico = profilo L0; co2/acqua_max = peggiore opzione materiale.
 -- ─────────────────────────────────────────────
 update public.categorie_item c set
-  co2_tipico   = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_tipico = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_min      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_min    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_max      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_max    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg))
+  co2_tipico   = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_tipico = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_min      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_min    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_max      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_max    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg))
 where c.profilo_default is not null;
 
 update public.categorie_item c set
@@ -1766,8 +1766,8 @@ update public.categorie_item c set
   acqua_max = greatest(c.acqua_max, sub.acquamax)
 from (
   select c2.id,
-         max((select co2   from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
-         max((select acqua from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
+         max((select co2   from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
+         max((select acqua from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
   from public.categorie_item c2, jsonb_array_elements(c2.materiali) m
   where c2.profilo_default is not null
   group by c2.id
@@ -1815,7 +1815,7 @@ begin
   else
     v_blend := coalesce(new.composizione, v_cat.profilo_default);
     select co2, acqua into v_co2, v_acqua
-      from public.renova_impatto_blend(v_blend, v_cat.peso_kg);
+      from public.loop_impatto_blend(v_blend, v_cat.peso_kg);
     new.co2   := v_co2;
     new.acqua := v_acqua;
     if new.composizione is null then
@@ -1841,9 +1841,9 @@ update public.articoli a set
 from (
   select a2.id,
          case when c.profilo_default is null then coalesce(c.co2_tipico,0)
-              else (select co2 from public.renova_impatto_blend(c.profilo_default, c.peso_kg)) end   as co2,
+              else (select co2 from public.loop_impatto_blend(c.profilo_default, c.peso_kg)) end   as co2,
          case when c.profilo_default is null then coalesce(c.acqua_tipico,0)
-              else (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)) end as acqua
+              else (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)) end as acqua
   from public.articoli a2
   join public.categorie_item c on c.id = a2.id_categoria
 ) sub
@@ -1904,9 +1904,9 @@ begin
   select nome_completo into v_owner_nome from public.utenti where id = v_me;
   select nome_completo into v_acq_nome   from public.utenti where id = p_id_acquirente;
 
-  perform set_config('renova.scambio_ok', '1', true);
+  perform set_config('loop.scambio_ok', '1', true);
   update public.articoli set stato = 'Scambiato' where id = p_id_articolo;
-  perform set_config('renova.scambio_ok', '0', true);
+  perform set_config('loop.scambio_ok', '0', true);
 
   insert into public.scambi
     (id_articolo, id_venditore, id_acquirente, nome_venditore, nome_acquirente,
@@ -1932,7 +1932,7 @@ revoke execute on function public.registra_scambio(bigint, uuid)      from publi
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0016 — Macro-categorie + nuove categorie di capo
+-- Loop · Migrazione 0016 — Macro-categorie + nuove categorie di capo
 -- ════════════════════════════════════════════════════════════════
 -- Amplia il catalogo `categorie_item` con i tipi di capo dei cataloghi dei
 -- top-5 brand teamwear (Givova, Joma, Macron, Legea, Erreà) e raggruppa tutte
@@ -2193,12 +2193,12 @@ where nome in ('Pantaloncini da allenamento','Pantaloncini da gioco','Pantalonci
 --    (Stesso pattern di 0015; idempotente su righe vecchie e nuove.)
 -- ─────────────────────────────────────────────
 update public.categorie_item c set
-  co2_tipico   = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_tipico = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_min      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_min    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_max      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_max    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg))
+  co2_tipico   = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_tipico = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_min      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_min    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_max      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_max    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg))
 where c.profilo_default is not null;
 
 update public.categorie_item c set
@@ -2206,8 +2206,8 @@ update public.categorie_item c set
   acqua_max = greatest(c.acqua_max, sub.acquamax)
 from (
   select c2.id,
-         max((select co2   from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
-         max((select acqua from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
+         max((select co2   from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
+         max((select acqua from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
   from public.categorie_item c2, jsonb_array_elements(c2.materiali) m
   where c2.profilo_default is not null
   group by c2.id
@@ -2237,7 +2237,7 @@ update public.categorie_item set valore = case nome
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0017 — La chat NON si elimina dopo lo scambio
+-- Loop · Migrazione 0017 — La chat NON si elimina dopo lo scambio
 -- ════════════════════════════════════════════════════════════════
 -- Rimuoviamo il criterio di auto-pulizia "articolo scambiato da più di una
 -- settimana" introdotto in 0013: dopo uno scambio gli utenti devono poter
@@ -2275,7 +2275,7 @@ revoke execute on function public.pulisci_conversazioni() from public, anon, aut
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0018 — Semplificazione categorie (2 macro + 14 item)
+-- Loop · Migrazione 0018 — Semplificazione categorie (2 macro + 14 item)
 -- ════════════════════════════════════════════════════════════════
 -- Snellisce il catalogo `categorie_item`:
 --   • MACRO-CATEGORIE ridotte a DUE: «Abbigliamento» e «Accessori».
@@ -2577,12 +2577,12 @@ where nome not in ('Canotta','T-shirt','Polo','Felpa','Pantaloni','Pantaloncini'
 --    Scarpe/Accessorio restano ai valori fissi impostati al passo 3.
 -- ─────────────────────────────────────────────
 update public.categorie_item c set
-  co2_tipico   = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_tipico = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_min      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_min    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_max      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_max    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg))
+  co2_tipico   = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_tipico = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_min      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_min    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_max      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_max    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg))
 where c.profilo_default is not null;
 
 update public.categorie_item c set
@@ -2590,8 +2590,8 @@ update public.categorie_item c set
   acqua_max = greatest(c.acqua_max, sub.acquamax)
 from (
   select c2.id,
-         max((select co2   from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
-         max((select acqua from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
+         max((select co2   from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
+         max((select acqua from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
   from public.categorie_item c2, jsonb_array_elements(c2.materiali) m
   where c2.profilo_default is not null
   group by c2.id
@@ -2628,9 +2628,9 @@ update public.articoli a set
 from (
   select a2.id,
          case when c.profilo_default is null then coalesce(c.co2_tipico,0)
-              else (select co2 from public.renova_impatto_blend(coalesce(a2.composizione, c.profilo_default), c.peso_kg)) end   as co2,
+              else (select co2 from public.loop_impatto_blend(coalesce(a2.composizione, c.profilo_default), c.peso_kg)) end   as co2,
          case when c.profilo_default is null then coalesce(c.acqua_tipico,0)
-              else (select acqua from public.renova_impatto_blend(coalesce(a2.composizione, c.profilo_default), c.peso_kg)) end as acqua
+              else (select acqua from public.loop_impatto_blend(coalesce(a2.composizione, c.profilo_default), c.peso_kg)) end as acqua
   from public.articoli a2
   join public.categorie_item c on c.id = a2.id_categoria
 ) sub
@@ -2643,7 +2643,7 @@ where a.id = sub.id;
 -- ========================================================================
 
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0019 — Rimozione colonne superflue
+-- Loop · Migrazione 0019 — Rimozione colonne superflue
 -- ════════════════════════════════════════════════════════════════
 -- Colonne scritte dalle migrazioni storiche ma mai lette da nessuna parte
 -- (né dal client, né da funzioni/trigger/policy lato DB):

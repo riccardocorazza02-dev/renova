@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0008 — Prezzo manuale e tipo di taglia per categoria
+-- Loop · Migrazione 0008 — Prezzo manuale e tipo di taglia per categoria
 -- ════════════════════════════════════════════════════════════════
 -- `richiede_prezzo`: se true, in fase di upload l'utente DEVE indicare il
 --   valore d'acquisto (scarpe, guanti, parastinchi). Per le altre categorie

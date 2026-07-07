@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0004 — Sport, feed pubblico/societario, impatto
+-- Loop · Migrazione 0004 — Sport, feed pubblico/societario, impatto
 -- ════════════════════════════════════════════════════════════════
 -- Introduce:
 --   • la dimensione SPORT (Calcio/Pallavolo/Basket);
@@ -43,7 +43,7 @@ create table if not exists public.categorie_item (
   acqua_max       numeric(10,2) not null default 0,
   valore_min      numeric(10,2) not null default 0,
   valore_max      numeric(10,2) not null default 0,
-  fonte           text not null default 'Stima Renova (cradle-to-gate). Fonti: MIT (2013) per le calzature; WWF/Water Footprint Network per il cotone; fattori LCA poliestere/nylon. Vedi documento metodologico.',
+  fonte           text not null default 'Stima Loop (cradle-to-gate). Fonti: MIT (2013) per le calzature; WWF/Water Footprint Network per il cotone; fattori LCA poliestere/nylon. Vedi documento metodologico.',
   unique (sport, nome)
 );
 

@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0014 — Tracciamento scambi, impatto personale,
+-- Loop · Migrazione 0014 — Tracciamento scambi, impatto personale,
 --                          recensioni a stelle
 -- ════════════════════════════════════════════════════════════════
 -- Finora "Scambiato" era solo uno stato dell'articolo: non restava traccia
@@ -77,7 +77,7 @@ create index if not exists idx_recensioni_destinatario on public.recensioni (id_
 --    Ridefiniamo set_scambiato_at (cfr. 0013) aggiungendo due guardie:
 --      a) "Scambiato" è IRREVERSIBILE (non si torna a Disponibile/Prenotato);
 --      b) si entra in "Scambiato" SOLO tramite registra_scambio(), che
---         imposta il flag transazionale `renova.scambio_ok`.
+--         imposta il flag transazionale `loop.scambio_ok`.
 -- ─────────────────────────────────────────────
 create or replace function public.set_scambiato_at()
 returns trigger
@@ -92,7 +92,7 @@ begin
 
   -- (b) la transizione a "Scambiato" è ammessa solo dalla RPC registra_scambio.
   if new.stato = 'Scambiato' and old.stato is distinct from 'Scambiato' then
-    if current_setting('renova.scambio_ok', true) is distinct from '1' then
+    if current_setting('loop.scambio_ok', true) is distinct from '1' then
       raise exception 'Per concludere uno scambio usa la conferma di scambio'
         using errcode = '42501';
     end if;
@@ -173,9 +173,9 @@ begin
   select nome_completo into v_acq_nome   from public.utenti where id = p_id_acquirente;
 
   -- autorizza la transizione di stato per il solo update qui sotto
-  perform set_config('renova.scambio_ok', '1', true);
+  perform set_config('loop.scambio_ok', '1', true);
   update public.articoli set stato = 'Scambiato' where id = p_id_articolo;
-  perform set_config('renova.scambio_ok', '0', true);
+  perform set_config('loop.scambio_ok', '0', true);
 
   insert into public.scambi
     (id_articolo, id_venditore, id_acquirente, nome_venditore, nome_acquirente,

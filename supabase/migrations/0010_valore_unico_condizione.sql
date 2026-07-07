@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0010 — Valore unico, split canotta basket, condizione
+-- Loop · Migrazione 0010 — Valore unico, split canotta basket, condizione
 -- ════════════════════════════════════════════════════════════════
 -- 1) `categorie_item.valore`: valore economico UNICO (sostituisce min–max
 --    nell'uso applicativo). NULL per gli item a prezzo manuale (l'utente

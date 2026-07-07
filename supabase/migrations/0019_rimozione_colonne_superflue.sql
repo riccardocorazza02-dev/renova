@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0019 — Rimozione colonne superflue
+-- Loop · Migrazione 0019 — Rimozione colonne superflue
 -- ════════════════════════════════════════════════════════════════
 -- Colonne scritte dalle migrazioni storiche ma mai lette da nessuna parte
 -- (né dal client, né da funzioni/trigger/policy lato DB):

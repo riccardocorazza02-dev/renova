@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0007 — Hardening delle funzioni SECURITY DEFINER
+-- Loop · Migrazione 0007 — Hardening delle funzioni SECURITY DEFINER
 -- ════════════════════════════════════════════════════════════════
 -- Le funzioni-trigger non devono essere invocabili via API REST (/rpc).
 -- Vengono eseguite dai trigger a prescindere dai privilegi del chiamante,

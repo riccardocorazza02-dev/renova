@@ -88,7 +88,7 @@ export function Register() {
           required
           value={form.codiceSocieta}
           onChange={set('codiceSocieta')}
-          placeholder="es. DEMO-CAL"
+          placeholder="es. BFC-CAL"
           hint="Te lo fornisce la tua società. Determina la società e lo sport del tuo feed."
           style={{ textTransform: 'uppercase' }}
         />

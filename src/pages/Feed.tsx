@@ -468,7 +468,7 @@ function SkeletonGrid() {
   return (
     <div className="-mx-4 grid grid-cols-2 gap-px border-b border-line bg-line">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="renova-skeleton flex flex-col gap-2.5 bg-paper p-3.5">
+        <div key={i} className="loop-skeleton flex flex-col gap-2.5 bg-paper p-3.5">
           <div className="aspect-[4/5] rounded-lg bg-black/5" />
           <div className="h-3.5 w-3/4 rounded bg-black/5" />
           <div className="h-2.5 w-1/2 rounded bg-black/5" />

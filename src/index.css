@@ -98,10 +98,10 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
 }
 
-@keyframes renova-pulse {
+@keyframes loop-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
-.renova-skeleton {
-  animation: renova-pulse 1.4s ease-in-out infinite;
+.loop-skeleton {
+  animation: loop-pulse 1.4s ease-in-out infinite;
 }

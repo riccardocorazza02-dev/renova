@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0003 — Dati di esempio (seed) [STORICO]
+-- Loop · Migrazione 0003 — Dati di esempio (seed) [STORICO]
 -- ════════════════════════════════════════════════════════════════
 -- ⚠️ STORICO: questo seed appartiene al modello pre-sport. Le tabelle
 -- `metriche_esg` e `catalogo_societa` vengono rimosse dalla 0004, e le

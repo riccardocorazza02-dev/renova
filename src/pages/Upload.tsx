@@ -26,7 +26,7 @@ const CHIAVE_NON_SO = 'non_so'
 
 /**
  * Impatto di un blend per un dato peso (kg), coi fattori delle fibre.
- * Replica lato client `renova_impatto_blend` del DB (solo per l'anteprima).
+ * Replica lato client `loop_impatto_blend` del DB (solo per l'anteprima).
  * L'acqua delle fibre senza dato (acqua = null) non contribuisce.
  */
 function impattoBlend(

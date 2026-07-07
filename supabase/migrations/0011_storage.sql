@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0011 — Storage bucket per le foto degli articoli
+-- Loop · Migrazione 0011 — Storage bucket per le foto degli articoli
 -- ════════════════════════════════════════════════════════════════
 -- Senza il bucket l'upload in Upload.tsx fallisce in silenzio e l'app
 -- ripiega sul placeholder: nel feed non si vede mai la foto caricata.

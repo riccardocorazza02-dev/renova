@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0002 — Row Level Security
+-- Loop · Migrazione 0002 — Row Level Security
 -- ════════════════════════════════════════════════════════════════
 -- La REGOLA DI BUSINESS centrale ("un utente vede solo gli articoli
 -- della propria società") è applicata qui a livello di database, così

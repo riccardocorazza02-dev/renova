@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Renova · Migrazione 0005 — Row Level Security per i due feed
+-- Loop · Migrazione 0005 — Row Level Security per i due feed
 -- ════════════════════════════════════════════════════════════════
 -- REGOLE DI BUSINESS (applicate nel DB, non solo lato client):
 --
