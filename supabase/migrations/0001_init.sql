@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0001 — Schema iniziale
+-- Renova · Migrazione 0001 — Schema iniziale
 -- ════════════════════════════════════════════════════════════════
 -- Marketplace B2B2C per lo scambio di materiale tecnico sportivo di
 -- seconda mano tra utenti della stessa società, con metriche ESG.

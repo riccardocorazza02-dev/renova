@@ -1,4 +1,4 @@
-# Loop 🔄 — Sport Resale & ESG
+# Renova 🔄 — Sport Resale & ESG
 
 Marketplace **B2B2C** per società sportive: gli atleti scambiano materiale tecnico di
 seconda mano **all'interno della propria società**, e ogni scambio mostra il
@@ -69,7 +69,7 @@ codice determina società **e** sport del tuo feed):
 | Fortitudo Bologna  | BO        | `FORT-BSK`  | Basket    |
 | Bologna Volley     | BO        | `BVOL-VOL`  | Pallavolo |
 
-> Per l'MVP c'è una società per sport. Registrandoti con `BFC-CAL`, nel **feed
+> Per l'MVP c'è una società per sport. Registrandoti con `DEMO-CAL`, nel **feed
 > pubblico** vedi gli articoli senza logo del tuo sport (Calcio); nel **feed
 > societario** solo quelli con logo della tua società — le due regole di
 > business in azione.

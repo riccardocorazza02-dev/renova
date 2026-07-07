@@ -441,10 +441,13 @@ function Step2() {
         </div>
       </div>
 
-      {/* Diagramma: feed centrale → due frecce → articolo societario / pubblico */}
-      <div className="mt-10 flex flex-col items-center gap-8 lg:mt-12 lg:flex-row lg:items-center lg:justify-center lg:gap-4">
+      {/* Diagramma: feed centrale → due frecce → articolo societario / pubblico.
+          Su mobile è tutto in colonna e centrato entro una larghezza controllata,
+          così la "Y" e i due telefoni restano sempre allineati. Su desktop diventa
+          orizzontale (sorgente a sinistra, due feed impilati a destra). */}
+      <div className="mx-auto mt-10 flex max-w-[360px] flex-col items-center lg:mt-12 lg:max-w-none lg:flex-row lg:items-center lg:justify-center lg:gap-4">
         {/* Feed sorgente */}
-        <figure className="flex max-w-[220px] flex-col items-center text-center">
+        <figure className="flex w-full max-w-[220px] flex-col items-center text-center lg:w-auto">
           <PhoneFrame className="max-w-[200px]">
             <FeedMock />
           </PhoneFrame>
@@ -455,89 +458,100 @@ function Step2() {
           </figcaption>
         </figure>
 
-        {/* Connettore: orizzontale su desktop, verticale su mobile */}
-        <SplitConnector />
+        {/* Connettore orizzontale, solo desktop */}
+        <SplitConnectorDesktop />
 
-        {/* I due feed risultanti: affiancati sotto la Y su mobile, in colonna su desktop */}
-        <div className="flex w-full flex-row justify-center gap-3 sm:gap-8 lg:w-auto lg:flex-col">
-          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
-              <ArticleMock variant="societario" />
-            </PhoneFrame>
-            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
-              <span className="font-bold text-eco-700">Feed societario</span>
-              <br />
-              articoli col logo societario, visibili solo ai tesserati del club stesso.
-            </figcaption>
-          </figure>
+        {/* Blocco mobile: la "Y" e i due feed condividono la stessa griglia a 2
+            colonne, così ogni freccia cade esattamente sul telefono sottostante. */}
+        <div className="w-full lg:contents">
+          <SplitConnectorMobile />
 
-          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
-              <ArticleMock variant="pubblico" />
-            </PhoneFrame>
-            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
-              <span className="font-bold text-ink">Feed pubblico</span>
-              <br />
-              articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
-            </figcaption>
-          </figure>
+          {/* I due feed risultanti: griglia 2 colonne su mobile, colonna su desktop */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:flex lg:flex-col lg:gap-8">
+            <figure className="flex min-w-0 flex-col items-center text-center">
+              <PhoneFrame className="max-w-[150px] sm:max-w-[180px] lg:max-w-[190px]">
+                <ArticleMock variant="societario" />
+              </PhoneFrame>
+              <figcaption className="mt-3 text-[12px] leading-snug text-ink-soft sm:text-[13px]">
+                <span className="font-bold text-eco-700">Feed societario</span>
+                <br />
+                articoli col logo societario, visibili solo ai tesserati del club stesso.
+              </figcaption>
+            </figure>
+
+            <figure className="flex min-w-0 flex-col items-center text-center">
+              <PhoneFrame className="max-w-[150px] sm:max-w-[180px] lg:max-w-[190px]">
+                <ArticleMock variant="pubblico" />
+              </PhoneFrame>
+              <figcaption className="mt-3 text-[12px] leading-snug text-ink-soft sm:text-[13px]">
+                <span className="font-bold text-ink">Feed pubblico</span>
+                <br />
+                articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-/** Connettore a "Y": linea che si sdoppia in due frecce. */
-function SplitConnector() {
+/** Connettore a "Y" per il desktop: linea orizzontale che si sdoppia in due rami. */
+function SplitConnectorDesktop() {
   return (
-    <>
-      {/* Desktop: orizzontale (sorgente a sinistra → due rami a destra) */}
-      <svg
-        className="hidden h-44 w-20 shrink-0 text-eco lg:block"
-        viewBox="0 0 80 180"
+    <svg
+      className="hidden h-44 w-20 shrink-0 text-eco lg:block"
+      viewBox="0 0 80 180"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 90 H30 C45 90 45 45 60 45 H72"
+        stroke="currentColor"
+        strokeWidth="2.5"
         fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M0 90 H30 C45 90 45 45 60 45 H72"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          fill="none"
-        />
-        <path
-          d="M0 90 H30 C45 90 45 135 60 135 H72"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          fill="none"
-        />
-        <polygon points="80,45 70,40 70,50" fill="currentColor" />
-        <polygon points="80,135 70,130 70,140" fill="currentColor" />
-      </svg>
+      />
+      <path
+        d="M0 90 H30 C45 90 45 135 60 135 H72"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        fill="none"
+      />
+      <polygon points="80,45 70,40 70,50" fill="currentColor" />
+      <polygon points="80,135 70,130 70,140" fill="currentColor" />
+    </svg>
+  )
+}
 
-      {/* Mobile: verticale (sorgente sopra → due rami sotto, larghi quanto i
-          due mockup affiancati così ogni freccia indica il proprio telefono) */}
-      <svg
-        className="h-16 w-[240px] max-w-full shrink-0 text-eco sm:w-80 lg:hidden"
-        viewBox="0 0 240 64"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M120 0 V16 C120 32 36 28 36 44 V52"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          fill="none"
-        />
-        <path
-          d="M120 0 V16 C120 32 204 28 204 44 V52"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          fill="none"
-        />
-        <polygon points="36,64 31,52 41,52" fill="currentColor" />
-        <polygon points="204,64 199,52 209,52" fill="currentColor" />
+/** Connettore a "Y" per mobile, costruito con box allineati alla griglia 2
+    colonne dei feed: stelo centrale → barra che copre i due centri colonna →
+    una freccia per colonna. Così ogni freccia punta al proprio telefono a
+    qualsiasi larghezza di schermo. */
+function SplitConnectorMobile() {
+  return (
+    <div className="my-5 w-full text-eco lg:hidden" aria-hidden="true">
+      {/* Stelo verticale centrale che scende dal Marketplace */}
+      <div className="mx-auto h-6 w-[2.5px] bg-current" />
+      {/* Barra orizzontale che collega i due centri colonna (25% ↔ 75%) */}
+      <div className="mx-auto h-[2.5px] w-1/2 bg-current" />
+      {/* Una freccia verticale per colonna, centrata nella propria colonna */}
+      <div className="grid grid-cols-2">
+        <SplitArrowDown />
+        <SplitArrowDown />
+      </div>
+    </div>
+  )
+}
+
+/** Freccia verticale (stelo + punta) centrata nella propria colonna. */
+function SplitArrowDown() {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="h-5 w-[2.5px] bg-current" />
+      <svg className="h-2.5 w-3.5" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+        <polygon points="7,10 0,0 14,0" fill="currentColor" />
       </svg>
-    </>
+    </div>
   )
 }
 

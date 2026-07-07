@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0012 — Chat tra utenti + scambio degli articoli
+-- Renova · Migrazione 0012 — Chat tra utenti + scambio degli articoli
 -- ════════════════════════════════════════════════════════════════
 -- Introduce la messaggistica che organizza lo scambio:
 --

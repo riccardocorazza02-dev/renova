@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0017 — La chat NON si elimina dopo lo scambio
+-- Renova · Migrazione 0017 — La chat NON si elimina dopo lo scambio
 -- ════════════════════════════════════════════════════════════════
 -- Rimuoviamo il criterio di auto-pulizia "articolo scambiato da più di una
 -- settimana" introdotto in 0013: dopo uno scambio gli utenti devono poter

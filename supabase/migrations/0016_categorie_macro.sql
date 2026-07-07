@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0016 — Macro-categorie + nuove categorie di capo
+-- Renova · Migrazione 0016 — Macro-categorie + nuove categorie di capo
 -- ════════════════════════════════════════════════════════════════
 -- Amplia il catalogo `categorie_item` con i tipi di capo dei cataloghi dei
 -- top-5 brand teamwear (Givova, Joma, Macron, Legea, Erreà) e raggruppa tutte
@@ -260,12 +260,12 @@ where nome in ('Pantaloncini da allenamento','Pantaloncini da gioco','Pantalonci
 --    (Stesso pattern di 0015; idempotente su righe vecchie e nuove.)
 -- ─────────────────────────────────────────────
 update public.categorie_item c set
-  co2_tipico   = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_tipico = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_min      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_min    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_max      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_max    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg))
+  co2_tipico   = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_tipico = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_min      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_min    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_max      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_max    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg))
 where c.profilo_default is not null;
 
 update public.categorie_item c set
@@ -273,8 +273,8 @@ update public.categorie_item c set
   acqua_max = greatest(c.acqua_max, sub.acquamax)
 from (
   select c2.id,
-         max((select co2   from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
-         max((select acqua from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
+         max((select co2   from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
+         max((select acqua from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
   from public.categorie_item c2, jsonb_array_elements(c2.materiali) m
   where c2.profilo_default is not null
   group by c2.id

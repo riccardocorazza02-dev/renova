@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0013 — Foto nei messaggi + auto-pulizia delle chat
+-- Renova · Migrazione 0013 — Foto nei messaggi + auto-pulizia delle chat
 -- ════════════════════════════════════════════════════════════════
 -- 1) I messaggi possono contenere una FOTO (oltre/anziché il testo). Le foto
 --    sono caricate nel bucket `articoli` sotto `<auth.uid()>/chat/<conv>/…`,

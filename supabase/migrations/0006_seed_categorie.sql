@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0006 — Seed: categorie di riferimento + società BO
+-- Renova · Migrazione 0006 — Seed: categorie di riferimento + società BO
 -- ════════════════════════════════════════════════════════════════
 -- Le categorie ricalcano le tre liste del documento metodologico.
 -- co2_tipico / acqua_tipico = punto medio dell'intervallo min–max.

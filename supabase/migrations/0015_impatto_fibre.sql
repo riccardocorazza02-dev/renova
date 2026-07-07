@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0015 — Stima d'impatto a livelli (fibre + blend)
+-- Renova · Migrazione 0015 — Stima d'impatto a livelli (fibre + blend)
 -- ════════════════════════════════════════════════════════════════
 -- Sostituisce la stima "valore fisso di categoria" con il modello a livelli:
 --   • L0  — priore di categoria (profilo sintetico) = pavimento prudenziale;
@@ -12,7 +12,7 @@
 -- valore fisso di categoria già presente.
 --
 -- Regola fibre senza dato: l'elastan e il poliuretano hanno la CO₂ (inclusa)
--- ma non l'acqua → il loro contributo idrico è zero (vedi loop_impatto_blend).
+-- ma non l'acqua → il loro contributo idrico è zero (vedi renova_impatto_blend).
 -- ════════════════════════════════════════════════════════════════
 
 -- ─────────────────────────────────────────────
@@ -60,10 +60,10 @@ comment on column public.categorie_item.materiali is
   'Opzioni del tap L0+1: [{chiave,label,hint,blend}]. [] = nessun tap.';
 
 -- ─────────────────────────────────────────────
--- 3. loop_impatto_blend — impatto di un blend per un dato peso (kg)
+-- 3. renova_impatto_blend — impatto di un blend per un dato peso (kg)
 --    Acqua: le fibre con dato mancante (acqua NULL) contribuiscono 0.
 -- ─────────────────────────────────────────────
-create or replace function public.loop_impatto_blend(p_blend jsonb, p_peso numeric)
+create or replace function public.renova_impatto_blend(p_blend jsonb, p_peso numeric)
 returns table (co2 numeric, acqua numeric)
 language sql stable set search_path = public
 as $$
@@ -191,12 +191,12 @@ where nome = 'Berretto / cuffia';
 --    co2/acqua_tipico = profilo L0; co2/acqua_max = peggiore opzione materiale.
 -- ─────────────────────────────────────────────
 update public.categorie_item c set
-  co2_tipico   = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_tipico = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_min      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_min    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  co2_max      = (select co2   from public.loop_impatto_blend(c.profilo_default, c.peso_kg)),
-  acqua_max    = (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg))
+  co2_tipico   = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_tipico = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_min      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_min    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  co2_max      = (select co2   from public.renova_impatto_blend(c.profilo_default, c.peso_kg)),
+  acqua_max    = (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg))
 where c.profilo_default is not null;
 
 update public.categorie_item c set
@@ -204,8 +204,8 @@ update public.categorie_item c set
   acqua_max = greatest(c.acqua_max, sub.acquamax)
 from (
   select c2.id,
-         max((select co2   from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
-         max((select acqua from public.loop_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
+         max((select co2   from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as co2max,
+         max((select acqua from public.renova_impatto_blend(coalesce((m->>'blend')::jsonb, c2.profilo_default), c2.peso_kg))) as acquamax
   from public.categorie_item c2, jsonb_array_elements(c2.materiali) m
   where c2.profilo_default is not null
   group by c2.id
@@ -253,7 +253,7 @@ begin
   else
     v_blend := coalesce(new.composizione, v_cat.profilo_default);
     select co2, acqua into v_co2, v_acqua
-      from public.loop_impatto_blend(v_blend, v_cat.peso_kg);
+      from public.renova_impatto_blend(v_blend, v_cat.peso_kg);
     new.co2   := v_co2;
     new.acqua := v_acqua;
     if new.composizione is null then
@@ -279,9 +279,9 @@ update public.articoli a set
 from (
   select a2.id,
          case when c.profilo_default is null then coalesce(c.co2_tipico,0)
-              else (select co2 from public.loop_impatto_blend(c.profilo_default, c.peso_kg)) end   as co2,
+              else (select co2 from public.renova_impatto_blend(c.profilo_default, c.peso_kg)) end   as co2,
          case when c.profilo_default is null then coalesce(c.acqua_tipico,0)
-              else (select acqua from public.loop_impatto_blend(c.profilo_default, c.peso_kg)) end as acqua
+              else (select acqua from public.renova_impatto_blend(c.profilo_default, c.peso_kg)) end as acqua
   from public.articoli a2
   join public.categorie_item c on c.id = a2.id_categoria
 ) sub
@@ -342,9 +342,9 @@ begin
   select nome_completo into v_owner_nome from public.utenti where id = v_me;
   select nome_completo into v_acq_nome   from public.utenti where id = p_id_acquirente;
 
-  perform set_config('loop.scambio_ok', '1', true);
+  perform set_config('renova.scambio_ok', '1', true);
   update public.articoli set stato = 'Scambiato' where id = p_id_articolo;
-  perform set_config('loop.scambio_ok', '0', true);
+  perform set_config('renova.scambio_ok', '0', true);
 
   insert into public.scambi
     (id_articolo, id_venditore, id_acquirente, nome_venditore, nome_acquirente,

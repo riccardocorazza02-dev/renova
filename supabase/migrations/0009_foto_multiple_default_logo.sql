@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- Loop · Migrazione 0009 — Foto multiple + default logo accessori
+-- Renova · Migrazione 0009 — Foto multiple + default logo accessori
 -- ════════════════════════════════════════════════════════════════
 -- 1) Un articolo può avere fino a 3 foto. `foto_url` resta la copertina
 --    (prima foto) per le card; `foto_urls` contiene tutte le foto.
