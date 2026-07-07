@@ -14,6 +14,73 @@
 
 ---
 
+<!-- ══════════════════════════════════════════════════════════════════════════
+     ISTRUZIONI PER CLAUDE — NON CANCELLARE QUESTO BLOCCO
+     ══════════════════════════════════════════════════════════════════════════
+
+ Quando l'utente ti rimanda questo file chiedendo di "aggiornare / cambiare il
+ sito", il flusso da seguire è SEMPRE questo:
+
+ 1. FONTE DI VERITÀ = questo file (CONTENUTI-SITO.md). Il sito va allineato al
+    file, non viceversa. L'unico file da modificare è `src/pages/Landing.tsx`
+    (tutta la landing pubblica vive lì: testo + mockup + icone).
+
+ 2. CONFRONTA sezione per sezione il testo di questo .md con le stringhe in
+    `Landing.tsx` e applica SOLO le differenze. Non riscrivere ciò che già
+    coincide. Mappa sezione .md → componente/blocco in Landing.tsx:
+      • §1 HEADER            → <header> in `Landing()` (voci nav + "Prenota una call" + "Accedi")
+      • §2 HERO              → funzione `Hero()`  (eyebrow, <h1>, paragrafo, CTA, riquadro sondaggio, badge)
+      • §2 Le leve           → chiamate a <Leva …>  dentro `Hero()`  (title/body)
+      • §2 Leva bonus        → blocco "Leva bonus — evidenziata" in `Hero()`
+      • §2 Trust-strip       → chiamate a <Stat …>  in `Hero()`  (valore/testo)
+      • §3 COME FUNZIONA     → funzione `ComeFunziona()` + `StepRow`/`Step2` (eyebrow, <h2>, paragrafo, 4 step, didascalie feed)
+      • §4 PARTNERSHIP       → funzione `SocialProof()`  (eyebrow, <h2>, paragrafo, nota)
+      • §5 FASE DI TEST      → funzione `FaseDiTest()`  (eyebrow, <h2>, paragrafo, CTA)
+      • §6 FAQ              → array `FAQ` (coppie q/a) sopra la funzione `Faq()`
+      • §7 CONTATTI          → funzione `Contatti()` (eyebrow, <h2>, paragrafo, campi form, bottone, nota)
+      • §8 FOOTER            → funzione `Footer()`  (titolo, sottotitolo, placeholder email, bottone, copyright)
+
+ 3. DATI GLOBALI (§"Dati globali", valori tra « »): sono le costanti in cima a
+    `Landing.tsx` → `EMAIL`, `SITO`, `TELEFONO`, `SURVEY_URL`. Se cambiano nel
+    .md, aggiorna quelle costanti (compaiono in più punti: header, contatti,
+    footer, mailto).
+
+ 4. ATTENZIONE alle entità: nel .md compaiono apostrofi curvi (’) e accenti;
+    in JSX usa la stessa forma già presente nei dintorni. Rispetta i caratteri
+    speciali già usati (CO₂, H₂O, €, ≥, ·). Non toccare className, JSX, icone,
+    struttura: SOLO il testo visibile.
+
+ 5. MOCKUP (§"MOCKUP", i telefonini disegnati): è testo DECORATIVO d'esempio.
+    Di default NON allinearlo automaticamente — le funzioni `FeedMock`,
+    `ArticleMock`, `ChatMock`, `ImpattoMock`, `CodeMock`, `FEED_ITEMS`,
+    `PhoneHeader` in `Landing.tsx` sono state rifinite a mano per assomigliare
+    agli schermi reali dell'app e possono divergere da questa sezione del .md.
+    Tocca i mockup SOLO se l'utente lo chiede esplicitamente; in quel caso
+    segnala che stai modificando testo decorativo.
+
+ 6. DOPO le modifiche: esegui `npm run build` (deve passare, type-check incluso)
+    e, se possibile, avvia l'anteprima per verificare che le stringhe cambiate
+    compaiano davvero. Poi riepiloga all'utente COSA è cambiato (elenco puntato
+    vecchio→nuovo).
+
+ 7. SINCRONIZZAZIONE GITHUB (standing rule, richiesta dell'utente): ogni volta
+    che aggiorni i contenuti del sito partendo da questo file, DOPO che il build
+    passa devi anche PUBBLICARE le modifiche su GitHub, così il sito online resta
+    sempre allineato al codice locale. In pratica:
+      • commit dei soli file toccati dall'update (di norma `src/pages/Landing.tsx`
+        e, se cambiato, `CONTENUTI-SITO.md`) — NON fare `git add -A`: non tirare
+        dentro le altre modifiche non collegate presenti nel working tree;
+      • messaggio di commit chiaro in italiano (es. "Landing: aggiorna copy da
+        CONTENUTI-SITO.md");
+      • `git push` sul branch `main` (il deploy del sito online parte da `main`).
+    Il push è ATTESO di default per questi aggiornamenti di contenuto: non serve
+    richiederlo ogni volta. Se però il working tree è in uno stato ambiguo o ci
+    sono conflitti, fermati e chiedi conferma all'utente prima di pushare.
+
+ ═══════════════════════════════════════════════════════════════════════════ -->
+
+---
+
 ## Dati globali (compaiono in più punti)
 
 - **Email:** «info@renovasport.it»
@@ -35,7 +102,7 @@
 
 ## 2 · HERO (prima schermata)
 
-[OCCHIELLO] Per le società sportive · Pre-lancio Bologna
+[OCCHIELLO] Servizio attivabile da ASD/SSD di Bologna
 
 [H1] Abbatti il costo dello sport per le famiglie del tuo club.
 
@@ -58,7 +125,7 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 **Leva 1**
 - [TITOLO] Zero sforzo organizzativo per il club
-- [TESTO] Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiare tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria.
+- [TESTO] Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria.
 
 **Leva 2**
 - [TITOLO] Retention e recruiting dei tesserati
@@ -81,7 +148,7 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 **Stat 1**
 - [VALORE] +55%
-- [TESTO] degli intervistati ha dichiarato che ogni stagione si trova in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato 
+- [TESTO] degli intervistati ha dichiarato che ogni stagione ha in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato 
 
 **Stat 2**
 - [VALORE] +90%
@@ -132,7 +199,7 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 [H2] Stiamo costruendo Renova con chi lo sport lo vive ogni giorno
 
-[PARAGRAFO] Renova nasce dal confronto diretto con i club. Queste sono le società che stanno collaborando allo sviluppo e alla fase di test.
+[PARAGRAFO] Renova nasce dal confronto diretto con i club. Queste sono le società che stanno collaborando allo sviluppo.
 
 [GRIGLIA LOGHI] (placeholder) 8 caselle vuote "Inserisci qui il tuo logo"
 
@@ -142,12 +209,12 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 ## 5 · FASE DI TEST (banda scura)
 
-[OCCHIELLO] Fase di test · Bologna
+[OCCHIELLO] Fase di sviluppo · Bologna
 
-[H2] Stiamo selezionando i primi club di Bologna
+[H2] Stiamo cercando club di Bologna interessati a collaborare.
 
 [PARAGRAFO]
-Renova è in fase di lancio e parte dal territorio bolognese. Stiamo coinvolgendo un primo gruppo di club del territorio per testare il servizio sul campo: **la partecipazione è gratuita**. È il momento giusto per entrare tra i primi e contribuire a costruire lo strumento.
+Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando di coinvolgere quanti più club del territorio per testare il servizio sul campo: **la partecipazione è gratuita**. È il momento giusto per entrare tra i primi e contribuire a costruire la piattaforma.
 
 [BOTTONE] Prenota una call conoscitiva
 
@@ -291,7 +358,7 @@ Renova è in fase di lancio e parte dal territorio bolognese. Stiamo coinvolgend
 ### Mockup codice di attivazione
 
 - Etichetta: Codice di attivazione
-- Codice: BFC-CAL
-- Sottotitolo: Bologna FC · Calcio
+- Codice: DEMO-CAL (fittizio: non è un codice di accesso attivo)
+- Sottotitolo: La tua società · Calcio
 - Testo: Distribuiscilo ai tesserati: con questo codice accedono al marketplace del club.
 - CTA: Condividi con i tesserati

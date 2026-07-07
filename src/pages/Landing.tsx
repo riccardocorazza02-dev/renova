@@ -158,7 +158,7 @@ function Hero() {
       <div className="mx-auto max-w-6xl px-5 py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-20">
         {/* Colonna sinistra: promessa + CTA */}
         <div>
-          <span className="eyebrow">Per le società sportive · Pre-lancio Bologna</span>
+          <span className="eyebrow">Servizio attivabile da ASD/SSD di Bologna</span>
           <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
             Abbatti il costo dello sport per le famiglie del tuo club.
           </h1>
@@ -222,7 +222,7 @@ function Hero() {
             <Leva
               icon={<BoltIcon />}
               title="Zero sforzo organizzativo per il club"
-              body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiare tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria."
+              body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria."
             />
             <Leva
               icon={<PeopleIcon />}
@@ -268,7 +268,7 @@ function Hero() {
 
           {/* Trust-strip */}
           <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border-[1.5px] border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
-            <Stat valore="+55%" testo="degli intervistati ha dichiarato che ogni stagione si trova in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato" />
+            <Stat valore="+55%" testo="degli intervistati ha dichiarato che ogni stagione ha in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato" />
             <Stat valore="+90%" testo="degli intervistati è interessato a un servizio di scambio del materiale del proprio club" />
             <Stat valore="+55%" testo="degli intervistati spende più di 100€ ogni stagione sportiva soltanto il materiale sportivo (di cui +20% spende più di 200€)" />
             <Stat valore="Gratis" testo="la partecipazione alla fase di test per i primi club" highlight />
@@ -458,10 +458,10 @@ function Step2() {
         {/* Connettore: orizzontale su desktop, verticale su mobile */}
         <SplitConnector />
 
-        {/* I due feed risultanti */}
-        <div className="flex flex-col gap-8 sm:flex-row lg:flex-col">
-          <figure className="flex max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[190px]">
+        {/* I due feed risultanti: affiancati sotto la Y su mobile, in colonna su desktop */}
+        <div className="flex w-full flex-row justify-center gap-3 sm:gap-8 lg:w-auto lg:flex-col">
+          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
+            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
               <ArticleMock variant="societario" />
             </PhoneFrame>
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
@@ -471,8 +471,8 @@ function Step2() {
             </figcaption>
           </figure>
 
-          <figure className="flex max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[190px]">
+          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
+            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
               <ArticleMock variant="pubblico" />
             </PhoneFrame>
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
@@ -514,27 +514,28 @@ function SplitConnector() {
         <polygon points="80,135 70,130 70,140" fill="currentColor" />
       </svg>
 
-      {/* Mobile: verticale (sorgente sopra → due rami sotto) */}
+      {/* Mobile: verticale (sorgente sopra → due rami sotto, larghi quanto i
+          due mockup affiancati così ogni freccia indica il proprio telefono) */}
       <svg
-        className="h-16 w-40 shrink-0 text-eco lg:hidden"
-        viewBox="0 0 160 64"
+        className="h-16 w-[240px] max-w-full shrink-0 text-eco sm:w-80 lg:hidden"
+        viewBox="0 0 240 64"
         fill="none"
         aria-hidden="true"
       >
         <path
-          d="M80 0 V18 C80 30 45 30 45 44 V52"
+          d="M120 0 V16 C120 32 36 28 36 44 V52"
           stroke="currentColor"
           strokeWidth="2.5"
           fill="none"
         />
         <path
-          d="M80 0 V18 C80 30 115 30 115 44 V52"
+          d="M120 0 V16 C120 32 204 28 204 44 V52"
           stroke="currentColor"
           strokeWidth="2.5"
           fill="none"
         />
-        <polygon points="45,64 40,52 50,52" fill="currentColor" />
-        <polygon points="115,64 110,52 120,52" fill="currentColor" />
+        <polygon points="36,64 31,52 41,52" fill="currentColor" />
+        <polygon points="204,64 199,52 209,52" fill="currentColor" />
       </svg>
     </>
   )
@@ -563,7 +564,7 @@ function SocialProof() {
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
             Renova nasce dal confronto diretto con i club. Queste sono le società che stanno
-            collaborando allo sviluppo e alla fase di test.
+            collaborando allo sviluppo.
           </p>
         </div>
 
@@ -603,16 +604,16 @@ function FaseDiTest() {
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-5 py-14 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:py-16">
         <div className="max-w-2xl">
           <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-eco">
-            Fase di test · Bologna
+            Fase di sviluppo · Bologna
           </span>
           <h2 className="mt-2 text-[26px] leading-tight text-paper sm:text-[32px]">
-            Stiamo selezionando i primi club di Bologna
+            Stiamo cercando club di Bologna interessati a collaborare.
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[#c9c8c2] lg:text-[16px]">
-            Renova è in fase di lancio e parte dal territorio bolognese. Stiamo coinvolgendo un
-            primo gruppo di club del territorio per testare il servizio sul campo:{' '}
+            Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando di
+            coinvolgere quanti più club del territorio per testare il servizio sul campo:{' '}
             <span className="font-semibold text-paper">la partecipazione è gratuita</span>. È il
-            momento giusto per entrare tra i primi e contribuire a costruire lo strumento.
+            momento giusto per entrare tra i primi e contribuire a costruire la piattaforma.
           </p>
         </div>
         <a
@@ -1341,9 +1342,9 @@ function CodeMock() {
           Codice di attivazione
         </p>
         <div className="mt-2 rounded-lg border-[1.5px] border-ink px-4 py-2.5">
-          <span className="text-[20px] font-extrabold tracking-[0.06em] text-ink">BFC-CAL</span>
+          <span className="text-[20px] font-extrabold tracking-[0.06em] text-ink">DEMO-CAL</span>
         </div>
-        <p className="mt-2 text-[8px] font-semibold text-ink-soft">Bologna FC · Calcio</p>
+        <p className="mt-2 text-[8px] font-semibold text-ink-soft">La tua società · Calcio</p>
         <p className="mt-3 max-w-[150px] text-[7px] leading-snug text-ink-muted">
           Distribuiscilo ai tesserati: con questo codice accedono al marketplace del club.
         </p>
