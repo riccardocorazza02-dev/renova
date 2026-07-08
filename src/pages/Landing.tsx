@@ -1,7 +1,13 @@
 import type { MouseEvent } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Logo, RenovaMark } from '../components/Logo'
+import { Logo } from '../components/Logo'
+import mockCodice from '../assets/mockups/06-codice.webp'
+import mockMarketplace from '../assets/mockups/01-marketplace.webp'
+import mockSocietario from '../assets/mockups/02-societario.webp'
+import mockPubblico from '../assets/mockups/03-pubblico.webp'
+import mockChat from '../assets/mockups/04-chat.webp'
+import mockImpatto from '../assets/mockups/05-impatto.webp'
 
 /* ──────────────────────────────────────────────────────────────────────────
    Landing pubblica di Renova — versione pre-lancio, rivolta PRIMA ai CLUB
@@ -330,6 +336,20 @@ function Stat({
    2 · COME FUNZIONA
    ════════════════════════════════════════════════════════════════════════ */
 
+/** Mockup fotografico dell'app dentro un iPhone Air (render pre-composto, con
+ *  cornice e ombra già incluse nell'immagine su sfondo avorio). */
+function MockupPhone({
+  src,
+  alt,
+  className = '',
+}: {
+  src: string
+  alt: string
+  className?: string
+}) {
+  return <img src={src} alt={alt} loading="lazy" className={`mx-auto h-auto w-full select-none ${className}`} />
+}
+
 function ComeFunziona() {
   return (
     <section id="come-funziona" className="scroll-mt-24 border-b-[1.5px] border-ink">
@@ -352,9 +372,11 @@ function ComeFunziona() {
             title="Il club attiva Renova"
             body="Il club aderisce al servizio e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi gli sforzi organizzativi della società sono finiti."
             mock={
-              <PhoneFrame>
-                <CodeMock />
-              </PhoneFrame>
+              <MockupPhone
+                src={mockCodice}
+                alt="Schermata dell'app Renova con il codice di attivazione del club"
+                className="max-w-[300px]"
+              />
             }
           />
 
@@ -368,9 +390,11 @@ function ComeFunziona() {
             title="Si accordano e scambiano, gratis"
             body="Tramite la chat integrata i tesserati si organizzano in autonomia e si scambiano il materiale di persona, gratuitamente. Come promesso, nessun lavoro per la società."
             mock={
-              <PhoneFrame>
-                <ChatMock />
-              </PhoneFrame>
+              <MockupPhone
+                src={mockChat}
+                alt="Schermata della chat integrata dell'app Renova"
+                className="max-w-[300px]"
+              />
             }
           />
 
@@ -380,9 +404,11 @@ function ComeFunziona() {
             title="Il club vede l'impatto"
             body="Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare, in ogni momento ed esportabili."
             mock={
-              <PhoneFrame>
-                <ImpattoMock />
-              </PhoneFrame>
+              <MockupPhone
+                src={mockImpatto}
+                alt="Dashboard d'impatto dell'app Renova con metriche ambientali ed economiche"
+                className="max-w-[300px]"
+              />
             }
           />
         </div>
@@ -444,10 +470,12 @@ function Step2() {
       {/* Diagramma: feed centrale → due frecce → articolo societario / pubblico */}
       <div className="mt-10 flex flex-col items-center gap-8 lg:mt-12 lg:flex-row lg:items-center lg:justify-center lg:gap-4">
         {/* Feed sorgente */}
-        <figure className="flex max-w-[220px] flex-col items-center text-center">
-          <PhoneFrame className="max-w-[200px]">
-            <FeedMock />
-          </PhoneFrame>
+        <figure className="flex max-w-[240px] flex-col items-center text-center">
+          <MockupPhone
+            src={mockMarketplace}
+            alt="Feed del marketplace nell'app Renova"
+            className="max-w-[240px]"
+          />
           <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
             <span className="font-bold text-ink">Marketplace</span>
             <br />
@@ -460,10 +488,12 @@ function Step2() {
 
         {/* I due feed risultanti: affiancati sotto la Y su mobile, in colonna su desktop */}
         <div className="flex w-full flex-row justify-center gap-3 sm:gap-8 lg:w-auto lg:flex-col">
-          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
-              <ArticleMock variant="societario" />
-            </PhoneFrame>
+          <figure className="flex min-w-0 flex-1 max-w-[240px] flex-col items-center text-center">
+            <MockupPhone
+              src={mockSocietario}
+              alt="Articolo nel feed societario dell'app Renova"
+              className="max-w-[170px] sm:max-w-[230px]"
+            />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-eco-700">Feed societario</span>
               <br />
@@ -471,10 +501,12 @@ function Step2() {
             </figcaption>
           </figure>
 
-          <figure className="flex min-w-0 flex-1 max-w-[220px] flex-col items-center text-center">
-            <PhoneFrame className="max-w-[140px] sm:max-w-[190px]">
-              <ArticleMock variant="pubblico" />
-            </PhoneFrame>
+          <figure className="flex min-w-0 flex-1 max-w-[240px] flex-col items-center text-center">
+            <MockupPhone
+              src={mockPubblico}
+              alt="Articolo nel feed pubblico dell'app Renova"
+              className="max-w-[170px] sm:max-w-[230px]"
+            />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-ink">Feed pubblico</span>
               <br />
@@ -1086,276 +1118,6 @@ function FeedMock() {
   )
 }
 
-function ArticleMock({ variant }: { variant: 'societario' | 'pubblico' }) {
-  const soc = variant === 'societario'
-  const tags = soc
-    ? ['Giacca sportiva', 'Taglia M', 'Ottimo', 'Capo societario']
-    : ['Scarpe da calcio', 'Taglia 41', 'Ottimo', 'Feed pubblico']
-  return (
-    <div className="flex h-full flex-col bg-paper text-ink">
-      <PhoneHeader />
-      {/* breadcrumb */}
-      <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5 text-[8px] font-bold">
-        <BackIcon />
-        <span className="text-ink">Indietro</span>
-        <span className="text-eco-700">Marketplace</span>
-      </div>
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* foto */}
-        <div className="foto-stripe relative aspect-[5/4] w-full shrink-0 overflow-hidden">
-          <StatoBadge stato={soc ? 'Disponibile' : 'Scambiato'} big />
-        </div>
-
-        <div className="px-3 py-2">
-          <h3 className="text-[12px] font-extrabold leading-tight text-ink">
-            {soc ? 'Giacca da rappresentanza' : 'Scarpe da calcio'}
-          </h3>
-          {/* chips */}
-          <div className="mt-1.5 flex flex-wrap gap-1">
-            {tags.map((t) => (
-              <span
-                key={t}
-                className="rounded border border-edge px-1 py-0.5 text-[5px] font-bold uppercase tracking-[0.04em] text-ink-muted"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div
-            className={`mt-2 flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-[7px] font-bold uppercase tracking-[0.06em] text-white ${
-              soc ? 'bg-eco' : 'bg-eco-300'
-            }`}
-          >
-            <ChatBubbleIcon className="h-2.5 w-2.5" />
-            {soc ? 'Chiedi informazioni' : 'Articolo già scambiato'}
-          </div>
-
-          {/* card impatto */}
-          <div className="mt-2 rounded-lg border border-eco-100 bg-eco-50/50 px-2 py-1.5">
-            <div className="text-[6px] font-bold uppercase tracking-[0.06em] text-ink">
-              Impatto del riuso rispetto al nuovo
-            </div>
-            <div className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[6px] font-bold uppercase">
-              <span className="text-eco">CO₂: ≥ {soc ? '0,9 KG' : '14 KG'}</span>
-              <span className="text-water-600">H₂O: ≥ {soc ? '18,6 L' : '1,3K L'}</span>
-              <span className="text-sun-600">Valore: {soc ? '45,00 €' : '215,00 €'}</span>
-            </div>
-            <p className="mt-1 text-[5px] leading-snug text-ink-soft">
-              <span className="font-bold">≥</span> significa «almeno»: è una stima prudenziale, il
-              risparmio reale è almeno questo.
-            </p>
-          </div>
-        </div>
-      </div>
-      <BottomNav active="market" />
-    </div>
-  )
-}
-
-function ChatMock() {
-  return (
-    <div className="flex h-full flex-col bg-paper text-ink">
-      <PhoneHeader />
-      {/* riga "Chat" */}
-      <div className="flex items-center gap-1.5 border-b border-line px-3 py-1.5 text-[8px] font-bold text-ink">
-        <BackIcon />
-        Chat
-      </div>
-      {/* contesto articolo + interlocutore */}
-      <div className="flex items-center gap-2 border-b border-line px-3 py-2">
-        <div className="foto-stripe h-7 w-7 shrink-0 overflow-hidden rounded" />
-        <div className="leading-tight">
-          <div className="text-[9px] font-bold text-ink">Maglia da allenamento</div>
-          <div className="text-[6px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
-            Con Marco B.
-          </div>
-        </div>
-        <span className="ml-auto rounded border border-edge px-1.5 py-0.5 text-[5px] font-bold uppercase tracking-[0.06em] text-ink-soft">
-          Articolo
-        </span>
-      </div>
-
-      {/* messaggi */}
-      <div className="flex flex-1 flex-col gap-2 overflow-hidden px-3 py-3">
-        <DateDivider>22 Giugno 2026</DateDivider>
-        <Bubble side="right" time="19:59">
-          Ciao, è ancora disponibile la maglia?
-        </Bubble>
-        <DateDivider>23 Giugno 2026</DateDivider>
-        <Bubble side="left" time="11:10">
-          Sì, te la sto tenendo da parte. La porto mercoledì all'allenamento?
-        </Bubble>
-      </div>
-
-      {/* input */}
-      <div className="flex items-center gap-2 border-t border-line px-3 py-2">
-        <ImageIcon />
-        <div className="flex-1 rounded-full border border-edge px-2.5 py-1 text-[7px] text-ink-faint">
-          Scrivi un messaggio…
-        </div>
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-eco-300 text-white">
-          <SendIcon />
-        </span>
-      </div>
-      <BottomNav active="chat" />
-    </div>
-  )
-}
-
-function DateDivider({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-center text-[5px] font-bold uppercase tracking-[0.08em] text-ink-faint">
-      {children}
-    </div>
-  )
-}
-
-function Bubble({
-  side,
-  time,
-  children,
-}: {
-  side: 'left' | 'right'
-  time?: string
-  children: React.ReactNode
-}) {
-  const right = side === 'right'
-  return (
-    <div className={`flex ${right ? 'justify-end' : 'justify-start'}`}>
-      <span
-        className={`max-w-[82%] rounded-2xl px-2.5 py-1.5 text-[8px] leading-snug ${
-          right ? 'rounded-br-sm bg-eco text-white' : 'rounded-bl-sm border border-line bg-paper text-ink'
-        }`}
-      >
-        {children}
-        {time && (
-          <span
-            className={`mt-0.5 block text-right text-[6px] ${right ? 'text-white/70' : 'text-ink-faint'}`}
-          >
-            {time}
-          </span>
-        )}
-      </span>
-    </div>
-  )
-}
-
-/** Ricostruzione fedele della pagina "Impatto" reale dell'app (vista "La
- *  società"): occhiello + titolone "Impatto", tab, blocchi metrica con pallino
- *  colorato, numero grande + unità e le equivalenze, riga di nota, scheda Fonti. */
-function ImpattoMock() {
-  return (
-    <div className="flex h-full flex-col bg-paper text-ink">
-      <PhoneHeader />
-      {/* intestazione editoriale */}
-      <div className="border-b-[1.5px] border-ink px-3 pb-2 pt-1.5">
-        <div className="text-[6px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
-          Il risparmio generato dal riuso
-        </div>
-        <div className="text-[26px] font-extrabold leading-[0.9] tracking-[-0.03em] text-ink">
-          Impatto
-        </div>
-      </div>
-
-      {/* tab: La società ↔ Il mio contributo */}
-      <div className="flex gap-4 border-b border-line px-3 py-1.5 text-[7px] uppercase tracking-[0.06em]">
-        <span className="border-b-2 border-eco pb-0.5 font-bold text-ink">La società</span>
-        <span className="font-semibold text-ink-faint">Il mio contributo</span>
-      </div>
-
-      {/* blocchi metrica */}
-      <div className="flex-1 overflow-hidden">
-        <ImpattoMetrica
-          dot="bg-eco"
-          label="CO₂ risparmiata"
-          num="312"
-          unit="kg"
-          eq="2.496 km in auto evitati · 104.000 ricariche smartphone"
-        />
-        <ImpattoMetrica
-          dot="bg-water"
-          label="Acqua risparmiata"
-          num="98.000"
-          unit="L"
-          eq="1.225 docce · 754 caffè (acqua nascosta)"
-        />
-        <ImpattoMetrica dot="bg-sun" label="Valore risparmiato" num="4.300" unit="€" />
-        <p className="border-t border-line px-3 py-1.5 text-[5px] leading-relaxed tracking-[0.03em] text-ink-faint">
-          Equivalenze indicative · 47 scambi conclusi · metodo nel profilo
-        </p>
-        <div className="flex items-center justify-between border-y border-line px-3 py-2 text-[6px] font-bold uppercase tracking-[0.08em] text-ink">
-          <span>Fonti delle equivalenze</span>
-          <ChevronDownIcon />
-        </div>
-      </div>
-      <BottomNav active="impatto" />
-    </div>
-  )
-}
-
-function ImpattoMetrica({
-  dot,
-  label,
-  num,
-  unit,
-  eq,
-}: {
-  dot: string
-  label: string
-  num: string
-  unit: string
-  eq?: string
-}) {
-  return (
-    <div className="border-t border-line px-3 py-2">
-      <div className="flex items-center gap-1.5 text-[6px] font-semibold uppercase tracking-[0.1em] text-ink-muted">
-        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-        {label}
-      </div>
-      <div className="mt-0.5 flex items-baseline gap-1">
-        <span className="text-[30px] font-extrabold leading-[0.85] tracking-[-0.03em] text-ink">
-          {num}
-        </span>
-        <span className="text-[13px] font-bold text-ink">{unit}</span>
-      </div>
-      {eq && <p className="mt-1 text-[6px] leading-snug text-ink-soft">{eq}</p>}
-    </div>
-  )
-}
-
-function CodeMock() {
-  return (
-    <div className="flex h-full flex-col bg-paper text-ink">
-      <div className="h-[18px]" />
-      <div className="flex items-center justify-center border-b-[1.5px] border-ink px-3 py-2">
-        <Logo className="text-[12px]" />
-      </div>
-
-      <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-eco-50 text-eco">
-          <RenovaMark className="h-7 w-7" />
-        </span>
-        <p className="mt-4 text-[7px] font-bold uppercase tracking-[0.1em] text-ink-muted">
-          Codice di attivazione
-        </p>
-        <div className="mt-2 rounded-lg border-[1.5px] border-ink px-4 py-2.5">
-          <span className="text-[20px] font-extrabold tracking-[0.06em] text-ink">DEMO-CAL</span>
-        </div>
-        <p className="mt-2 text-[8px] font-semibold text-ink-soft">La tua società · Calcio</p>
-        <p className="mt-3 max-w-[150px] text-[7px] leading-snug text-ink-muted">
-          Distribuiscilo ai tesserati: con questo codice accedono al marketplace del club.
-        </p>
-        <div className="mt-4 w-full rounded-md bg-eco px-3 py-2 text-[8px] font-bold uppercase tracking-[0.08em] text-white">
-          Condividi con i tesserati
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /* ──────────────────────────────────────────────────────────────────────────
    Icone inline
    ────────────────────────────────────────────────────────────────────────── */
@@ -1408,30 +1170,6 @@ function MiniSearchIcon() {
   )
 }
 
-function BackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-3 w-3 text-ink" fill="none" aria-hidden="true">
-      <path d="m15 6-6 6 6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function SendIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" aria-hidden="true">
-      <path d="M4 12 20 4l-6 16-3-7-7-1Z" fill="currentColor" />
-    </svg>
-  )
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-ink-soft" fill="none" aria-hidden="true">
-      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
 /* ── Icone della navigazione inferiore dei mockup ── */
 
 function GridIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
@@ -1477,16 +1215,6 @@ function PersonIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
       <circle cx="12" cy="8" r="3.4" stroke="currentColor" strokeWidth="1.8" />
       <path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function ImageIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-ink-faint" fill="none" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="8.5" cy="9" r="1.6" fill="currentColor" />
-      <path d="m4 18 5-5 4 4 3-3 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
     </svg>
   )
 }
