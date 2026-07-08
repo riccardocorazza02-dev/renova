@@ -30,9 +30,9 @@
     coincide. Mappa sezione .md → componente/blocco in Landing.tsx:
       • §1 HEADER            → <header> in `Landing()` (voci nav + "Prenota una call" + "Accedi")
       • §2 HERO              → funzione `Hero()`  (eyebrow, <h1>, paragrafo, CTA, riquadro sondaggio, badge)
-      • §2 Le leve           → chiamate a <Leva …>  dentro `Hero()`  (title/body)
+      • §2 Le leve           → chiamate a <Leva …>  dentro `Hero()`  (title/body + prop `stats` con i dati delle interviste nelle leve 3 e 4)
       • §2 Leva bonus        → blocco "Leva bonus — evidenziata" in `Hero()`
-      • §2 Trust-strip       → chiamate a <Stat …>  in `Hero()`  (valore/testo)
+      • §2 Banda "Gratis"    → banda verde "Gratis" in `Hero()` (sotto la leva bonus)
       • §3 COME FUNZIONA     → funzione `ComeFunziona()` + `StepRow`/`Step2` (eyebrow, <h2>, paragrafo, 4 step, didascalie feed)
       • §4 PARTNERSHIP       → funzione `SocialProof()`  (eyebrow, <h2>, paragrafo, nota)
       • §5 FASE DI TEST      → funzione `FaseDiTest()`  (eyebrow, <h2>, paragrafo, CTA)
@@ -134,31 +134,25 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 **Leva 3**
 - [TITOLO] Un servizio che le famiglie chiedono davvero
 - [TESTO] Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo.
+- [DATO] **+55%** delle famiglie/tesserati intervistati ha dichiarato che ogni stagione ha del materiale in buone condizioni che rimane inutilizzato
+- [DATO] **+90%** delle famiglie/tesserati intervistati è interessato a un servizio di scambio per il proprio club
 
 **Leva 4**
 - [TITOLO] Costo dello sport più basso per le famiglie
 - [TESTO] Scarpe, divise, attrezzatura: il materiale tecnico è una spesa ricorrente. Con Renova quella spesa si abbassa, perché il materiale ancora buono torna a circolare invece di essere ricomprato da zero. Il risparmio va direttamente alle famiglie.
+- [DATO] **+55%** degli intervistati spende più di 100€ ogni stagione sportiva soltanto in materiale sportivo (di cui +20% spende più di 200€)
 
 **Leva bonus (evidenziata)**
 - [ETICHETTA] Bonus
 - [TITOLO] Materiale che torna a circolare, con i dati in mano
 - [TESTO] Ogni scambio è attrezzatura salvata dall'armadio e un dato misurato: la dashboard traccia il risparmio generato per le famiglie e l'impatto ambientale evitato — carbon footprint (CO₂) e water footprint (acqua). Numeri pronti da mostrare a famiglie, sponsor e istituzioni.
 
-### Trust-strip (4 statistiche)
+### Banda "Gratis" (sotto le leve)
 
-**Stat 1**
-- [VALORE] +55%
-- [TESTO] degli intervistati ha dichiarato che ogni stagione ha in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato 
+> I dati delle interviste (+55%, +90%, +55% sulle spese) sono ora mostrati
+> DENTRO le leve 3 e 4 qui sopra, non più in una striscia di statistiche a sé.
+> Qui resta solo la banda verde con la partecipazione gratuita.
 
-**Stat 2**
-- [VALORE] +90%
-- [TESTO] degli intervistati è interessato a un servizio di scambio del materiale del proprio club
-
-**Stat 3**
-- [VALORE] +55%
-- [TESTO] degli intervistati spende più di 100€ ogni stagione sportiva soltanto il materiale sportivo (di cui +20% spende più di 200€)
-
-**Stat 4 (evidenziata)**
 - [VALORE] Gratis
 - [TESTO] la partecipazione alla fase di test per i primi club
 

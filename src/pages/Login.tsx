@@ -95,7 +95,7 @@ export function AuthShell({
           </p>
         </div>
         <div className="rounded-xl border border-line border-t-[1.5px] border-t-ink bg-paper p-6 shadow-sm">
-          <span className="eyebrow">Renova · Sport Resale</span>
+          <span className="eyebrow">Renova · Il marketplace second hand per ASD e SSD</span>
           <h1 className="mt-1 text-[28px] font-extrabold tracking-[-0.03em] text-ink">
             {titolo}
           </h1>

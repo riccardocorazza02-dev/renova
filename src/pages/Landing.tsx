@@ -239,11 +239,30 @@ function Hero() {
               icon={<HeartChatIcon />}
               title="Un servizio che le famiglie chiedono davvero"
               body="Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo."
+              stats={[
+                {
+                  valore: '+55%',
+                  testo:
+                    'delle famiglie/tesserati intervistati ha dichiarato che ogni stagione ha del materiale in buone condizioni che rimane inutilizzato',
+                },
+                {
+                  valore: '+90%',
+                  testo:
+                    'delle famiglie/tesserati intervistati è interessato a un servizio di scambio per il proprio club',
+                },
+              ]}
             />
             <Leva
               icon={<TagIcon />}
               title="Costo dello sport più basso per le famiglie"
               body="Scarpe, divise, attrezzatura: il materiale tecnico è una spesa ricorrente. Con Renova quella spesa si abbassa, perché il materiale ancora buono torna a circolare invece di essere ricomprato da zero. Il risparmio va direttamente alle famiglie."
+              stats={[
+                {
+                  valore: '+55%',
+                  testo:
+                    'degli intervistati spende più di 100€ ogni stagione sportiva soltanto in materiale sportivo (di cui +20% spende più di 200€)',
+                },
+              ]}
             />
           </div>
 
@@ -272,12 +291,12 @@ function Hero() {
             </div>
           </div>
 
-          {/* Trust-strip */}
-          <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border-[1.5px] border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
-            <Stat valore="+55%" testo="degli intervistati ha dichiarato che ogni stagione ha in casa del materiale sportivo usato in buone condizioni che rimane inutilizzato" />
-            <Stat valore="+90%" testo="degli intervistati è interessato a un servizio di scambio del materiale del proprio club" />
-            <Stat valore="+55%" testo="degli intervistati spende più di 100€ ogni stagione sportiva soltanto il materiale sportivo (di cui +20% spende più di 200€)" />
-            <Stat valore="Gratis" testo="la partecipazione alla fase di test per i primi club" highlight />
+          {/* Banda "Gratis" — partecipazione alla fase di test */}
+          <div className="mt-8 flex items-center gap-4 rounded-2xl bg-eco px-6 py-5 text-white">
+            <span className="text-[26px] font-extrabold tracking-[-0.03em]">Gratis</span>
+            <p className="text-[13px] leading-snug text-white/90 lg:text-[14px]">
+              la partecipazione alla fase di test per i primi club
+            </p>
           </div>
         </div>
       </div>
@@ -289,10 +308,12 @@ function Leva({
   icon,
   title,
   body,
+  stats,
 }: {
   icon: React.ReactNode
   title: string
   body: string
+  stats?: Array<{ valore: string; testo: string }>
 }) {
   return (
     <div className="rounded-2xl border border-edge bg-paper p-5 lg:p-6">
@@ -303,31 +324,21 @@ function Leva({
         <h3 className="text-[17px] leading-snug lg:text-[18px]">{title}</h3>
       </div>
       <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{body}</p>
-    </div>
-  )
-}
-
-function Stat({
-  valore,
-  testo,
-  highlight = false,
-}: {
-  valore: string
-  testo: string
-  highlight?: boolean
-}) {
-  return (
-    <div className={`px-5 py-5 ${highlight ? 'bg-eco' : 'bg-paper'}`}>
-      <div
-        className={`text-[26px] font-extrabold tracking-[-0.03em] ${highlight ? 'text-white' : 'text-eco'}`}
-      >
-        {valore}
-      </div>
-      <p
-        className={`mt-1 text-[12px] leading-snug ${highlight ? 'text-white/90' : 'text-ink-soft'}`}
-      >
-        {testo}
-      </p>
+      {stats && stats.length > 0 && (
+        <div className="mt-4 space-y-2 border-t border-line pt-4">
+          {stats.map((s, i) => (
+            <div
+              key={i}
+              className="flex items-baseline gap-3 rounded-xl bg-eco-50/60 px-3 py-2.5"
+            >
+              <span className="shrink-0 text-[22px] font-extrabold leading-none tracking-[-0.03em] text-eco">
+                {s.valore}
+              </span>
+              <span className="text-[12px] leading-snug text-ink-soft">{s.testo}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
