@@ -375,7 +375,7 @@ function ComeFunziona() {
               <MockupPhone
                 src={mockCodice}
                 alt="Schermata dell'app Renova con il codice di attivazione del club"
-                className="max-w-[300px]"
+                className="max-w-[230px]"
               />
             }
           />
@@ -393,7 +393,7 @@ function ComeFunziona() {
               <MockupPhone
                 src={mockChat}
                 alt="Schermata della chat integrata dell'app Renova"
-                className="max-w-[300px]"
+                className="max-w-[230px]"
               />
             }
           />
@@ -407,7 +407,7 @@ function ComeFunziona() {
               <MockupPhone
                 src={mockImpatto}
                 alt="Dashboard d'impatto dell'app Renova con metriche ambientali ed economiche"
-                className="max-w-[300px]"
+                className="max-w-[230px]"
               />
             }
           />
@@ -474,7 +474,7 @@ function Step2() {
           <MockupPhone
             src={mockMarketplace}
             alt="Feed del marketplace nell'app Renova"
-            className="max-w-[240px]"
+            className="max-w-[230px]"
           />
           <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
             <span className="font-bold text-ink">Marketplace</span>
@@ -492,7 +492,7 @@ function Step2() {
             <MockupPhone
               src={mockSocietario}
               alt="Articolo nel feed societario dell'app Renova"
-              className="max-w-[170px] sm:max-w-[230px]"
+              className="max-w-[230px]"
             />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-eco-700">Feed societario</span>
@@ -505,7 +505,7 @@ function Step2() {
             <MockupPhone
               src={mockPubblico}
               alt="Articolo nel feed pubblico dell'app Renova"
-              className="max-w-[170px] sm:max-w-[230px]"
+              className="max-w-[230px]"
             />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-ink">Feed pubblico</span>
