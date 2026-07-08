@@ -32,7 +32,6 @@
       • §2 HERO              → funzione `Hero()`  (eyebrow, <h1>, paragrafo, CTA, riquadro sondaggio, badge)
       • §2 Le leve           → chiamate a <Leva …>  dentro `Hero()`  (title/body + prop `stats` con i dati delle interviste nelle leve 3 e 4)
       • §2 Leva bonus        → blocco "Leva bonus — evidenziata" in `Hero()`
-      • §2 Banda "Gratis"    → banda verde "Gratis" in `Hero()` (sotto la leva bonus)
       • §3 COME FUNZIONA     → funzione `ComeFunziona()` + `StepRow`/`Step2` (eyebrow, <h2>, paragrafo, 4 step, didascalie feed)
       • §4 PARTNERSHIP       → funzione `SocialProof()`  (eyebrow, <h2>, paragrafo, nota)
       • §5 FASE DI TEST      → funzione `FaseDiTest()`  (eyebrow, <h2>, paragrafo, CTA)
@@ -147,14 +146,8 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 - [TITOLO] Materiale che torna a circolare, con i dati in mano
 - [TESTO] Ogni scambio è attrezzatura salvata dall'armadio e un dato misurato: la dashboard traccia il risparmio generato per le famiglie e l'impatto ambientale evitato — carbon footprint (CO₂) e water footprint (acqua). Numeri pronti da mostrare a famiglie, sponsor e istituzioni.
 
-### Banda "Gratis" (sotto le leve)
-
-> I dati delle interviste (+55%, +90%, +55% sulle spese) sono ora mostrati
-> DENTRO le leve 3 e 4 qui sopra, non più in una striscia di statistiche a sé.
-> Qui resta solo la banda verde con la partecipazione gratuita.
-
-- [VALORE] Gratis
-- [TESTO] la partecipazione alla fase di test per i primi club
+> I dati delle interviste (+55%, +90%, +55% sulle spese) sono mostrati DENTRO
+> le leve 3 e 4 qui sopra, non più in una striscia di statistiche a sé.
 
 ---
 

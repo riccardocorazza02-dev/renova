@@ -290,14 +290,6 @@ function Hero() {
               </div>
             </div>
           </div>
-
-          {/* Banda "Gratis" — partecipazione alla fase di test */}
-          <div className="mt-8 flex items-center gap-4 rounded-2xl bg-eco px-6 py-5 text-white">
-            <span className="text-[26px] font-extrabold tracking-[-0.03em]">Gratis</span>
-            <p className="text-[13px] leading-snug text-white/90 lg:text-[14px]">
-              la partecipazione alla fase di test per i primi club
-            </p>
-          </div>
         </div>
       </div>
     </section>
