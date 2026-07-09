@@ -228,22 +228,22 @@ function Hero() {
             <Leva
               icon={<BoltIcon />}
               title="Zero sforzo organizzativo per il club"
-              body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria."
+              body="Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro, senza nessun carico sulla segreteria."
             />
             <Leva
               icon={<PeopleIcon />}
               title="Retention e recruiting dei tesserati"
-              body="Gli scambi avvengono di persona, tra famiglie dello stesso club: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta."
+              body="Gli scambi avvengono di persona: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta."
             />
             <Leva
               icon={<HeartChatIcon />}
               title="Un servizio che le famiglie chiedono davvero"
-              body="Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo."
+              body="Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club arricchisce il valore del tuo servizio."
               stats={[
                 {
                   valore: '+55%',
                   testo:
-                    'delle famiglie/tesserati intervistati ha dichiarato che ogni stagione ha del materiale in buone condizioni che rimane inutilizzato',
+                    'delle famiglie/tesserati intervistati ha dichiarato che ogni stagione si trova con del materiale in buone condizioni che rimane inutilizzato',
                 },
                 {
                   valore: '+90%',
@@ -405,7 +405,7 @@ function ComeFunziona() {
           <StepRow
             n="4"
             title="Il club vede l'impatto"
-            body="Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare, in ogni momento ed esportabili."
+            body="Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare in ogni momento."
             mock={
               <MockupPhone
                 src={mockImpatto}
@@ -465,7 +465,7 @@ function Step2() {
           <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
             Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il
             materiale che non usano più. Lo stesso feed si divide automaticamente in due viste,
-            in base alla presenza del logo della società.
+            in base alla presenza o meno del logo della società.
           </p>
         </div>
       </div>
@@ -482,7 +482,7 @@ function Step2() {
           <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
             <span className="font-bold text-ink">Marketplace</span>
             <br />
-            un solo posto dove pubblicare e cercare.
+            Un solo posto dove pubblicare e cercare.
           </figcaption>
         </figure>
 
@@ -500,7 +500,7 @@ function Step2() {
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-eco-700">Feed societario</span>
               <br />
-              articoli col logo societario, visibili solo ai tesserati del club stesso.
+              Articoli col logo societario, visibili solo ai tesserati del club stesso.
             </figcaption>
           </figure>
 
@@ -513,7 +513,7 @@ function Step2() {
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
               <span className="font-bold text-ink">Feed pubblico</span>
               <br />
-              articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
+              Articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
             </figcaption>
           </figure>
         </div>
@@ -670,11 +670,11 @@ function FaseDiTest() {
 const FAQ: Array<{ q: string; a: string }> = [
   {
     q: 'Quanto costa al club?',
-    a: 'In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare il servizio: nessun costo, nessun impegno economico.',
+    a: 'In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare e sviluppare il servizio: nessun costo, nessun impegno economico.',
   },
   {
     q: 'È davvero gratis? E dopo la fase di test?',
-    a: 'Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di revenue è ancora in corso di definizione ma in ogni caso lo scambio del materiale tra tesserati resta gratuito.',
+    a: 'Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di business è ancora in corso di definizione ma in ogni caso il servizio è pensato per far sì che lo scambio del materiale tra i tesserati resti gratuito.',
   },
   {
     q: 'Cosa deve fare concretamente il club?',
@@ -687,14 +687,6 @@ const FAQ: Array<{ q: string; a: string }> = [
   {
     q: 'Come avviene lo scambio? È gratuito o c’è un prezzo?',
     a: 'La piattaforma fa incontrare domanda e offerta; l’accordo lo prendono le famiglie tramite la chat integrata e lo scambio avviene di persona, tra tesserati. È una scelta voluta: rafforza i rapporti dentro la community del club. Il prezzo che vedi indicato negli articoli riguarda il risparmio economico generato dallo scambio, non un importo da pagare.',
-  },
-  {
-    q: 'Chi vede cosa? Come gestite la privacy?',
-    a: 'Ogni tesserato vede due insiemi separati: il feed societario, visibile solo ai membri dello stesso club (qui finiscono gli articoli con il logo della società); e il feed pubblico, con i soli articoli senza logo, visibili a tutti gli altri praticanti dello stesso sport nella stessa area geografica. Agli altri utenti sono visibili solo le informazioni minime necessarie ad accordarsi sullo scambio; il resto dei dati personali non è esposto. La separazione è garantita a livello di sistema, non lasciata al caso.',
-  },
-  {
-    q: 'E per i tesserati minorenni?',
-    a: 'L’account di un minore è creato e gestito da un genitore o da un adulto di riferimento, che resta responsabile delle interazioni. Lo scambio avviene di persona e all’interno della community del club, in un ambiente chiuso e riconducibile a tesserati reali — non una piazza aperta a sconosciuti. Stiamo definendo strumenti dedicati per mantenere la chat un ambiente sicuro.',
   },
   {
     q: 'Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?',
@@ -804,8 +796,9 @@ function Contatti() {
             Vuoi portare Renova nel tuo club?
           </h2>
           <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-ink-soft">
-            Raccontaci del tuo club o facci le tue domande. Ti ricontattiamo per una call senza
-            impegno.
+            Non esitare a contattarci. Raccontaci della tua realtà, porta alla luce i tuoi dubbi
+            e curiosità o aiutaci con dei suggerimenti che contribuiscano al miglioramento del
+            servizio.
           </p>
 
           <div className="mt-8 space-y-4">

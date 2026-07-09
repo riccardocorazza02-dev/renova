@@ -124,16 +124,16 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 **Leva 1**
 - [TITOLO] Zero sforzo organizzativo per il club
-- [TESTO] Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro. Nessun magazzino, nessun coordinamento, nessun carico sulla segreteria.
+- [TESTO] Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro, senza nessun carico sulla segreteria.
 
 **Leva 2**
 - [TITOLO] Retention e recruiting dei tesserati
-- [TESTO] Gli scambi avvengono di persona, tra famiglie dello stesso club: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta.
+- [TESTO] Gli scambi avvengono di persona: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta.
 
 **Leva 3**
 - [TITOLO] Un servizio che le famiglie chiedono davvero
-- [TESTO] Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club ti dà un argomento concreto al momento dell'iscrizione e del rinnovo.
-- [DATO] **+55%** delle famiglie/tesserati intervistati ha dichiarato che ogni stagione ha del materiale in buone condizioni che rimane inutilizzato
+- [TESTO] Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club arricchisce il valore del tuo servizio.
+- [DATO] **+55%** delle famiglie/tesserati intervistati ha dichiarato che ogni stagione si trova con del materiale in buone condizioni che rimane inutilizzato
 - [DATO] **+90%** delle famiglie/tesserati intervistati è interessato a un servizio di scambio per il proprio club
 
 **Leva 4**
@@ -165,10 +165,10 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 **Step 2**
 - [TITOLO] I tesserati entrano nel marketplace
-- [TESTO] Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il materiale che non usano più. Lo stesso feed si divide automaticamente in due viste, in base alla presenza del logo della società.
-- [DIDASCALIA mockup centrale] **Marketplace** — un solo posto dove pubblicare e cercare.
-- [DIDASCALIA feed societario] **Feed societario** — articoli col logo societario, visibili solo ai tesserati del club stesso.
-- [DIDASCALIA feed pubblico] **Feed pubblico** — articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
+- [TESTO] Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il materiale che non usano più. Lo stesso feed si divide automaticamente in due viste, in base alla presenza o meno del logo della società.
+- [DIDASCALIA mockup centrale] **Marketplace** — Un solo posto dove pubblicare e cercare.
+- [DIDASCALIA feed societario] **Feed societario** — Articoli col logo societario, visibili solo ai tesserati del club stesso.
+- [DIDASCALIA feed pubblico] **Feed pubblico** — Articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
 
 **Step 3**
 - [TITOLO] Si accordano e scambiano, gratis
@@ -176,7 +176,7 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 **Step 4**
 - [TITOLO] Il club vede l'impatto
-- [TESTO] Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare, in ogni momento ed esportabili.
+- [TESTO] Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare in ogni momento.
 
 ---
 
@@ -214,10 +214,10 @@ Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando 
 [H2] Domande frequenti
 
 **D1.** Quanto costa al club?
-**R1.** In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare il servizio: nessun costo, nessun impegno economico. 
+**R1.** In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare e sviluppare il servizio: nessun costo, nessun impegno economico. 
 
 **D2.** È davvero gratis? E dopo la fase di test?
-**R2.** Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di revenue è ancora in corso di definizione ma in ogni caso lo scambio del materiale tra tesserati resta gratuito.
+**R2.** Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di business è ancora in corso di definizione ma in ogni caso il servizio è pensato per far sì che lo scambio del materiale tra i tesserati resti gratuito.
 
 **D3.** Cosa deve fare concretamente il club?
 **R3.** Pochissimo: aderire, distribuire il codice di attivazione ai tesserati e prendersi i meriti dell'iniziativa. Tutto il resto — pubblicazione del materiale, accordi, scambio — lo gestiscono le famiglie in autonomia. Nessun carico di lavoro sulla società.
@@ -228,20 +228,14 @@ Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando 
 **D5.** Come avviene lo scambio? È gratuito o c'è un prezzo?
 **R5.** La piattaforma fa incontrare domanda e offerta; l'accordo lo prendono le famiglie tramite la chat integrata e lo scambio avviene di persona, tra tesserati. È una scelta voluta: rafforza i rapporti dentro la community del club. Il prezzo che vedi indicato negli articoli riguarda il risparmio economico generato dallo scambio, non un importo da pagare.
 
-**D6.** Chi vede cosa? Come gestite la privacy?
-**R6.** Ogni tesserato vede due insiemi separati: il feed societario, visibile solo ai membri dello stesso club (qui finiscono gli articoli con il logo della società); e il feed pubblico, con i soli articoli senza logo, visibili a tutti gli altri praticanti dello stesso sport nella stessa area geografica. Agli altri utenti sono visibili solo le informazioni minime necessarie ad accordarsi sullo scambio; il resto dei dati personali non è esposto. La separazione è garantita a livello di sistema, non lasciata al caso.
+**D6.** Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?
+**R6.** Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l'accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l'oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi. Bisogna immaginare Renova come uno spazio pubblico, il cui buon funzionamento è una responsabilità condivisa.
 
-**D7.** E per i tesserati minorenni?
-**R7.** L'account di un minore è creato e gestito da un genitore o da un adulto di riferimento, che resta responsabile delle interazioni. Lo scambio avviene di persona e all'interno della community del club, in un ambiente chiuso e riconducibile a tesserati reali — non una piazza aperta a sconosciuti. Stiamo definendo strumenti dedicati per mantenere la chat un ambiente sicuro.
+**D7.** Come accedono i tesserati? Serve scaricare un'app?
+**R7.** Al momento no: si accede da web con il codice di attivazione del club, dallo smartphone come da computer. Nessuna installazione, nessuna procedura complicata.
 
-**D8.** Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?
-**R8.** Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l'accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l'oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi. Bisogna immaginare Renova come uno spazio pubblico, il cui buon funzionamento è una responsabilità condivisa.
-
-**D9.** Come accedono i tesserati? Serve scaricare un'app?
-**R9.** Al momento no: si accede da web con il codice di attivazione del club, dallo smartphone come da computer. Nessuna installazione, nessuna procedura complicata.
-
-**D10.** Come fate a misurare il risparmio e l'impatto ambientale mostrati nella dashboard?
-**R10.** Il risparmio nasce dagli scambi reali registrati sulla piattaforma. L'impatto ambientale (CO₂ e acqua) è stimato con un metodo deterministico e tracciabile, calcolato dalle fibre che compongono il capo — non un numero generico, ma una stima documentata con tre livelli di affidabilità a seconda di quanto si conosce del materiale.
+**D8.** Come fate a misurare il risparmio e l'impatto ambientale mostrati nella dashboard?
+**R8.** Il risparmio nasce dagli scambi reali registrati sulla piattaforma. L'impatto ambientale (CO₂ e acqua) è stimato con un metodo deterministico e tracciabile, calcolato dalle fibre che compongono il capo — non un numero generico, ma una stima documentata con tre livelli di affidabilità a seconda di quanto si conosce del materiale.
 
 ---
 
@@ -251,7 +245,7 @@ Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando 
 
 [H2] Vuoi portare Renova nel tuo club?
 
-[PARAGRAFO] Raccontaci del tuo club o facci le tue domande. Ti ricontattiamo per una call senza impegno.
+[PARAGRAFO] Non esitare a contattarci. Raccontaci della tua realtà, porta alla luce i tuoi dubbi e curiosità o aiutaci con dei suggerimenti che contribuiscano al miglioramento del servizio.
 
 [CONTATTI DIRETTI]
 - Email: «info@renovasport.it»
