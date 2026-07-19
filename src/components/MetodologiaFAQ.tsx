@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 // ── Area Q&A: come si calcola l'impatto + criteri anti-greenwashing ──────
-// Sintesi divulgativa della nota metodologica di Renova (giugno 2026).
-// Vive nella pagina Profilo come sotto-sezione collassabile: l'utente apre la
-// scheda e trova le domande/risposte all'interno.
+// Sintesi divulgativa della nota metodologica di Renova. Vive nella pagina
+// Impatto come scheda collassabile; il documento integrale è pubblico su
+// /metodologia (linkato in fondo alle Q&A).
 
 function QA({
   domanda,
@@ -237,10 +238,26 @@ export function MetodologiaFAQ() {
             </QA>
           </div>
 
+          <Link
+            to="/metodologia"
+            className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-eco-300 bg-eco-50 px-3.5 py-3 text-[13px] font-bold uppercase tracking-[0.04em] text-eco-700 transition hover:bg-eco-100"
+          >
+            Leggi il documento metodologico completo
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path
+                d="M9 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+
           <p className="mt-3 rounded-lg border border-line bg-surface px-3.5 py-2.5 text-[11px] leading-relaxed text-ink-soft">
             Nota: le stime descritte non costituiscono una LCA certificata e vanno
             validate prima di qualsiasi dichiarazione ambientale rivolta al mercato.
-            Sintesi della nota metodologica di Renova (versione giugno 2026).
+            Sintesi della nota metodologica di Renova (versione luglio 2026).
           </p>
         </div>
       )}

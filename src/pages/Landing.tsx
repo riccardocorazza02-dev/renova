@@ -967,6 +967,12 @@ function Footer() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
           <Logo className="text-[18px]" />
+          <Link
+            to="/metodologia"
+            className="text-[11px] font-bold uppercase tracking-[0.08em] text-ink-soft transition hover:text-ink"
+          >
+            Metodologia d'impatto
+          </Link>
           <p className="text-[11px] text-ink-muted">
             © 2026 Renova · Il marketplace second hand per ASD e SSD · {SITO}
           </p>
@@ -1067,7 +1073,7 @@ function StatoBadge({ stato, big = false }: { stato: string; big?: boolean }) {
  *  righe), stati e metriche ESG nel formato «≥» dell'app. */
 const FEED_ITEMS = [
   { titolo: 'Zaino sportivo', meta: 'Zaino · Unica · Buono', co2: '9 KG', h2o: '300 L', stato: 'Disponibile' },
-  { titolo: 'Scarpe da calcio', meta: 'Scarpe · 41 · Ottimo', co2: '14 KG', h2o: '1,3K L', stato: 'Scambiato' },
+  { titolo: 'Scarpe da calcio', meta: 'Scarpe · 41 · Ottimo', co2: '14 KG', h2o: '1,5K L', stato: 'Scambiato' },
   { titolo: 'Giacca sportiva', meta: 'Giacca · M · Ottimo', co2: '1 KG', h2o: '19 L', stato: 'Disponibile' },
   { titolo: 'Maglia allenamento', meta: 'Maglia · S · Perfetto', co2: '4 KG', h2o: '600 L', stato: 'Prenotato' },
 ]

@@ -52,10 +52,13 @@ src/
 │                scambio), RecensioneScambio, Stelle, StoricoScambi,
 │                MetodologiaFAQ, Logo, ui.tsx (TextField/SelectField/
 │                PrimaryButton/banner), ...
-├─ pages/        Landing (B2B, pubblica), Login, Register, RecuperaPassword,
+├─ pages/        Landing (B2B, pubblica), Metodologia (documento metodologico
+│                integrale, pubblica su /metodologia; PDF scaricabile da
+│                public/metodologia-renova.pdf — aggiornare pagina e PDF
+│                insieme), Login, Register, RecuperaPassword,
 │                AggiornaPassword, Feed, ArticleDetail, Upload,
 │                ModificaArticolo, Chat, Conversation, MieiArticoli,
-│                MieiScambi, Impatto, Profile
+│                MieiScambi, Impatto (con MetodologiaFAQ in fondo), Profile
 └─ App.tsx       routing (PublicOnly / ProtectedRoute / Home "2 in 1")
 supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0004_sport_feed · 0005_rls_feed · 0006_seed_categorie ·

@@ -5,7 +5,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { Spinner } from '../components/Spinner'
 import { StelleStatiche } from '../components/Stelle'
 import { ScambioCard } from '../components/StoricoScambi'
-import { MetodologiaFAQ } from '../components/MetodologiaFAQ'
 import type { Scambio } from '../lib/database.types'
 
 export function Profile() {
@@ -175,11 +174,6 @@ export function Profile() {
           valore={conteggio === null ? '—' : String(conteggio)}
         />
       </section>
-
-      {/* Metodologia dell'impatto — scheda collassabile (Q&A anti-greenwashing) */}
-      <div className="mt-5">
-        <MetodologiaFAQ />
-      </div>
 
       {/* Azioni */}
       <button

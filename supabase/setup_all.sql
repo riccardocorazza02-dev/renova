@@ -2294,7 +2294,7 @@ revoke execute on function public.pulisci_conversazioni() from public, anon, aut
 -- canotta passa da «tecnico/riciclato» a «tecnico/riciclato/cotone»).
 --
 -- Scarpe: valore fisso di categoria 13,6 kg CO₂e/paio (MIT, Cheah et al. 2013,
--- news.mit.edu/2013/footwear-carbon-footprint-0522) e ≥1.300 L/paio (valore
+-- news.mit.edu/2013/footwear-carbon-footprint-0522) e ≥1.500 L/paio (valore
 -- prudenziale: non esiste un LCA idrico affidabile per la scarpa sportiva
 -- sintetica; ≈8.000 L riguarda la PELLE ed è escluso). Confine diverso dal
 -- cradle-to-fibre-gate dei capi (è un valore di letteratura per l'intera scarpa):

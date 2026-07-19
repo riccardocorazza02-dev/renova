@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { FullScreenSpinner } from '../components/Spinner'
+import { MetodologiaFAQ } from '../components/MetodologiaFAQ'
 import { formatCo2, formatAcqua, formatPrezzo } from '../lib/format'
 import type { ImpattoSocieta, Scambio } from '../lib/database.types'
 
@@ -164,7 +165,7 @@ export function Impatto() {
               <p className="border-t border-line px-5 py-3.5 text-[10.5px] leading-relaxed tracking-[0.03em] text-ink-faint">
                 Equivalenze indicative · {numScambi}{' '}
                 {numScambi === 1 ? 'scambio concluso' : 'scambi conclusi'} · metodo
-                nel profilo
+                in fondo alla pagina
               </p>
             </div>
 
@@ -211,6 +212,11 @@ export function Impatto() {
           />
         </div>
       )}
+
+      {/* Metodologia: Q&A anti-greenwashing + link al documento integrale */}
+      <div className="mt-5">
+        <MetodologiaFAQ />
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { FullScreenSpinner } from './components/Spinner'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/Layout'
 import { Landing } from './pages/Landing'
+import { Metodologia } from './pages/Metodologia'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { RecuperaPassword } from './pages/RecuperaPassword'
@@ -47,6 +48,9 @@ export default function App() {
     <Routes>
       {/* Radice pubblica: landing per gli anonimi, app per gli autenticati. */}
       <Route path="/" element={<Home />} />
+
+      {/* Documento metodologico integrale — pubblico, senza login. */}
+      <Route path="/metodologia" element={<Metodologia />} />
 
       {/* Pubbliche */}
       <Route
