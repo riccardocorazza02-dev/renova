@@ -1,4 +1,4 @@
-# Loop 🔄 — Sport Resale & ESG
+# Renova 🔄 — Sport Resale & ESG
 
 Marketplace **B2B2C** per società sportive: gli atleti scambiano materiale tecnico di
 seconda mano **all'interno della propria società**, e ogni scambio mostra il
