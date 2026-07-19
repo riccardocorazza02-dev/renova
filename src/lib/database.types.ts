@@ -223,8 +223,10 @@ export interface Scambio {
   id: number
   /** null se l'articolo è stato eliminato dopo lo scambio */
   id_articolo: number | null
-  id_venditore: string
-  id_acquirente: string
+  /** null se l'account è stato eliminato (il nome resta anonimizzato) */
+  id_venditore: string | null
+  /** null se l'account è stato eliminato (il nome resta anonimizzato) */
+  id_acquirente: string | null
   nome_venditore: string
   nome_acquirente: string
   titolo_articolo: string
@@ -242,8 +244,10 @@ export interface Scambio {
 export interface Recensione {
   id: number
   id_scambio: number
-  id_autore: string
-  id_destinatario: string
+  /** null se l'account dell'autore è stato eliminato */
+  id_autore: string | null
+  /** null se l'account del destinatario è stato eliminato */
+  id_destinatario: string | null
   valutazione: number
   created_at: string
 }

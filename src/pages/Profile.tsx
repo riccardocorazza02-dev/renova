@@ -9,12 +9,17 @@ import { MetodologiaFAQ } from '../components/MetodologiaFAQ'
 import type { Scambio } from '../lib/database.types'
 
 export function Profile() {
-  const { session, profilo, signOut } = useAuth()
+  const { session, profilo, signOut, deleteAccount } = useAuth()
   const meId = session?.user.id
   const [conteggio, setConteggio] = useState<number | null>(null)
   const [scambi, setScambi] = useState<Scambio[]>([])
   const [valutazioni, setValutazioni] = useState<number[]>([])
   const [signingOut, setSigningOut] = useState(false)
+
+  // Eliminazione account (definitiva, con doppia conferma)
+  const [confermaElimina, setConfermaElimina] = useState(false)
+  const [eliminando, setEliminando] = useState(false)
+  const [erroreElimina, setErroreElimina] = useState('')
 
   useEffect(() => {
     let active = true
@@ -58,6 +63,20 @@ export function Profile() {
     setSigningOut(true)
     await signOut()
     // L'AuthProvider azzera la sessione → le rotte protette reindirizzano a /login.
+  }
+
+  async function handleEliminaAccount() {
+    setEliminando(true)
+    setErroreElimina('')
+    try {
+      await deleteAccount()
+      // Sessione azzerata → le rotte protette reindirizzano fuori dall'app.
+    } catch (err) {
+      setErroreElimina(
+        err instanceof Error ? err.message : "Impossibile eliminare l'account.",
+      )
+      setEliminando(false)
+    }
   }
 
   if (!profilo) return null
@@ -171,6 +190,55 @@ export function Profile() {
         {signingOut && <Spinner className="h-4 w-4" />}
         Esci dall'account
       </button>
+
+      {/* Eliminazione account — definitiva (diritto all'oblio) */}
+      <section className="mt-6 border-t border-line pt-4">
+        {erroreElimina && (
+          <p className="mb-3 border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
+            {erroreElimina}
+          </p>
+        )}
+        {!confermaElimina ? (
+          <button
+            type="button"
+            onClick={() => setConfermaElimina(true)}
+            className="w-full text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-faint transition hover:text-red-600"
+          >
+            Elimina il mio account
+          </button>
+        ) : (
+          <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4">
+            <p className="text-sm font-semibold text-ink">
+              Eliminare definitivamente il tuo account?
+            </p>
+            <p className="text-xs leading-relaxed text-ink-soft">
+              L'operazione è irreversibile: verranno cancellati il tuo profilo,
+              i tuoi articoli con le foto e tutte le tue chat. Gli scambi già
+              conclusi restano nello storico delle altre persone in forma
+              anonima («Utente eliminato»).
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleEliminaAccount}
+                disabled={eliminando}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.04em] text-white transition hover:bg-red-700 disabled:opacity-60"
+              >
+                {eliminando && <Spinner className="h-4 w-4" />}
+                {eliminando ? 'Elimino…' : 'Sì, elimina tutto'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfermaElimina(false)}
+                disabled={eliminando}
+                className="rounded-lg border border-edge bg-paper px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.04em] text-ink transition hover:border-ink disabled:opacity-60"
+              >
+                Annulla
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
 
       <p className="pb-2 pt-5 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
         Renova · Sport Resale &amp; ESG

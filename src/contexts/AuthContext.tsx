@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
+import { supabase, STORAGE_BUCKET } from '../lib/supabase'
 import type { Utente, Societa } from '../lib/database.types'
 
 /** Profilo applicativo dell'utente + la sua società. */
@@ -27,6 +27,8 @@ interface AuthContextValue {
     codiceSocieta: string
   }) => Promise<void>
   signOut: () => Promise<void>
+  /** Elimina DEFINITIVAMENTE l'account (RPC `elimina_account`) e chiude la sessione. */
+  deleteAccount: () => Promise<void>
   refreshProfilo: () => Promise<void>
   /** Invia l'email con il link per reimpostare la password. */
   resetPassword: (email: string) => Promise<void>
@@ -113,6 +115,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         options: {
+          // Destinazione del link nell'email di conferma: la radice del sito
+          // (l'utente atterra già autenticato e viene portato al feed).
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             nome_completo: nomeCompleto.trim(),
             codice_societa: codiceSocieta.trim(),
@@ -126,6 +131,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
+    setProfilo(null)
+  }, [])
+
+  const deleteAccount = useCallback(async () => {
+    // Prima la pulizia delle foto (Storage API, policy "delete proprio"):
+    // il DELETE SQL diretto su storage.objects è vietato da Supabase, quindi
+    // la RPC non può farlo. Best-effort: un errore qui non blocca l'oblio.
+    const { data } = await supabase.auth.getSession()
+    const uid = data.session?.user.id
+    if (uid) {
+      try {
+        await svuotaCartellaStorage(uid)
+      } catch (err) {
+        console.warn('[Renova] Pulizia storage non completata:', err)
+      }
+    }
+
+    const { error } = await supabase.rpc('elimina_account')
+    if (error) {
+      console.error('[Renova] elimina_account error:', error.message)
+      throw new Error(
+        "Impossibile eliminare l'account. Riprova o contatta info@renovasport.it.",
+      )
+    }
+    // L'utente non esiste più lato server: basta chiudere la sessione locale.
+    await supabase.auth.signOut({ scope: 'local' })
     setProfilo(null)
   }, [])
 
@@ -155,6 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signUp,
         signOut,
+        deleteAccount,
         refreshProfilo,
         resetPassword,
         updatePassword,
@@ -170,6 +202,26 @@ export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth deve essere usato dentro <AuthProvider>')
   return ctx
+}
+
+/**
+ * Svuota ricorsivamente la cartella dell'utente nel bucket foto
+ * (articoli, etichette e foto di chat: `<uid>/…`).
+ */
+async function svuotaCartellaStorage(prefix: string): Promise<void> {
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .list(prefix, { limit: 1000 })
+  if (error || !data) return
+  const files: string[] = []
+  for (const voce of data) {
+    // Le sottocartelle (es. chat/) hanno id null e vanno visitate.
+    if (voce.id) files.push(`${prefix}/${voce.name}`)
+    else await svuotaCartellaStorage(`${prefix}/${voce.name}`)
+  }
+  if (files.length) {
+    await supabase.storage.from(STORAGE_BUCKET).remove(files)
+  }
 }
 
 /** Traduce i messaggi di errore Supabase più comuni in italiano. */

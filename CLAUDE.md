@@ -66,7 +66,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0018_semplificazione_categorie (2 macro + 14 item) ·
                       0019_rinomina_loop_renova · 0020_blend_osservati_L1 ·
                       0021_tap_scostamento_10pct ·
-                      0022_rimozione_colonne_superflue (modello ATTUALE).
+                      0022_rimozione_colonne_superflue ·
+                      0023_eliminazione_account (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -133,6 +134,16 @@ il calcolo lato client solo per l'anteprima.
 - **Scambio definitivo**: lo stato `Scambiato` NON si scrive direttamente
   (trigger `set_scambiato_at` lo blocca): passa solo dalla RPC
   `registra_scambio`, che registra anche l'acquirente.
+- **Eliminazione account** (`0023`, GDPR): RPC `elimina_account` — elimina
+  articoli e chat, ANONIMIZZA lo storico scambi/recensioni («Utente
+  eliminato», FK a NULL) e cancella l'utente da `auth.users`. Le foto le
+  rimuove il CLIENT via Storage API prima della RPC (il DELETE SQL su
+  storage.objects è vietato da Supabase). UI nel Profilo, logica in
+  `AuthContext.deleteAccount`.
+- **Conferma email**: attiva sul progetto remoto (signup → email di
+  conferma; `emailRedirectTo` impostato nel signUp). ⚠️ Il servizio email
+  integrato di Supabase ha un limite di poche email/ora: per l'uso reale va
+  configurato un SMTP personalizzato (dashboard → Auth → SMTP).
 - **Lingua**: tutta la UI e i messaggi all'utente sono in **italiano**.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti
