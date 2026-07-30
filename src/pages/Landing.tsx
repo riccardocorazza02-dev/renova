@@ -164,9 +164,11 @@ function Hero() {
       <div className="mx-auto max-w-6xl px-5 py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-20">
         {/* Colonna sinistra: promessa + CTA */}
         <div>
-          <span className="eyebrow">Servizio attivabile da ASD/SSD di Bologna</span>
+          <span className="eyebrow">
+            Servizio alla ricerca di partner per una fase pilota gratuita.
+          </span>
           <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
-            Abbatti il costo dello sport per le famiglie del tuo club.
+            La prima app per l’economia circolare per ASD e SSD.
           </h1>
           <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
             Il servizio che le famiglie del tuo club stanno aspettando. Con Renova i tesserati
