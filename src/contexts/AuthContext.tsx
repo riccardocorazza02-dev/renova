@@ -293,5 +293,17 @@ function traduciErrore(msg: string): string {
     console.error('[Renova] Invio email di conferma fallito:', msg)
     return "Non è stato possibile inviare l'email di conferma. Riprova tra qualche minuto o scrivi a info@renovasport.it."
   }
+  // 500 lato GoTrue (`unexpected_failure`): tipicamente una riga di auth.users
+  // creata a mano con colonne token a NULL — GoTrue le legge in stringhe non
+  // nullable e va in errore. Il messaggio grezzo non dice nulla all'utente,
+  // ma serve a noi: resta in console.
+  if (
+    m.includes('database error') ||
+    m.includes('unexpected_failure') ||
+    m.includes('converting null')
+  ) {
+    console.error('[Renova] Errore inatteso del servizio auth:', msg)
+    return 'Errore temporaneo del servizio di accesso. Riprova tra poco; se continua scrivi a info@renovasport.it.'
+  }
   return msg
 }
