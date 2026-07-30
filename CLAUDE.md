@@ -144,9 +144,18 @@ il calcolo lato client solo per l'anteprima.
   storage.objects è vietato da Supabase). UI nel Profilo, logica in
   `AuthContext.deleteAccount`.
 - **Conferma email**: attiva sul progetto remoto (signup → email di
-  conferma; `emailRedirectTo` impostato nel signUp). ⚠️ Il servizio email
+  conferma; `emailRedirectTo` impostato nel signUp). `Register.tsx` avvisa
+  prima del signup e poi mostra la schermata «Attiva il tuo account» con
+  reinvio (`AuthContext.reinviaConferma`); il login intercetta
+  `EmailNonConfermataError` e offre lo stesso reinvio. ⚠️ Il servizio email
   integrato di Supabase ha un limite di poche email/ora: per l'uso reale va
-  configurato un SMTP personalizzato (dashboard → Auth → SMTP).
+  configurato un SMTP personalizzato (dashboard → Auth → SMTP; passi nel
+  `README.md`).
+- ⚠️ **Email già registrata**: Supabase risponde `200` con un utente
+  "offuscato" (`identities: []`) e **non invia nulla** (anti-enumerazione).
+  `signUp` rileva il caso e lo dichiara all'utente, altrimenti sembra che «non
+  arrivi la mail di conferma». Attenzione quando si ripuliscono gli account di
+  prova: svuotare le tabelle `public.*` NON cancella `auth.users`.
 - **Lingua**: tutta la UI e i messaggi all'utente sono in **italiano**.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti
@@ -162,6 +171,7 @@ il calcolo lato client solo per l'anteprima.
 Variabili in `.env` (vedi `.env.example`): `VITE_SUPABASE_URL`,
 `VITE_SUPABASE_ANON_KEY`, `VITE_SUPABASE_STORAGE_BUCKET`. Le istruzioni
 complete di configurazione Supabase sono nel `README.md`.
-Codici di accesso di test (dal seed 0006, MVP area Bologna):
-`BFC-CAL` (Bologna FC · Calcio), `FORT-BSK` (Fortitudo Bologna · Basket),
-`BVOL-VOL` (Bologna Volley · Pallavolo).
+Codici di accesso: il seed `0006` crea quelli dell'area Bologna (`BFC-CAL`,
+`FORT-BSK`, `BVOL-VOL`), ma il progetto REMOTO è stato ripulito a mano e oggi
+contiene **solo `DEMO-UNIBO`** (Alma Mater · Calcio): verifica sempre con
+`select codice from codici_accesso` prima di dare per buoni i codici del seed.

@@ -15,6 +15,17 @@ export interface Profilo extends Utente {
   societa: Societa
 }
 
+/**
+ * Esito di una registrazione andata a buon fine.
+ * - `conferma-richiesta`: utente creato, email di conferma inviata, NESSUNA
+ *   sessione attiva (è il caso reale: la conferma email è attiva sul progetto).
+ * - `sessione-attiva`: conferma email disattivata, l'utente è già dentro.
+ */
+export type EsitoRegistrazione = 'conferma-richiesta' | 'sessione-attiva'
+
+/** Login rifiutato perché l'account esiste ma non è ancora stato attivato. */
+export class EmailNonConfermataError extends Error {}
+
 interface AuthContextValue {
   session: Session | null
   profilo: Profilo | null
@@ -25,7 +36,9 @@ interface AuthContextValue {
     password: string
     nomeCompleto: string
     codiceSocieta: string
-  }) => Promise<void>
+  }) => Promise<EsitoRegistrazione>
+  /** Rimanda l'email di attivazione a un account registrato ma non confermato. */
+  reinviaConferma: (email: string) => Promise<void>
   signOut: () => Promise<void>
   /** Elimina DEFINITIVAMENTE l'account (RPC `elimina_account`) e chiude la sessione. */
   deleteAccount: () => Promise<void>
@@ -91,7 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw new Error(traduciErrore(error.message))
+    if (!error) return
+    // Account registrato ma non attivato: la UI offre il reinvio dell'email.
+    if (error.message.toLowerCase().includes('email not confirmed')) {
+      throw new EmailNonConfermataError(traduciErrore(error.message))
+    }
+    throw new Error(traduciErrore(error.message))
   }, [])
 
   const signUp = useCallback<AuthContextValue['signUp']>(
@@ -111,8 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         )
       }
 
-      const { error } = await supabase.auth.signUp({
-        email,
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
         password,
         options: {
           // Destinazione del link nell'email di conferma: la radice del sito
@@ -125,9 +143,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       })
       if (error) throw new Error(traduciErrore(error.message))
+
+      // Anti-enumerazione di Supabase: se l'email appartiene già a un account
+      // ATTIVO la risposta è 200 con un utente "offuscato" (`identities` vuoto)
+      // e NESSUNA email viene inviata. Senza questo controllo la UI mostrava un
+      // falso «registrazione completata» e si restava in attesa di una mail che
+      // non arriva mai (l'account esistente, con la sua vecchia password,
+      // rimane l'unico valido).
+      if (data.user && (data.user.identities?.length ?? 0) === 0) {
+        throw new Error(
+          'Esiste già un account attivo con questa email. Accedi con la password che avevi scelto, oppure usa «Password dimenticata?» per reimpostarla.',
+        )
+      }
+
+      return data.session ? 'sessione-attiva' : 'conferma-richiesta'
     },
     [],
   )
+
+  const reinviaConferma = useCallback(async (email: string) => {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/` },
+    })
+    if (error) throw new Error(traduciErrore(error.message))
+  }, [])
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
@@ -185,6 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signIn,
         signUp,
+        reinviaConferma,
         signOut,
         deleteAccount,
         refreshProfilo,
@@ -236,6 +278,20 @@ function traduciErrore(msg: string): string {
   if (m.includes('codice società') || m.includes('23514'))
     return 'Codice società non valido.'
   if (m.includes('email not confirmed'))
-    return 'Conferma la tua email prima di accedere.'
+    return "Account non ancora attivato: apri il link nell'email di conferma, poi accedi."
+  // Limiti del servizio email: da soli non bloccano l'account, ma senza un
+  // messaggio chiaro sembra che «non arrivi la mail» senza motivo.
+  if (m.includes('rate limit') || m.includes('for security purposes'))
+    return 'Troppe email richieste in poco tempo. Attendi qualche minuto e riprova.'
+  if (m.includes('not authorized')) {
+    // SMTP di default di Supabase: consegna SOLO agli indirizzi del team del
+    // progetto. Serve un SMTP personalizzato per gli indirizzi esterni.
+    console.error('[Renova] SMTP non configurato per indirizzi esterni:', msg)
+    return "Non è possibile inviare l'email di conferma a questo indirizzo. Scrivi a info@renovasport.it e attiviamo l'account manualmente."
+  }
+  if (m.includes('error sending') || m.includes('confirmation email')) {
+    console.error('[Renova] Invio email di conferma fallito:', msg)
+    return "Non è stato possibile inviare l'email di conferma. Riprova tra qualche minuto o scrivi a info@renovasport.it."
+  }
   return msg
 }

@@ -1,11 +1,16 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth, EmailNonConfermataError } from '../contexts/AuthContext'
 import { Logo } from '../components/Logo'
-import { TextField, PrimaryButton, ErrorBanner } from '../components/ui'
+import {
+  TextField,
+  PrimaryButton,
+  ErrorBanner,
+  SuccessBanner,
+} from '../components/ui'
 
 export function Login() {
-  const { signIn } = useAuth()
+  const { signIn, reinviaConferma } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = (location.state as { from?: Location })?.from?.pathname ?? '/'
@@ -14,16 +19,36 @@ export function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  /** true quando l'account esiste ma non è stato attivato: offriamo il reinvio. */
+  const [daAttivare, setDaAttivare] = useState(false)
+  const [reinviata, setReinviata] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError('')
+    setDaAttivare(false)
+    setReinviata(false)
     setLoading(true)
     try {
       await signIn(email, password)
       navigate(from, { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore di accesso')
+      setDaAttivare(err instanceof EmailNonConfermataError)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function reinvia() {
+    setError('')
+    setLoading(true)
+    try {
+      await reinviaConferma(email)
+      setReinviata(true)
+      setDaAttivare(false)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invio non riuscito')
     } finally {
       setLoading(false)
     }
@@ -36,6 +61,19 @@ export function Login() {
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <ErrorBanner message={error} />}
+        {daAttivare && (
+          <button
+            type="button"
+            onClick={reinvia}
+            disabled={loading}
+            className="w-full rounded-lg border border-edge bg-paper px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-surface disabled:opacity-60"
+          >
+            Invia di nuovo l'email di attivazione
+          </button>
+        )}
+        {reinviata && (
+          <SuccessBanner message="Email di attivazione inviata: apri il link e poi riprova ad accedere." />
+        )}
         <TextField
           label="Email"
           type="email"

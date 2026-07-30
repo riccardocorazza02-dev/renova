@@ -74,10 +74,47 @@ codice determina società **e** sport del tuo feed):
 > societario** solo quelli con logo della tua società — le due regole di
 > business in azione.
 
-### Conferma email
+### Conferma email (attiva) e invio SMTP
 
-Per provare velocemente, su Supabase → **Authentication → Providers → Email**
-disattiva *"Confirm email"*: il login è immediato dopo la registrazione.
+L'account va **attivato dal link ricevuto via email** prima di poter accedere:
+`Register.tsx` lo dichiara prima del signup e mostra poi la schermata
+«Attiva il tuo account» con il pulsante di reinvio; il login intercetta
+`email not confirmed` e offre lo stesso reinvio.
+
+⚠️ L'invio usa per default il servizio integrato di Supabase
+(`noreply@mail.app.supabase.io`): **poche email/ora**, nessun controllo sulla
+deliverability e — da documentazione — la consegna può essere limitata ai soli
+indirizzi membri del team del progetto (*"Email address not authorized"*).
+Non è adatto alla produzione: serve un **SMTP personalizzato**.
+
+1. Su [Resend](https://resend.com) → **Domains** → aggiungi `renovasport.it` e
+   inserisci i record DNS (SPF/DKIM) forniti; attendi la verifica.
+2. Resend → **API Keys** → crea una key (permesso *Sending access*).
+3. Supabase → **Authentication → Emails → SMTP Settings** → *Enable custom SMTP*:
+   host `smtp.resend.com`, porta `465`, user `resend`, password = la API key,
+   sender `no-reply@renovasport.it`, sender name `Renova`.
+4. Supabase → **Authentication → Rate Limits**: alza *Emails per hour* (di
+   default il nuovo SMTP parte a 30/h).
+5. Supabase → **Authentication → URL Configuration**: `Site URL`
+   `https://renovasport.it` e fra i *Redirect URLs* anche
+   `http://localhost:5173/**` (il link di conferma torna su
+   `window.location.origin`, quindi il dominio usato in fase di test va
+   autorizzato).
+
+Alternativa solo per prove locali: **Authentication → Providers → Email** →
+disattiva *"Confirm email"* (il login diventa immediato; `signUp` restituisce
+`sessione-attiva` e la UI porta direttamente al feed).
+
+> Se un account resta bloccato senza email, si attiva a mano con
+> `update auth.users set email_confirmed_at = now() where email = '…';`.
+
+⚠️ **Email già registrata**: Supabase risponde `200` con un utente "offuscato"
+e **non invia nessuna email** (anti-enumerazione). `signUp` rileva il caso
+(`identities` vuoto) e lo dice all'utente: senza quel controllo si resta ad
+aspettare una mail che non arriverà. Se hai cancellato gli account di prova
+dalle tabelle `public.*`, ricordati che le righe in `auth.users` **restano**:
+va eliminato l'utente da Authentication → Users (o con la RPC
+`elimina_account`).
 
 ## 4. Storage foto
 
