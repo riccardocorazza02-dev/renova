@@ -1,0 +1,8 @@
+# Fallback SPA per gli host che leggono questo file (Cloudflare Pages,
+# Netlify): qualunque percorso serve index.html con status 200, così un
+# refresh su /feed o l'apertura diretta di /login non danno 404 e la rotta
+# la risolve React Router.
+#
+# GitHub Pages ignora questo file (lì il fallback è dist/404.html, generato
+# dal plugin `spaFallback` in vite.config.ts).
+/*    /index.html   200

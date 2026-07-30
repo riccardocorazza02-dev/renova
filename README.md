@@ -47,15 +47,55 @@ bundle: a distinguerle è **`VITE_APP_URL`** (es. `https://app.renovasport.it`).
   landing.
 
 ⚠️ GitHub Pages serve **un solo dominio custom per repository** (qui
-`public/CNAME` = `renovasport.it`): per avere `app.renovasport.it` serve un
-secondo deploy — un altro repo con lo stesso workflow e `CNAME` diverso,
-oppure un altro host (Vercel/Netlify/Cloudflare Pages) — più il record DNS
-`CNAME app → <host>`. Quando il sottodominio è attivo, imposta la variabile
-di repo `VITE_APP_URL` (Settings → Secrets and variables → Actions →
-*Variables*): il workflow la passa alla build e il link si attiva da solo.
-Ricordati di aggiungere il nuovo dominio anche in Supabase → Authentication →
-URL Configuration (Site URL / Redirect URLs), perché i link di conferma e
-recupero password tornano su `window.location.origin`.
+`public/CNAME` = `renovasport.it`): il sottodominio dell'app richiede quindi
+un secondo deploy dello stesso repo su un altro host. Procedura completa qui
+sotto.
+
+### Pubblicare l'app su `app.renovasport.it`
+
+Setup attuale: dominio registrato su **Aruba** (DNS `dns.technorail.com` &
+co.), `renovasport.it` e `www` puntano a **GitHub Pages** (deploy da
+`.github/workflows/deploy.yml`). La landing resta lì; l'app va su un secondo
+host che pubblica **lo stesso repo** a ogni push. Sotto la ricetta con
+**Cloudflare Pages** (gratuito, uso commerciale consentito, banda illimitata);
+Netlify è equivalente e legge lo stesso `public/_redirects`.
+
+1. **Cloudflare Pages → crea il progetto.** [dash.cloudflare.com](https://dash.cloudflare.com)
+   → *Workers & Pages* → *Create* → *Pages* → *Connect to Git* → autorizza
+   GitHub e scegli il repo `renova`, branch `main`.
+   - *Framework preset*: **Vite** — *Build command*: `npm run build` —
+     *Build output directory*: `dist`.
+2. **Variabili d'ambiente del progetto** (Settings → *Variables and secrets*,
+   ambiente *Production*): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`,
+   `VITE_SUPABASE_STORAGE_BUCKET` (gli stessi valori del `.env` / dei Secrets
+   del repo) **e `VITE_APP_URL` = `https://app.renovasport.it`** — è ciò che
+   dice all'app «questo è il mio dominio», così la radice porta al login e non
+   alla landing. Poi *Deployments* → *Retry deployment* perché le variabili
+   valgono dalla build successiva.
+3. **Dominio custom**: progetto → *Custom domains* → *Set up a custom domain*
+   → `app.renovasport.it`. Cloudflare mostra il record da creare (il tuo DNS
+   NON è su Cloudflare, quindi lo aggiungi tu su Aruba).
+4. **DNS su Aruba**: pannello Aruba → *Gestione DNS* del dominio
+   `renovasport.it` → aggiungi un record **CNAME**: nome/host `app`, valore
+   `<nome-progetto>.pages.dev` (quello indicato al passo 3), TTL predefinito.
+   Non toccare i record del dominio radice e di `www`: la landing deve
+   continuare a puntare a GitHub Pages. La propagazione richiede da pochi
+   minuti a qualche ora; verifica con `dig +short app.renovasport.it`.
+5. **Supabase → Authentication → URL Configuration**: *Site URL* =
+   `https://app.renovasport.it` e fra i *Redirect URLs* aggiungi
+   `https://app.renovasport.it/**` (i link di conferma e di recupero password
+   tornano su `window.location.origin`, cioè sul dominio dove l'utente si è
+   registrato). Lascia anche `http://localhost:5173/**` per le prove locali.
+6. **Solo alla fine, accendi il link sulla landing**: GitHub → repo `renova` →
+   *Settings* → *Secrets and variables* → *Actions* → tab **Variables** →
+   *New repository variable*: nome `VITE_APP_URL`, valore
+   `https://app.renovasport.it`. Al primo push (o *Actions* → *Deploy su
+   GitHub Pages* → *Run workflow*) il pulsante «Accedi» comincia ad aprire
+   l'app in una nuova scheda. Finché la variabile non esiste, «Accedi» resta
+   la rotta interna: nessun link rotto nel frattempo.
+
+> Fatto questo, ogni push su `main` aggiorna **entrambi** i siti: GitHub Pages
+> ricostruisce la landing, Cloudflare Pages l'app.
 
 ## 3. Database
 

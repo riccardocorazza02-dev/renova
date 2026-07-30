@@ -19,8 +19,11 @@ renovasport.it, l'app su un dominio suo indicato da **`VITE_APP_URL`** (es.
 `https://app.renovasport.it`). Se la variabile è valorizzata, «Accedi» sulla
 landing apre l'app in una nuova scheda e sul dominio dell'app la radice porta
 al login invece che alla landing; se è vuota (locale) vale il "2 in 1" di
-sopra. ⚠️ GitHub Pages serve un solo dominio custom per repo (`public/CNAME`):
-il sottodominio richiede un secondo deploy — vedi README.
+sopra. ⚠️ GitHub Pages serve un solo dominio custom per repo (`public/CNAME`
+= renovasport.it, DNS su Aruba): l'app va quindi pubblicata su un secondo host
+(Cloudflare Pages/Netlify: leggono `public/_redirects` per il fallback SPA)
+che builda lo stesso repo con `VITE_APP_URL` valorizzata — procedura passo
+passo nel README.
 
 Stile UI: **"Sport-Tech"** — mobile-first, sfondi bianchi/grigio chiaro,
 accento **Verde Eco fluorescente** (`--color-eco`, `#10e87f`); azzurro
