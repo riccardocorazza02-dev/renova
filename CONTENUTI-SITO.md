@@ -103,7 +103,7 @@
 
 [OCCHIELLO] Servizio alla ricerca di partner per una fase pilota gratuita.
 
-[H1] La prima app per l'economia circolare per ASD e SSD.
+[H1] La prima app di economia circolare per ASD e SSD.
 
 [PARAGRAFO]
 Il servizio che le famiglie del tuo club stanno aspettando. Con Renova i tesserati si scambiano gratuitamente il materiale sportivo usato ancora in buone condizioni. Più risparmio per le famiglie, più fidelizzazione per te. **Nessuno sforzo organizzativo.**
