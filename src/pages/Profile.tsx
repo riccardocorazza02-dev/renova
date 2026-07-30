@@ -96,9 +96,32 @@ export function Profile() {
         </div>
         <div className="min-w-0">
           <span className="eyebrow">{profilo.sport} · {profilo.societa.nome}</span>
-          <h1 className="truncate text-[26px] font-extrabold leading-tight tracking-[-0.03em] text-ink">
-            {profilo.nome_completo}
-          </h1>
+          {/* Il nome apre "Il mio account" (dati di accesso + password). */}
+          <Link
+            to="/profilo/account"
+            className="group flex items-center gap-1.5"
+            aria-label="Apri il mio account"
+          >
+            <h1 className="truncate text-[26px] font-extrabold leading-tight tracking-[-0.03em] text-ink underline decoration-eco decoration-2 underline-offset-4 transition group-hover:decoration-ink">
+              {profilo.nome_completo}
+            </h1>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden
+              className="shrink-0 text-ink-faint transition group-hover:text-ink"
+            >
+              <path
+                d="M9 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
           <p className="truncate text-xs text-ink-soft">{session?.user.email}</p>
           <div className="mt-1.5 flex items-center gap-1.5">
             {valutazioni.length > 0 ? (

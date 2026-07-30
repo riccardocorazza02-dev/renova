@@ -15,6 +15,7 @@ import { Feed } from './pages/Feed'
 import { Impatto } from './pages/Impatto'
 import { Upload } from './pages/Upload'
 import { Profile } from './pages/Profile'
+import { Account } from './pages/Account'
 import { MieiScambi } from './pages/MieiScambi'
 import { MieiArticoli } from './pages/MieiArticoli'
 import { ArticleDetail } from './pages/ArticleDetail'
@@ -96,6 +97,7 @@ export default function App() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/chat/:id" element={<Conversation />} />
         <Route path="/profilo" element={<Profile />} />
+        <Route path="/profilo/account" element={<Account />} />
         <Route path="/scambi" element={<MieiScambi />} />
         <Route path="/miei-articoli" element={<MieiArticoli />} />
       </Route>

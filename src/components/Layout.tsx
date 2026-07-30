@@ -75,16 +75,20 @@ function Tab({
   label,
   name,
   badge = 0,
+  // `end` disattivabile per le tab con sotto-pagine (es. /profilo/account),
+  // così la tab resta evidenziata anche dentro la sezione.
+  end = true,
 }: {
   to: string
   label: string
   name: 'feed' | 'impatto' | 'chat' | 'profilo'
   badge?: number
+  end?: boolean
 }) {
   return (
     <NavLink
       to={to}
-      end
+      end={end}
       aria-label={label}
       className={({ isActive }) =>
         [
@@ -216,7 +220,7 @@ export function Layout() {
           {/* spazio per il FAB centrale */}
           <div className="w-14 shrink-0" aria-hidden="true" />
           <Tab to="/chat" label="Chat" name="chat" badge={chatNonLette} />
-          <Tab to="/profilo" label="Profilo" name="profilo" />
+          <Tab to="/profilo" label="Profilo" name="profilo" end={false} />
           <AddFab />
         </div>
       </nav>

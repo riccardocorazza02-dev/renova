@@ -47,6 +47,14 @@ interface AuthContextValue {
   resetPassword: (email: string) => Promise<void>
   /** Imposta una nuova password (durante la sessione di recupero). */
   updatePassword: (password: string) => Promise<void>
+  /**
+   * Cambia la password dall'interno dell'app, verificando prima quella
+   * attuale (utente autenticato che ricorda la sua password).
+   */
+  changePassword: (
+    passwordAttuale: string,
+    nuovaPassword: string,
+  ) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -218,6 +226,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw new Error(traduciErrore(error.message))
   }, [])
 
+  const changePassword = useCallback(
+    async (passwordAttuale: string, nuovaPassword: string) => {
+      // `updateUser` NON chiede la password attuale: se qualcuno si impossessa
+      // di una sessione aperta potrebbe cambiarla e prendersi l'account. La
+      // ricontrolliamo con un login "silenzioso" sulla stessa email: se è
+      // sbagliata la chiamata fallisce e la sessione in corso resta intatta.
+      const { data } = await supabase.auth.getSession()
+      const email = data.session?.user.email
+      if (!email) {
+        throw new Error('Sessione scaduta: accedi di nuovo e riprova.')
+      }
+
+      const { error: erroreVerifica } = await supabase.auth.signInWithPassword({
+        email,
+        password: passwordAttuale,
+      })
+      if (erroreVerifica) {
+        if (
+          erroreVerifica.message.toLowerCase().includes('invalid login credentials')
+        ) {
+          throw new Error('La password attuale non è corretta.')
+        }
+        throw new Error(traduciErrore(erroreVerifica.message))
+      }
+
+      const { error } = await supabase.auth.updateUser({
+        password: nuovaPassword,
+      })
+      if (error) throw new Error(traduciErrore(error.message))
+    },
+    [],
+  )
+
   return (
     <AuthContext.Provider
       value={{
@@ -232,6 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refreshProfilo,
         resetPassword,
         updatePassword,
+        changePassword,
       }}
     >
       {children}
@@ -275,6 +317,12 @@ function traduciErrore(msg: string): string {
     return 'Esiste già un account con questa email.'
   if (m.includes('password should be at least'))
     return 'La password deve avere almeno 6 caratteri.'
+  // Supabase rifiuta il riuso della vecchia password quando l'opzione
+  // "prevent reuse" è attiva sul progetto.
+  if (m.includes('should be different') || m.includes('same_password'))
+    return 'La nuova password deve essere diversa da quella attuale.'
+  if (m.includes('reauthentication'))
+    return 'Per sicurezza devi accedere di nuovo prima di cambiare la password.'
   if (m.includes('codice società') || m.includes('23514'))
     return 'Codice società non valido.'
   if (m.includes('email not confirmed'))
