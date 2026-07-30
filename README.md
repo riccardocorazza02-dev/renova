@@ -33,6 +33,29 @@ schermata guida invece di crashare.
 | `VITE_SUPABASE_URL`            | Project URL                                       |
 | `VITE_SUPABASE_ANON_KEY`       | Project API key → `anon` / `publishable`          |
 | `VITE_SUPABASE_STORAGE_BUCKET` | Nome bucket foto (default `articoli`)             |
+| `VITE_APP_URL`                 | *(opzionale)* dominio dell'app — vedi sotto       |
+
+### Landing e app su due domini
+
+La landing B2B (`renovasport.it`) e l'app per i tesserati sono lo stesso
+bundle: a distinguerle è **`VITE_APP_URL`** (es. `https://app.renovasport.it`).
+
+- **Vuota** (default, e in locale): tutto come prima — «Accedi» è la rotta
+  interna `/login` e la radice è la landing «2 in 1».
+- **Valorizzata**: «Accedi» sulla landing apre l'app **in una nuova scheda**
+  e, sul dominio dell'app, la radice porta al login/feed invece che alla
+  landing.
+
+⚠️ GitHub Pages serve **un solo dominio custom per repository** (qui
+`public/CNAME` = `renovasport.it`): per avere `app.renovasport.it` serve un
+secondo deploy — un altro repo con lo stesso workflow e `CNAME` diverso,
+oppure un altro host (Vercel/Netlify/Cloudflare Pages) — più il record DNS
+`CNAME app → <host>`. Quando il sottodominio è attivo, imposta la variabile
+di repo `VITE_APP_URL` (Settings → Secrets and variables → Actions →
+*Variables*): il workflow la passa alla build e il link si attiva da solo.
+Ricordati di aggiungere il nuovo dominio anche in Supabase → Authentication →
+URL Configuration (Site URL / Redirect URLs), perché i link di conferma e
+recupero password tornano su `window.location.origin`.
 
 ## 3. Database
 

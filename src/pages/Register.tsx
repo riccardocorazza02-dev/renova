@@ -90,7 +90,8 @@ export function Register() {
           required
           value={form.codiceSocieta}
           onChange={set('codiceSocieta')}
-          placeholder="es. DEMO-UNIBO"
+          // Nessun esempio nel placeholder: i codici sono riservati alle
+          // società e non vanno suggeriti a chi apre la registrazione.
           hint="Te lo fornisce la tua società. Determina la società e lo sport del tuo feed."
           style={{ textTransform: 'uppercase' }}
         />

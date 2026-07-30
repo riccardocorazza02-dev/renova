@@ -2,6 +2,7 @@ import type { MouseEvent } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/Logo'
+import { APP_URL, HA_APP_DEDICATA } from '../lib/app-url'
 import mockCodice from '../assets/mockups/06-codice.webp'
 import mockMarketplace from '../assets/mockups/01-marketplace.webp'
 import mockSocietario from '../assets/mockups/02-societario.webp'
@@ -26,6 +27,10 @@ const SITO = 'renovasport.it'
 const TELEFONO: string = '+39 370 3238359'
 const SURVEY_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform'
+
+/** Stile del link «Accedi» (interno o verso l'app dedicata: vedi header). */
+const ACCEDI_CLASS =
+  'text-[12px] font-semibold text-ink-muted underline-offset-4 transition hover:text-ink hover:underline'
 
 /**
  * Scroll fluido e volutamente morbido verso una sezione, tenendo conto
@@ -96,12 +101,24 @@ export function Landing() {
             >
               Prenota una call
             </a>
-            <Link
-              to="/login"
-              className="text-[12px] font-semibold text-ink-muted underline-offset-4 transition hover:text-ink hover:underline"
-            >
-              Accedi
-            </Link>
+            {/* «Accedi» porta all'APP, che vive su un dominio suo
+                (VITE_APP_URL): si apre in una nuova scheda così la landing
+                resta aperta. Senza dominio dedicato (in locale) è la solita
+                rotta interna. */}
+            {HA_APP_DEDICATA ? (
+              <a
+                href={APP_URL}
+                target="_blank"
+                rel="noopener"
+                className={ACCEDI_CLASS}
+              >
+                Accedi
+              </a>
+            ) : (
+              <Link to="/login" className={ACCEDI_CLASS}>
+                Accedi
+              </Link>
+            )}
             {/* Hamburger mobile */}
             <button
               type="button"

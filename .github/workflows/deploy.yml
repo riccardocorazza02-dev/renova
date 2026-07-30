@@ -35,9 +35,17 @@ jobs:
 
       # Dominio custom (renovasport.it) servito sulla radice → base '/'.
       # Il file public/CNAME mantiene il dominio su ogni deploy.
+      #
+      # VITE_APP_URL: quando l'app avrà il suo dominio (app.renovasport.it),
+      # basta creare la variabile di repo omonima (Settings → Secrets and
+      # variables → Actions → Variables) e il pulsante «Accedi» della landing
+      # comincerà ad aprire l'app in una nuova scheda. Finché la variabile non
+      # esiste il valore è vuoto e «Accedi» resta la rotta interna /login:
+      # così non si pubblica un link verso un dominio non ancora attivo.
       - name: Build
         env:
           VITE_BASE: /
+          VITE_APP_URL: ${{ vars.VITE_APP_URL }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SUPABASE_STORAGE_BUCKET: ${{ secrets.VITE_SUPABASE_STORAGE_BUCKET }}

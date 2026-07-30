@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { isSupabaseConfigured } from './lib/supabase'
+import { IS_APP_HOST } from './lib/app-url'
 import { useAuth } from './contexts/AuthContext'
 import { SetupNotice } from './components/SetupNotice'
 import { FullScreenSpinner } from './components/Spinner'
@@ -34,11 +35,16 @@ function PublicOnly({ children }: { children: React.ReactNode }) {
 /**
  * Radice "2 in 1" su renovasport.it: il visitatore anonimo vede la landing
  * pubblica; l'utente autenticato viene portato direttamente nell'app (feed).
+ *
+ * Sul dominio dedicato all'app (VITE_APP_URL, es. app.renovasport.it) la
+ * landing non compare mai: chi non è loggato va direttamente al login, così i
+ * due mondi restano ben distinti.
  */
 function Home() {
   const { session, loading } = useAuth()
   if (loading) return <FullScreenSpinner />
   if (session) return <Navigate to="/feed" replace />
+  if (IS_APP_HOST) return <Navigate to="/login" replace />
   return <Landing />
 }
 
