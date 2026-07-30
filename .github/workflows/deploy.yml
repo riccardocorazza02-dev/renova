@@ -33,15 +33,22 @@ jobs:
       - name: Installa dipendenze
         run: npm ci
 
-      # Dominio custom (renovasport.it) servito sulla radice → base '/'.
-      # Il file public/CNAME mantiene il dominio su ogni deploy.
+      # Dominio custom servito sulla radice → base '/'.
       #
-      # VITE_APP_URL: quando l'app avrà il suo dominio (app.renovasport.it),
-      # basta creare la variabile di repo omonima (Settings → Secrets and
-      # variables → Actions → Variables) e il pulsante «Accedi» della landing
-      # comincerà ad aprire l'app in una nuova scheda. Finché la variabile non
-      # esiste il valore è vuoto e «Accedi» resta la rotta interna /login:
-      # così non si pubblica un link verso un dominio non ancora attivo.
+      # Questo stesso workflow gira in DUE repository (vedi README, «Landing e
+      # app su due domini»): `renova` pubblica la landing su renovasport.it,
+      # `renova-app` pubblica la stessa build su app.renovasport.it. A
+      # distinguerli sono solo le variabili di repo (Settings → Secrets and
+      # variables → Actions → Variables), non il codice:
+      #
+      #   • PAGES_DOMAIN → dominio custom di QUESTO sito Pages
+      #     (vuota = renovasport.it; nel repo dell'app: app.renovasport.it);
+      #   • VITE_APP_URL → dove vive l'app (https://app.renovasport.it).
+      #     Va impostata in ENTRAMBI i repo: alla landing serve per aprire
+      #     l'app in una nuova scheda, all'app per riconoscere il proprio
+      #     dominio e portare alla radice il login invece della landing.
+      #     Finché non esiste, «Accedi» resta la rotta interna /login — così
+      #     non si pubblica un link verso un dominio non ancora attivo.
       - name: Build
         env:
           VITE_BASE: /
@@ -50,6 +57,14 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SUPABASE_STORAGE_BUCKET: ${{ secrets.VITE_SUPABASE_STORAGE_BUCKET }}
         run: npm run build
+
+      # Il dominio custom va riscritto a ogni deploy, altrimenti Pages lo
+      # dimentica. `public/CNAME` (renovasport.it) resta il default del repo
+      # della landing; il repo dell'app lo sovrascrive con PAGES_DOMAIN.
+      - name: Dominio custom (CNAME)
+        run: |
+          echo "${{ vars.PAGES_DOMAIN || 'renovasport.it' }}" > dist/CNAME
+          echo "CNAME = $(cat dist/CNAME)"
 
       - name: Carica artifact per Pages
         uses: actions/upload-pages-artifact@v3
