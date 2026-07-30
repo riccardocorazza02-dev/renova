@@ -70,7 +70,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0019_rinomina_loop_renova · 0020_blend_osservati_L1 ·
                       0021_tap_scostamento_10pct ·
                       0022_rimozione_colonne_superflue ·
-                      0023_eliminazione_account (modello ATTUALE).
+                      0023_eliminazione_account ·
+                      0024_chat_dal_primo_messaggio (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -105,6 +106,8 @@ file 0001→0022, ma non confrontare le cronologie per nome.
   `foto_etichetta_url` (per la futura lettura L2), `scambiato_at`.
 - **Chat** (`0012`/`0013`): `conversazioni` (una per coppia articolo+interessato)
   + `messaggi`, con RPC `inizia_conversazione`/`segna_letto` e realtime.
+  `primo_messaggio_at` (`0024`) segna il primo messaggio: finché è NULL la
+  conversazione non è visibile a nessuno dei due (vedi convenzioni).
 - **Scambi e recensioni** (`0014`): `scambi` (registrati via `registra_scambio`,
   entrano nello storico/impatto di entrambi) + `recensioni` (via
   `lascia_recensione`, media mostrata nel profilo).
@@ -134,6 +137,12 @@ il calcolo lato client solo per l'anteprima.
 - **Registrazione**: richiede un `codice` di `codici_accesso`; il trigger
   `handle_new_user` (in `0004_sport_feed.sql`) crea la riga `utenti` con
   società + sport. Validare il codice lato client prima del signup.
+- **La chat nasce col primo messaggio** (`0024`): aprire «Chiedi informazioni»
+  NON crea nulla — il client va su `/chat/nuova/:idArticolo` (bozza locale) e
+  chiama `inizia_conversazione` solo al primo invio, così il proprietario non
+  riceve chat vuote né badge di non letti per una semplice occhiata. Lato DB la
+  RLS di `conversazioni` nasconde a entrambi le conversazioni con
+  `primo_messaggio_at is null` (il trigger `bump_conversazione` lo valorizza).
 - **Scambio definitivo**: lo stato `Scambiato` NON si scrive direttamente
   (trigger `set_scambiato_at` lo blocca): passa solo dalla RPC
   `registra_scambio`, che registra anche l'acquirente.

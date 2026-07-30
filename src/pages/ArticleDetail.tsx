@@ -82,22 +82,27 @@ export function ArticleDetail() {
   const isProprietario =
     !!session && !!articolo && session.user.id === articolo.id_utente
 
-  // Apre (o riapre) la chat con il proprietario tramite la RPC idempotente:
-  // una sola conversazione per coppia (articolo, utente interessato).
+  // Apre la chat con il proprietario. La conversazione NON viene creata qui:
+  // se ne esiste già una la riapriamo, altrimenti si va su una BOZZA locale
+  // (`/chat/nuova/:idArticolo`). La chat — e quindi la notifica al
+  // proprietario — nasce solo con il primo messaggio inviato.
   async function handleChiediInfo() {
-    if (!articolo || isProprietario) return
+    if (!articolo || isProprietario || !session) return
     setAvviandoChat(true)
     setErroreChat('')
-    const { data, error } = await supabase.rpc('inizia_conversazione', {
-      p_id_articolo: articolo.id,
-    })
+    const { data, error } = await supabase
+      .from('conversazioni')
+      .select('id')
+      .eq('id_articolo', articolo.id)
+      .eq('id_acquirente', session.user.id)
+      .maybeSingle()
     if (error) {
-      setErroreChat('Impossibile avviare la chat. Riprova.')
-      console.error('[Renova] inizia_conversazione error:', error.message)
+      setErroreChat('Impossibile aprire la chat. Riprova.')
+      console.error('[Renova] Ricerca conversazione error:', error.message)
       setAvviandoChat(false)
       return
     }
-    navigate(`/chat/${data as number}`)
+    navigate(data ? `/chat/${data.id}` : `/chat/nuova/${articolo.id}`)
   }
 
   async function handleElimina() {

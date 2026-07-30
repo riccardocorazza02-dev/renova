@@ -190,6 +190,11 @@ export interface Conversazione {
   created_at: string
   /** aggiornato a ogni nuovo messaggio: ordina la lista e calcola i non letti */
   updated_at: string
+  /**
+   * Primo messaggio ricevuto: finché è null la conversazione non esiste per
+   * nessuno dei due (RLS 0024) — la chat nasce solo quando qualcuno scrive.
+   */
+  primo_messaggio_at: string | null
 }
 
 export interface Messaggio {

@@ -16,15 +16,30 @@ import {
   formatGiornoMessaggio,
 } from '../lib/format'
 
-/** Thread di una singola conversazione + gestione stato per il proprietario. */
+/** Anteprima dell'articolo mostrata in testata (anche in bozza). */
+type AnteprimaArticolo = NonNullable<ConversazioneConArticolo['articolo']>
+
+/** Thread di una singola conversazione + gestione stato per il proprietario.
+ *
+ *  Due modalità:
+ *   • `/chat/:id` — conversazione esistente;
+ *   • `/chat/nuova/:idArticolo` — BOZZA: la chat è aperta dalla scheda
+ *     articolo ma sul server non esiste ancora nulla. Viene creata (RPC
+ *     `inizia_conversazione`) solo al PRIMO messaggio inviato, così il
+ *     proprietario non riceve una chat vuota e la relativa notifica per il
+ *     solo fatto che qualcuno ha aperto la schermata. */
 export function Conversation() {
-  const { id } = useParams<{ id: string }>()
-  const convId = Number(id)
+  const { id, idArticolo } = useParams<{ id?: string; idArticolo?: string }>()
   const navigate = useNavigate()
   const { session } = useAuth()
   const userId = session?.user.id
 
+  // In bozza `convId` è null finché non parte il primo messaggio.
+  const idArticoloBozza = idArticolo ? Number(idArticolo) : null
+  const [convId, setConvId] = useState<number | null>(id ? Number(id) : null)
+
   const [conv, setConv] = useState<ConversazioneConArticolo | null>(null)
+  const [articoloBozza, setArticoloBozza] = useState<AnteprimaArticolo | null>(null)
   const [messaggi, setMessaggi] = useState<Messaggio[]>([])
   const [scambioId, setScambioId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,6 +52,9 @@ export function Conversation() {
 
   const fondoRef = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  // Conversazione creata al primo invio: la teniamo in un ref finché il
+  // messaggio non è davvero partito (vedi `assicuraConversazione`).
+  const convCreataRef = useRef<number | null>(null)
 
   const sonoProprietario = !!conv && conv.id_proprietario === userId
   const controparte = conv
@@ -48,23 +66,26 @@ export function Conversation() {
   // Segna la conversazione come letta per il lato corrente.
   // NB: il builder di supabase-js è "lazy" → serve .then() (o await) perché
   // la richiesta parta davvero.
-  const segnaLetto = useCallback(() => {
-    if (!Number.isFinite(convId)) return
-    supabase.rpc('segna_letto', { p_conv: convId }).then(({ error }) => {
+  const segnaLetto = useCallback((cid: number) => {
+    supabase.rpc('segna_letto', { p_conv: cid }).then(({ error }) => {
       if (error) console.error('[Renova] segna_letto error:', error.message)
     })
-  }, [convId])
+  }, [])
 
-  // Caricamento iniziale: conversazione (+ articolo) e messaggi.
+  // Tiene allineato `convId` all'URL (cambia quando la bozza diventa una
+  // conversazione vera e sostituiamo la rotta).
   useEffect(() => {
-    if (!Number.isFinite(convId)) {
-      setError('Conversazione non valida.')
-      setLoading(false)
-      return
-    }
+    if (id) setConvId(Number(id))
+  }, [id])
+
+  // Caricamento iniziale: conversazione (+ articolo) e messaggi. In bozza
+  // c'è solo l'articolo da mostrare in testata: nessun thread da leggere.
+  // NB: niente `setLoading(true)` qui — quando la bozza diventa conversazione
+  // il contenuto è già a schermo e non deve sparire dietro lo spinner.
+  useEffect(() => {
     let active = true
-    async function load() {
-      setLoading(true)
+
+    async function loadConversazione(cid: number) {
       setError('')
       const [{ data: c, error: ec }, { data: m, error: em }] = await Promise.all([
         supabase
@@ -74,12 +95,12 @@ export function Conversation() {
              nome_acquirente, letto_proprietario, letto_acquirente, created_at, updated_at,
              articolo:articoli ( id, titolo, foto_url, foto_urls, stato )`,
           )
-          .eq('id', convId)
+          .eq('id', cid)
           .maybeSingle(),
         supabase
           .from('messaggi')
           .select('id, id_conversazione, id_mittente, testo, foto_url, created_at')
-          .eq('id_conversazione', convId)
+          .eq('id_conversazione', cid)
           .order('created_at', { ascending: true }),
       ])
 
@@ -92,15 +113,43 @@ export function Conversation() {
       } else {
         setConv(c as unknown as ConversazioneConArticolo)
         setMessaggi((m ?? []) as unknown as Messaggio[])
-        segnaLetto()
+        segnaLetto(cid)
       }
       setLoading(false)
     }
-    load()
+
+    async function loadBozza(idArt: number) {
+      setError('')
+      const { data, error: ea } = await supabase
+        .from('articoli')
+        .select('id, titolo, foto_url, foto_urls, stato')
+        .eq('id', idArt)
+        .maybeSingle()
+
+      if (!active) return
+      if (ea) {
+        setError('Impossibile caricare l’articolo. Riprova.')
+        console.error('[Renova] Bozza chat error:', ea.message)
+      } else if (!data) {
+        setError('Articolo non trovato o non più visibile.')
+      } else {
+        setArticoloBozza(data as unknown as AnteprimaArticolo)
+      }
+      setLoading(false)
+    }
+
+    if (convId !== null && Number.isFinite(convId)) loadConversazione(convId)
+    else if (idArticoloBozza !== null && Number.isFinite(idArticoloBozza))
+      loadBozza(idArticoloBozza)
+    else {
+      setError('Conversazione non valida.')
+      setLoading(false)
+    }
+
     return () => {
       active = false
     }
-  }, [convId, segnaLetto])
+  }, [convId, idArticoloBozza, segnaLetto])
 
   // Se l'articolo è già scambiato, recupera lo scambio per abilitare la
   // recensione reciproca — ma solo se lo scambio riguarda QUESTA controparte
@@ -131,9 +180,10 @@ export function Conversation() {
     }
   }, [conv?.id_articolo, conv?.id_acquirente, conv?.articolo?.stato])
 
-  // Realtime: nuovi messaggi della conversazione.
+  // Realtime: nuovi messaggi della conversazione (in bozza non c'è nulla da
+  // ascoltare: la conversazione non esiste ancora).
   useEffect(() => {
-    if (!Number.isFinite(convId)) return
+    if (convId === null || !Number.isFinite(convId)) return
     const channel = supabase
       .channel(`conv-${convId}`)
       .on(
@@ -149,7 +199,7 @@ export function Conversation() {
           setMessaggi((prev) =>
             prev.some((x) => x.id === nuovo.id) ? prev : [...prev, nuovo],
           )
-          segnaLetto()
+          segnaLetto(convId)
         },
       )
       .subscribe()
@@ -163,34 +213,65 @@ export function Conversation() {
     fondoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [messaggi.length])
 
+  // Restituisce l'id della conversazione, creandola al volo se siamo in
+  // bozza. È QUI che la chat inizia davvero a esistere per il proprietario:
+  // solo al primo invio, mai alla semplice apertura della schermata.
+  // La RPC è idempotente (una sola conversazione per articolo+interessato).
+  async function assicuraConversazione(): Promise<number> {
+    if (convId !== null) return convId
+    if (convCreataRef.current !== null) return convCreataRef.current
+    if (idArticoloBozza === null) throw new Error('Conversazione non valida')
+    const { data, error } = await supabase.rpc('inizia_conversazione', {
+      p_id_articolo: idArticoloBozza,
+    })
+    if (error) throw new Error(error.message)
+    convCreataRef.current = data as number
+    return convCreataRef.current
+  }
+
+  // Passa dalla bozza alla conversazione vera: da qui in poi la schermata si
+  // comporta come una chat normale (rotta, realtime, stato letto).
+  function confermaConversazione(cid: number) {
+    if (convId !== null) return
+    setConvId(cid)
+    navigate(`/chat/${cid}`, { replace: true })
+  }
+
   async function invia(e: React.FormEvent) {
     e.preventDefault()
     const testo = bozza.trim()
     if (!testo || inviando || !userId) return
     setInviando(true)
     setErroreInvio('')
-    const { data, error } = await supabase
-      .from('messaggi')
-      .insert({ id_conversazione: convId, id_mittente: userId, testo })
-      .select('id, id_conversazione, id_mittente, testo, foto_url, created_at')
-      .single()
-    setInviando(false)
-    if (error) {
+    try {
+      const cid = await assicuraConversazione()
+      const { data, error } = await supabase
+        .from('messaggi')
+        .insert({ id_conversazione: cid, id_mittente: userId, testo })
+        .select('id, id_conversazione, id_mittente, testo, foto_url, created_at')
+        .single()
+      if (error) throw new Error(error.message)
+      setBozza('')
+      aggiungiMessaggio(data as unknown as Messaggio, cid)
+      confermaConversazione(cid)
+    } catch (err) {
       setErroreInvio('Messaggio non inviato. Riprova.')
-      console.error('[Renova] Invio messaggio error:', error.message)
-      return
+      console.error(
+        '[Renova] Invio messaggio error:',
+        err instanceof Error ? err.message : err,
+      )
+    } finally {
+      setInviando(false)
     }
-    setBozza('')
-    aggiungiMessaggio(data as unknown as Messaggio)
   }
 
   // Aggiunge un messaggio in coda (deduplicando) e rimarca letto per me:
   // il mio stesso invio fa "bump" della conversazione.
-  function aggiungiMessaggio(nuovo: Messaggio) {
+  function aggiungiMessaggio(nuovo: Messaggio, cid: number) {
     setMessaggi((prev) =>
       prev.some((x) => x.id === nuovo.id) ? prev : [...prev, nuovo],
     )
-    segnaLetto()
+    segnaLetto(cid)
   }
 
   // Invio di una foto: upload nel bucket (cartella dell'utente, come da policy
@@ -202,8 +283,10 @@ export function Conversation() {
     setCaricandoFoto(true)
     setErroreInvio('')
     try {
+      // Anche la foto è un primo messaggio valido: crea la conversazione.
+      const cid = await assicuraConversazione()
       const ext = file.name.split('.').pop() || 'jpg'
-      const path = `${userId}/chat/${convId}/${crypto.randomUUID()}.${ext}`
+      const path = `${userId}/chat/${cid}/${crypto.randomUUID()}.${ext}`
       const { error: upErr } = await supabase.storage
         .from(STORAGE_BUCKET)
         .upload(path, file, { cacheControl: '3600', upsert: false })
@@ -213,14 +296,15 @@ export function Conversation() {
       const { data, error } = await supabase
         .from('messaggi')
         .insert({
-          id_conversazione: convId,
+          id_conversazione: cid,
           id_mittente: userId,
           foto_url: pub.publicUrl,
         })
         .select('id, id_conversazione, id_mittente, testo, foto_url, created_at')
         .single()
       if (error) throw new Error(error.message)
-      aggiungiMessaggio(data as unknown as Messaggio)
+      aggiungiMessaggio(data as unknown as Messaggio, cid)
+      confermaConversazione(cid)
     } catch (err) {
       setErroreInvio('Foto non inviata. Riprova.')
       console.error(
@@ -246,7 +330,8 @@ export function Conversation() {
 
   if (loading) return <FullScreenSpinner />
 
-  if (error || !conv) {
+  // In bozza non c'è ancora una conversazione: basta l'articolo.
+  if (error || (!conv && !articoloBozza)) {
     return (
       <div className="space-y-4">
         <BackLink onClick={() => navigate('/chat')} />
@@ -257,7 +342,7 @@ export function Conversation() {
     )
   }
 
-  const articolo = conv.articolo
+  const articolo = conv ? conv.articolo : articoloBozza
   const cover = articolo?.foto_urls?.[0] || articolo?.foto_url || PLACEHOLDER_FOTO
 
   return (
@@ -284,7 +369,9 @@ export function Conversation() {
                 {articolo?.titolo ?? 'Articolo non più disponibile'}
               </p>
               <p className="truncate text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-muted">
-                {sonoProprietario ? 'Richiesta da' : 'Con'} {controparte}
+                {conv
+                  ? `${sonoProprietario ? 'Richiesta da' : 'Con'} ${controparte}`
+                  : 'Nuova conversazione'}
               </p>
             </div>
             {articolo && (
@@ -309,7 +396,7 @@ export function Conversation() {
       })()}
 
       {/* Gestione stato (solo proprietario) */}
-      {sonoProprietario && articolo && (
+      {conv && sonoProprietario && articolo && (
         <GestioneStato
           idArticolo={articolo.id}
           stato={articolo.stato}

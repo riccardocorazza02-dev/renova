@@ -95,6 +95,9 @@ export default function App() {
         <Route path="/articolo/:id/modifica" element={<ModificaArticolo />} />
         <Route path="/aggiungi" element={<Upload />} />
         <Route path="/chat" element={<Chat />} />
+        {/* Bozza: chat aperta dalla scheda articolo ma non ancora esistente
+            (nasce, per entrambi, con il primo messaggio inviato). */}
+        <Route path="/chat/nuova/:idArticolo" element={<Conversation />} />
         <Route path="/chat/:id" element={<Conversation />} />
         <Route path="/profilo" element={<Profile />} />
         <Route path="/profilo/account" element={<Account />} />
