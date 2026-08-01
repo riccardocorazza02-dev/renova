@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { isSupabaseConfigured } from './lib/supabase'
 import { IS_APP_HOST } from './lib/app-url'
 import { useAuth } from './contexts/AuthContext'
@@ -48,7 +49,24 @@ function Home() {
   return <Landing />
 }
 
+/**
+ * Titolo della scheda del browser: nell'app è semplicemente «renova», solo
+ * sulla landing pubblica resta il titolo lungo — è quello che leggono i motori
+ * di ricerca ed è anche il `<title>` statico di `index.html`, servito ai
+ * crawler prima che parta il JS (per questo va tenuto identico nei due posti).
+ */
+const TITOLO_LANDING = 'La prima app di economia circolare per ASD e SSD'
+
+function useTitoloScheda() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const suLanding = pathname === '/' && !IS_APP_HOST
+    document.title = suLanding ? TITOLO_LANDING : 'renova'
+  }, [pathname])
+}
+
 export default function App() {
+  useTitoloScheda()
   if (!isSupabaseConfigured) return <SetupNotice />
 
   return (
