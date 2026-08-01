@@ -82,6 +82,13 @@ distinguere i due siti sono solo le *variabili di repo*.
 4. **Attiva Pages su `renova-app`**: Settings → *Pages* → *Source* =
    **GitHub Actions**. Poi *Actions* → *Deploy su GitHub Pages* → *Run
    workflow* per la prima pubblicazione.
+   ⚠️ Nella stessa pagina compila anche **Custom domain** =
+   `app.renovasport.it` → *Save*. Con il deploy via GitHub Actions il file
+   `CNAME` dentro l'artefatto **non basta** a registrare il dominio: senza
+   questo campo GitHub risponde `404` a chi arriva dal sottodominio (il
+   `CNAME` scritto dal workflow resta utile come descrizione del build e se
+   un giorno si torna al deploy da branch). Dopo il *Save* parte il DNS check
+   e l'emissione del certificato; quando appare, spunta **Enforce HTTPS**.
 5. **DNS su Aruba**: pannello Aruba → *Gestione DNS* di `renovasport.it` →
    nuovo record **CNAME**: host `app`, valore `riccardocorazza02-dev.github.io`
    (con il punto finale se il pannello lo richiede), TTL predefinito. **Non
