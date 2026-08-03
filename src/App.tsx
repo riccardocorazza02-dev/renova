@@ -8,6 +8,11 @@ import { FullScreenSpinner } from './components/Spinner'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/Layout'
 import { Landing } from './pages/Landing'
+import { Progetto } from './pages/Progetto'
+import { ComeFunziona } from './pages/ComeFunziona'
+import { ComeMisuriamo } from './pages/ComeMisuriamo'
+import { Collabora } from './pages/Collabora'
+import { PAGINE_SITO } from './components/sito'
 import { Metodologia } from './pages/Metodologia'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
@@ -50,18 +55,23 @@ function Home() {
 }
 
 /**
- * Titolo della scheda del browser: nell'app è semplicemente «renova», solo
- * sulla landing pubblica resta il titolo lungo — è quello che leggono i motori
- * di ricerca ed è anche il `<title>` statico di `index.html`, servito ai
- * crawler prima che parta il JS (per questo va tenuto identico nei due posti).
+ * Titolo della scheda del browser: nell'app è semplicemente «renova», mentre
+ * ogni pagina del SITO pubblico ha il suo — è quello che leggono i motori di
+ * ricerca. Quello della home è anche il `<title>` statico di `index.html`,
+ * servito ai crawler prima che parta il JS (per questo va tenuto identico nei
+ * due posti).
  */
-const TITOLO_LANDING = 'La prima app di economia circolare per ASD e SSD'
+const TITOLO_LANDING = 'Renova — Economia circolare per lo sport dilettantistico'
 
 function useTitoloScheda() {
   const { pathname } = useLocation()
   useEffect(() => {
-    const suLanding = pathname === '/' && !IS_APP_HOST
-    document.title = suLanding ? TITOLO_LANDING : 'renova'
+    if (pathname === '/' && !IS_APP_HOST) {
+      document.title = TITOLO_LANDING
+      return
+    }
+    const pagina = PAGINE_SITO.find((p) => p.to === pathname)
+    document.title = pagina ? pagina.titolo : 'renova'
   }, [pathname])
 }
 
@@ -73,6 +83,14 @@ export default function App() {
     <Routes>
       {/* Radice pubblica: landing per gli anonimi, app per gli autenticati. */}
       <Route path="/" element={<Home />} />
+
+      {/* Sito pubblico: una pagina per voce di menu (vedi components/sito.tsx).
+          ⚠️ L'«Impatto» del menu sta su /come-misuriamo perché /impatto è già
+          la dashboard dell'app. */}
+      <Route path="/progetto" element={<Progetto />} />
+      <Route path="/come-funziona" element={<ComeFunziona />} />
+      <Route path="/come-misuriamo" element={<ComeMisuriamo />} />
+      <Route path="/collabora" element={<Collabora />} />
 
       {/* Documento metodologico integrale — pubblico, senza login. */}
       <Route path="/metodologia" element={<Metodologia />} />

@@ -1,16 +1,28 @@
 # Contenuti del sito Renova — brutta copia editabile
 
 > **Come usare questo file.**
-> Qui sotto trovi *tutto il testo* che compare sulla landing pubblica del sito
-> (`src/pages/Landing.tsx`). Modifica liberamente il testo **dentro le sezioni**,
-> poi rimandami questo file: lo riporto io sul sito senza che tu tocchi il codice.
+> Qui sotto trovi *tutto il testo* che compare sul sito pubblico di Renova.
+> Modifica liberamente il testo **dentro le sezioni**, poi rimandami questo file:
+> lo riporto io sul sito senza che tu tocchi il codice.
 >
 > Regole per non rompere nulla:
 > - Cambia solo il testo, **non** le etichette tipo `[H1]`, `[BOTTONE]`, `### …`.
 > - I valori tra `« »` (es. `«+39 370 3238359»`) sono dati/contatti: cambiali pure.
 > - Dove c'è scritto `(placeholder)` è un testo provvisorio in attesa di dati reali.
-> - I "mockup" (telefonini disegnati) contengono testo finto d'esempio: lo trovi
->   in fondo, nella sezione **MOCKUP**.
+> - I "mockup" (il telefonino disegnato nell'hero) contengono testo finto d'esempio:
+>   lo trovi in fondo, nella sezione **MOCKUP**.
+>
+> **Struttura del sito (novità).** La home (`/`) ospita **solo l'hero**: è la
+> schermata che si raggiunge cercando il sito su Google. Il resto del racconto
+> sta su **quattro pagine dedicate**, raggiungibili dal menu in alto e dalle
+> card in fondo alla home:
+>
+> | Voce di menu | Indirizzo | Sezione di questo file |
+> |---|---|---|
+> | Il progetto | `/progetto` | §3 |
+> | Come funziona | `/come-funziona` | §4 |
+> | Impatto | `/come-misuriamo` | §5 |
+> | Collabora | `/collabora` | §6 |
 
 ---
 
@@ -22,54 +34,87 @@
  sito", il flusso da seguire è SEMPRE questo:
 
  1. FONTE DI VERITÀ = questo file (CONTENUTI-SITO.md). Il sito va allineato al
-    file, non viceversa. L'unico file da modificare è `src/pages/Landing.tsx`
-    (tutta la landing pubblica vive lì: testo + mockup + icone).
+    file, non viceversa. Il sito pubblico vive in cinque file di pagina più un
+    guscio comune:
+      • src/components/sito.tsx   → header, footer, «Continua», costanti
+      • src/pages/Landing.tsx     → home (hero + indice)
+      • src/pages/Progetto.tsx    → /progetto
+      • src/pages/ComeFunziona.tsx→ /come-funziona
+      • src/pages/ComeMisuriamo.tsx → /come-misuriamo (voce di menu «Impatto»)
+      • src/pages/Collabora.tsx   → /collabora (form + contatti)
+    La pagina /metodologia (documento metodologico integrale) NON è governata
+    da questo file: vive in src/pages/Metodologia.tsx e va aggiornata insieme
+    al PDF in public/metodologia-renova.pdf.
 
- 2. CONFRONTA sezione per sezione il testo di questo .md con le stringhe in
-    `Landing.tsx` e applica SOLO le differenze. Non riscrivere ciò che già
-    coincide. Mappa sezione .md → componente/blocco in Landing.tsx:
-      • §1 HEADER            → <header> in `Landing()` (voci nav + "Prenota una call" + "Accedi")
-      • §2 HERO              → funzione `Hero()`  (eyebrow, <h1>, paragrafo, CTA, riquadro sondaggio, badge)
-      • §2 Le leve           → chiamate a <Leva …>  dentro `Hero()`  (title/body + prop `stats` con i dati delle interviste nelle leve 3 e 4)
-      • §2 Leva bonus        → blocco "Leva bonus — evidenziata" in `Hero()`
-      • §3 COME FUNZIONA     → funzione `ComeFunziona()` + `StepRow`/`Step2` (eyebrow, <h2>, paragrafo, 4 step, didascalie feed)
-      • §4 PARTNERSHIP       → funzione `SocialProof()`  (eyebrow, <h2>, paragrafo, nota)
-      • §5 FASE DI TEST      → funzione `FaseDiTest()`  (eyebrow, <h2>, paragrafo, CTA)
-      • §6 FAQ              → array `FAQ` (coppie q/a) sopra la funzione `Faq()`
-      • §7 CONTATTI          → funzione `Contatti()` (eyebrow, <h2>, paragrafo, campi form, bottone, nota)
-      • §8 FOOTER            → funzione `Footer()`  (titolo, sottotitolo, placeholder email, bottone, copyright)
+ 2. CONFRONTA sezione per sezione il testo di questo .md con le stringhe nei
+    file e applica SOLO le differenze. Non riscrivere ciò che già coincide.
+    Mappa sezione .md → codice:
+      • §1 HEADER            → `SitoHeader` in components/sito.tsx (voci nav, bottone, «Accedi»)
+      • §2 HOME · Hero       → `Hero()` in pages/Landing.tsx
+      • §2 HOME · Striscia   → array `DATI_SONDAGGIO` + nota, in pages/Landing.tsx
+      • §2 HOME · Indice     → `Indice()` in Landing.tsx; i titoli e i sommari
+                               delle card vengono da `PAGINE_SITO` in sito.tsx
+                               (⚠️ gli stessi testi compaiono anche nel blocco
+                               «Continua» in fondo a ogni pagina e nel footer)
+      • §3 IL PROGETTO       → pages/Progetto.tsx: `CosaE()` (+ array `NUMERI_SISTEMA`),
+                               `MissionVision()`, `Agenda2030()` (+ array `SDG`)
+      • §4 COME FUNZIONA     → pages/ComeFunziona.tsx: `ComeFunziona()`,
+                               `StepRow`/`Step2`, `ValorePerIlClub()`
+      • §5 IMPATTO           → pages/ComeMisuriamo.tsx: array `METODO`,
+                               `Equivalenze()`, `LeggiMetodologia()`
+      • §6 COLLABORA         → pages/Collabora.tsx: `Invito()`, `ReteDiNodi()`
+                               (array `NODI`), `FormClub()`, `FormEnte()`
+                               (array `TIPI_ENTE`), `Contatti()`
+      • §7 FOOTER            → `SitoFooter` in components/sito.tsx
+      • §8 CONTINUA          → `ProssimaPagina` in components/sito.tsx
 
  3. DATI GLOBALI (§"Dati globali", valori tra « »): sono le costanti in cima a
-    `Landing.tsx` → `EMAIL`, `SITO`, `TELEFONO`, `SURVEY_URL`. Se cambiano nel
-    .md, aggiorna quelle costanti (compaiono in più punti: header, contatti,
-    footer, mailto).
+    src/components/sito.tsx → `EMAIL`, `SITO`, `TELEFONO`, `SURVEY_URL`. Se
+    cambiano nel .md, aggiorna quelle costanti (compaiono in più punti: footer,
+    contatti, mailto dei form).
 
- 4. ATTENZIONE alle entità: nel .md compaiono apostrofi curvi (’) e accenti;
+ 4. TITOLI DELLA SCHEDA (SEO): il titolo della home sta in DUE posti che devono
+    restare identici — `TITOLO_LANDING` in src/App.tsx e il <title> di
+    index.html (i motori di ricerca leggono quello statico). I titoli delle
+    altre pagine stanno nel campo `titolo` di `PAGINE_SITO` (sito.tsx).
+
+ 5. ATTENZIONE alle entità: nel .md compaiono apostrofi curvi (’) e accenti;
     in JSX usa la stessa forma già presente nei dintorni. Rispetta i caratteri
     speciali già usati (CO₂, H₂O, €, ≥, ·). Non toccare className, JSX, icone,
     struttura: SOLO il testo visibile.
 
- 5. MOCKUP (§"MOCKUP", i telefonini disegnati): è testo DECORATIVO d'esempio.
-    Di default NON allinearlo automaticamente — le funzioni `FeedMock`,
-    `ArticleMock`, `ChatMock`, `ImpattoMock`, `CodeMock`, `FEED_ITEMS`,
-    `PhoneHeader` in `Landing.tsx` sono state rifinite a mano per assomigliare
-    agli schermi reali dell'app e possono divergere da questa sezione del .md.
-    Tocca i mockup SOLO se l'utente lo chiede esplicitamente; in quel caso
+ 6. NUMERI E FONTI (regola anti-greenwashing, non negoziabile): ogni dato
+    mostrato sul sito ha la sua fonte dichiarata in pagina. Se l'utente cambia
+    un numero senza cambiare la fonte, segnalaglielo invece di pubblicare in
+    silenzio. Non inventare dati, non gonfiare la traction: il progetto non ha
+    ancora utenti reali e il sito lo dice apertamente.
+
+ 7. MOCKUP: nell'hero della home il telefonino è DISEGNATO in codice
+    (`FeedMock`, `FEED_ITEMS`, `PhoneHeader`, `BottomNav` in Landing.tsx) ed è
+    stato rifinito a mano; nella pagina «Come funziona» i telefonini sono
+    IMMAGINI (src/assets/mockups/*.webp) e il loro contenuto non si cambia da
+    qui. Tocca i mockup SOLO se l'utente lo chiede esplicitamente; in quel caso
     segnala che stai modificando testo decorativo.
 
- 6. DOPO le modifiche: esegui `npm run build` (deve passare, type-check incluso)
+ 8. IMMAGINI: il sito non usa foto. Le grafiche (numeri di sistema, equivalenze,
+    rete di nodi, badge SDG) sono costruite in codice/SVG nello stile del brand.
+    Regola ferrea per il futuro: niente stock corporate (strette di mano, mondo
+    tra le mani, foglioline verdi). Se arriveranno foto, saranno scatti reali di
+    contesto sportivo.
+
+ 9. DOPO le modifiche: esegui `npm run build` (deve passare, type-check incluso)
     e, se possibile, avvia l'anteprima per verificare che le stringhe cambiate
     compaiano davvero. Poi riepiloga all'utente COSA è cambiato (elenco puntato
     vecchio→nuovo).
 
- 7. SINCRONIZZAZIONE GITHUB (standing rule, richiesta dell'utente): ogni volta
+ 10. SINCRONIZZAZIONE GITHUB (standing rule, richiesta dell'utente): ogni volta
     che aggiorni i contenuti del sito partendo da questo file, DOPO che il build
     passa devi anche PUBBLICARE le modifiche su GitHub, così il sito online resta
     sempre allineato al codice locale. In pratica:
-      • commit dei soli file toccati dall'update (di norma `src/pages/Landing.tsx`
-        e, se cambiato, `CONTENUTI-SITO.md`) — NON fare `git add -A`: non tirare
+      • commit dei soli file toccati dall'update (le pagine del sito e, se
+        cambiato, `CONTENUTI-SITO.md`) — NON fare `git add -A`: non tirare
         dentro le altre modifiche non collegate presenti nel working tree;
-      • messaggio di commit chiaro in italiano (es. "Landing: aggiorna copy da
+      • messaggio di commit chiaro in italiano (es. "Sito: aggiorna copy da
         CONTENUTI-SITO.md");
       • `git push` sul branch `main` (il deploy del sito online parte da `main`).
     Il push è ATTESO di default per questi aggiornamenti di contenuto: non serve
@@ -86,29 +131,39 @@
 - **Telefono:** «+39 370 3238359»
 - **Sito:** «renovasport.it»
 - **Link sondaggio famiglie:** «https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform»
+- **Documento metodologico (PDF):** «/metodologia-renova.pdf»
+
+### Titolo che appare su Google (home)
+
+[TITOLO SCHEDA] Renova — Economia circolare per lo sport dilettantistico
+[DESCRIZIONE] Renova è la piattaforma che rimette in circolo il materiale sportivo ancora buono: i tesserati di ASD e SSD se lo scambiano gratuitamente, e ogni scambio misura il risparmio economico e l'impatto ambientale evitato (CO2 e acqua).
 
 ---
 
-## 1 · HEADER (barra in alto)
+## 1 · HEADER (barra in alto, uguale su tutte le pagine)
 
+- [VOCE MENU] Il progetto
 - [VOCE MENU] Come funziona
-- [VOCE MENU] Partnership
-- [VOCE MENU] FAQ
-- [BOTTONE] Prenota una call
+- [VOCE MENU] Impatto
+- [VOCE MENU] Collabora
+- [BOTTONE] Collabora con noi
 - [LINK] Accedi
 
 ---
 
-## 2 · HERO (prima schermata)
+## 2 · HOME (`/`) — la schermata che si raggiunge da Google
 
-[OCCHIELLO] Servizio alla ricerca di partner per una fase pilota gratuita.
+### Hero
 
-[H1] La prima app di economia circolare per ASD e SSD.
+[OCCHIELLO] Economia circolare per lo sport dilettantistico
+
+[H1] La piattaforma che rimette in circolo il materiale sportivo ancora buono.
 
 [PARAGRAFO]
-Il servizio che le famiglie del tuo club stanno aspettando. Con Renova i tesserati si scambiano gratuitamente il materiale sportivo usato ancora in buone condizioni. Più risparmio per le famiglie, più fidelizzazione per te. **Nessuno sforzo organizzativo.**
+Renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. **Non un'app da vendere, ma un progetto che misura ogni beneficio che genera.**
 
-[BOTTONE PRINCIPALE] Prenota una call conoscitiva
+[BOTTONE PRINCIPALE] Scopri come funziona → porta a «Come funziona»
+[BOTTONE SECONDARIO] Collabora con noi → porta a «Collabora»
 
 [RIQUADRO SECONDARIO]
 Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renova.
@@ -118,44 +173,131 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 - Risparmio misurato
 - CO₂ · Acqua · €
 
-### Le leve — "Perché i club scelgono Renova"
+### Striscia dati (dal sondaggio famiglie/tesserati)
 
-[OCCHIELLO] Perché i club scelgono Renova
+[OCCHIELLO] Cosa ci hanno detto le famiglie
 
-**Leva 1**
-- [TITOLO] Zero sforzo organizzativo per il club
-- [TESTO] Tu attivi il servizio e ti prendi i meriti. Distribuisci un codice e sono i tesserati a pubblicare, accordarsi e scambiarsi gli articoli tra loro, senza nessun carico sulla segreteria.
+- [DATO 1] **+90%** — degli intervistati è interessato a un servizio di scambio nel proprio club
+- [DATO 2] **+55%** — ogni stagione si ritrova materiale in buone condizioni rimasto inutilizzato
+- [DATO 3] **+55%** — spende oltre 100 € a stagione solo in materiale sportivo
 
-**Leva 2**
-- [TITOLO] Retention e recruiting dei tesserati
-- [TESTO] Gli scambi avvengono di persona: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta.
+[NOTA FONTE] Indagine esplorativa condotta presso i tesserati di due società di pallacanestro del territorio bolognese (106 risposte, l'89% da genitori di tesserati). Rilevazione circoscritta: indica una tendenza, non consente generalizzazione statistica.
 
-**Leva 3**
-- [TITOLO] Un servizio che le famiglie chiedono davvero
-- [TESTO] Non è un'ipotesi: stiamo conducendo ricerche sui genitori e tesserati e il riscontro è positivo. La domanda c'è — e portarla nel tuo club arricchisce il valore del tuo servizio.
-- [DATO] **+55%** delle famiglie/tesserati intervistati ha dichiarato che ogni stagione si trova con del materiale in buone condizioni che rimane inutilizzato
-- [DATO] **+90%** delle famiglie/tesserati intervistati è interessato a un servizio di scambio per il proprio club
+### Indice delle pagine (card in fondo alla home)
 
-**Leva 4**
-- [TITOLO] Costo dello sport più basso per le famiglie
-- [TESTO] Scarpe, divise, attrezzatura: il materiale tecnico è una spesa ricorrente. Con Renova quella spesa si abbassa, perché il materiale ancora buono torna a circolare invece di essere ricomprato da zero. Il risparmio va direttamente alle famiglie.
-- [DATO] **+55%** degli intervistati spende più di 100€ ogni stagione sportiva soltanto in materiale sportivo (di cui +20% spende più di 200€)
+[OCCHIELLO] Il sito
 
-**Leva bonus (evidenziata)**
-- [ETICHETTA] Bonus
-- [TITOLO] Materiale che torna a circolare, con i dati in mano
-- [TESTO] Ogni scambio è attrezzatura salvata dall'armadio e un dato misurato: la dashboard traccia il risparmio generato per le famiglie e l'impatto ambientale evitato — carbon footprint (CO₂) e water footprint (acqua). Numeri pronti da mostrare a famiglie, sponsor e istituzioni.
+[H2] Il progetto, per intero.
 
-> I dati delle interviste (+55%, +90%, +55% sulle spese) sono mostrati DENTRO
-> le leve 3 e 4 qui sopra, non più in una striscia di statistiche a sé.
+[PARAGRAFO] Renova non ha ancora utenti reali: quello che possiamo mostrare è il metodo con cui è stata costruita. Ogni pagina ne racconta una parte.
+
+> ⚠️ I quattro sommari qui sotto compaiono in **tre punti**: nelle card della
+> home, nel blocco «Continua» in fondo a ogni pagina e (solo il titolo) nel
+> footer. Cambiandoli qui cambiano ovunque.
+
+**Card 01 — Il progetto**
+Il costo che nessuno copre, l'impatto già pagato, la nostra missione e gli obiettivi dell'Agenda 2030 che presidiamo.
+
+**Card 02 — Come funziona**
+Dall'attivazione del club al primo scambio, in quattro passaggi. Uno solo compete alla società.
+
+**Card 03 — Impatto**
+Come stimiamo il beneficio ambientale di ogni scambio, perché lo sottostimiamo apposta e dove dichiariamo i limiti.
+
+**Card 04 — Collabora**
+Club, federazioni, amministrazioni, enti del terzo settore, aziende: la rete si costruisce un nodo alla volta.
+
+[LINK card] Apri
 
 ---
 
-## 3 · COME FUNZIONA
+## 3 · IL PROGETTO (`/progetto`)
+
+### 3a · Cosa è Renova
+
+[OCCHIELLO] Il progetto
+
+[H1] Un costo che nessuno copre, un impatto già pagato.
+
+[PARAGRAFO 1]
+Lo sport dilettantistico italiano conta 107.804 enti e 12,3 milioni di tesserati. Per le famiglie il materiale tecnico pesa circa il 25% della spesa annua nei principali sport di squadra — ed è l'unica voce priva di qualsiasi sostegno pubblico: i voucher coprono l'iscrizione, non il corredo.
+
+[PARAGRAFO 2]
+Allo stesso tempo, ogni capo sportivo porta con sé un impatto ambientale — CO₂ e acqua — già interamente prodotto nel momento in cui viene fabbricato. Buttarlo quando è ancora buono spreca due volte: i soldi delle famiglie e le risorse spese per produrlo.
+
+[GRAFICA NUMERI DI SISTEMA]
+- **107.804** — *enti sportivi* — iscritti al Registro nazionale con almeno un tesseramento attivo (2024).
+- **12,3** — *milioni di tesserati* — in Italia; nella fascia 6-14 anni la copertura arriva al 63,2% dei residenti.
+- **~25%** — *della spesa annua* — è il peso del materiale tecnico nei tre principali sport di squadra: l'unica voce senza alcun sostegno pubblico.
+
+[NOTA FONTE] Fonti: Istituto per il Credito Sportivo e Culturale & Sport e Salute, *Rapporto Sport 2025* (dati 2024) per enti e tesserati; elaborazione su Federconsumatori (2023) per l'incidenza del corredo sulla spesa annua.
+
+[H2] Renova rimette in circolo quel materiale.
+
+[PARAGRAFO]
+I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova nel catalogo, si accordano tramite la chat interna e se lo scambiano di persona, gratuitamente. La piattaforma non ospita denaro, non movimenta merce e non chiede alla società alcuna attività di gestione.
+
+**Bacino 1**
+- [TITOLO] Materiale col logo del club
+- [TESTO] Divise, tute e abbigliamento con il marchio della società restano visibili ai soli tesserati di quel club: un capo che porta i colori di una società non ha mercato fuori da lì.
+
+**Bacino 2**
+- [TITOLO] Materiale neutro
+- [TESTO] Calzature, protezioni, abbigliamento tecnico senza marchio e borse circolano fra i praticanti dello stesso sport nella stessa area geografica. È ciò che rende il servizio utile anche alla società piccola.
+
+### 3b · Mission & Vision
+
+[OCCHIELLO] Mission & Vision
+
+**Blocco missione**
+- [TITOLO] La nostra missione
+- [TESTO] Rimettere in circolo il materiale sportivo ancora buono per abbassare la barriera economica di accesso allo sport ed evitare un impatto ambientale che è già stato prodotto.
+
+**Blocco visione** *(banda scura — è dichiarata come direzione futura, non come funzione già attiva)*
+- [ETICHETTA] Direzione futura
+- [TITOLO] Il domani di Renova
+- [TESTO] Renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che diffonde la cultura della sostenibilità nello sport — attraverso informazione, formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di collaborazione con enti di ogni tipo.
+
+### 3c · Renova e l'Agenda 2030
+
+[OCCHIELLO] Renova e l'Agenda 2030
+
+[H2] Ogni funzione, un obiettivo di sviluppo sostenibile.
+
+[PARAGRAFO] Renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
+
+> ⚠️ Sono volutamente **cinque** obiettivi (12, 13, 3, 10, 17). L'SDG 6 (Acqua
+> pulita) NON compare come voce autonoma: la metodologia dichiara lacune sui
+> consumi idrici di alcune fibre sintetiche, e rivendicarlo contraddirebbe la
+> linea anti-greenwashing. Non aggiungerlo.
+
+**SDG 12 · Consumo e produzione responsabili**
+Il cuore di Renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.
+→ *Funzione: Marketplace di scambio gratuito.*
+
+**SDG 13 · Lotta al cambiamento climatico**
+Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.
+→ *Funzione: Stima d'impatto per articolo + dashboard.*
+
+**SDG 3 · Salute e benessere**
+Abbassare il costo del corredo abbassa una delle barriere che tengono i ragazzi lontani dallo sport. Più materiale accessibile significa più possibilità di praticare.
+→ *Funzione: Scambio gratuito che riduce la spesa delle famiglie.*
+
+**SDG 10 · Ridurre le disuguaglianze**
+Il beneficio economico va dove serve di più: alle famiglie con meno risorse. Il feed pubblico territoriale allarga le occasioni di scambio anche ai club più piccoli.
+→ *Funzione: Gratuità + circolazione territoriale del materiale neutro.*
+
+**SDG 17 · Partnership per gli obiettivi**
+Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l'obiettivo.
+→ *Funzione: Apertura dell'ecosistema a partner di ogni tipo.*
+
+---
+
+## 4 · COME FUNZIONA (`/come-funziona`)
 
 [OCCHIELLO] Come funziona
 
-[H2] Dall'attivazione al primo scambio, in pochi tap.
+[H1] Dall'attivazione al primo scambio, in pochi tap.
 
 [PARAGRAFO] Il club fa una cosa sola; tutto il resto lo gestiscono le famiglie in autonomia. Ecco come funziona in 4 semplici step:
 
@@ -167,179 +309,191 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 - [TITOLO] I tesserati entrano nel marketplace
 - [TESTO] Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il materiale che non usano più. Lo stesso feed si divide automaticamente in due viste, in base alla presenza o meno del logo della società.
 - [DIDASCALIA mockup centrale] **Marketplace** — Un solo posto dove pubblicare e cercare.
-- [DIDASCALIA feed societario] **Feed societario** — Articoli col logo societario, visibili solo ai tesserati del club stesso.
+- [DIDASCALIA feed societario] **Feed societario** — Articoli col logo societario, visibili solo ai tesserati del club.
 - [DIDASCALIA feed pubblico] **Feed pubblico** — Articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area geografica.
 
 **Step 3**
 - [TITOLO] Si accordano e scambiano, gratis
-- [TESTO] Tramite la chat integrata i tesserati si organizzano in autonomia e si scambiano il materiale di persona, gratuitamente. Come promesso, nessun lavoro per la società.
+- [TESTO] Tramite la chat integrata i tesserati si organizzano in autonomia e si scambiano il materiale di persona, gratuitamente. La valutazione delle condizioni e l'accordo finale restano in capo a chi scambia, che si incontra di persona e verifica l'oggetto prima di prenderlo: il club non si fa garante dei singoli scambi.
 
 **Step 4**
 - [TITOLO] Il club vede l'impatto
 - [TESTO] Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare in ogni momento.
 
+### Perché un club sceglie Renova
+
+[OCCHIELLO] Il valore per la società
+
+[H2] Perché un club sceglie Renova
+
+**Leva 1**
+- [TITOLO] Zero sforzo organizzativo
+- [TESTO] Il club distribuisce un codice e si prende i meriti; a pubblicare, accordarsi e scambiare sono i tesserati. Nessun carico sulla segreteria.
+
+**Leva 2**
+- [TITOLO] Retention e recruiting
+- [TESTO] Gli scambi avvengono di persona: ogni passaggio di materiale è un'occasione di incontro che costruisce community. Un club che fa risparmiare e crea relazioni è un club a cui ci si iscrive e in cui si resta.
+
 ---
 
-## 4 · PARTNERSHIP (social proof)
+## 5 · IMPATTO — come lo misuriamo (`/come-misuriamo`)
 
-[OCCHIELLO] Partnership
+[OCCHIELLO] Impatto
 
-[H2] Stiamo costruendo Renova con chi lo sport lo vive ogni giorno
-
-[PARAGRAFO] Renova nasce dal confronto diretto con i club. Queste sono le società che stanno collaborando allo sviluppo.
-
-[GRIGLIA LOGHI] (placeholder) 8 caselle vuote "Inserisci qui il tuo logo"
-
-[NOTA] I loghi dei club partner verranno mostrati qui una volta raccolti i consensi.
-
----
-
-## 5 · FASE DI TEST (banda scura)
-
-[OCCHIELLO] Fase di sviluppo · Bologna
-
-[H2] Stiamo cercando club di Bologna interessati a collaborare.
+[H1] Misuriamo il beneficio. E lo sottostimiamo apposta.
 
 [PARAGRAFO]
-Renova è in fase di sviluppo e parte dal territorio bolognese. Stiamo cercando di coinvolgere quanti più club del territorio per testare il servizio sul campo: **la partecipazione è gratuita**. È il momento giusto per entrare tra i primi e contribuire a costruire la piattaforma.
+Dire «riusare fa bene all'ambiente» è facile. Metterci un numero onesto è un'altra cosa. Renova stima l'impatto evitato da ogni scambio con un criterio dichiaratamente prudenziale: quando c'è un dubbio, scegliamo sempre l'ipotesi che *abbassa* il beneficio dichiarato. È il contrario del greenwashing.
 
-[BOTTONE] Prenota una call conoscitiva
+**Punto 01**
+- [TITOLO] Confine di sistema: cradle-to-gate a livello di fibra
+- [TESTO] Contiamo l'impatto dalla materia prima alla produzione della fibra, escludendo filatura, tessitura, tintura e confezione. Significa che i nostri valori sono, per costruzione, una sottostima dell'impatto reale del capo finito.
+
+**Punto 02**
+- [TITOLO] Stima a livelli di confidenza crescente
+- [TESTO] Livello 0 (profilo prudenziale di categoria) e Livello 1 (blend selezionato dall'utente) sono attivi; il Livello 2 (riconoscimento fotografico dell'etichetta) è progettato per il futuro. In mancanza di prova, assumiamo sempre la fibra a impatto più basso.
+
+**Punto 03**
+- [TITOLO] Lacune dichiarate, non colmate con numeri inventati
+- [TESTO] Dove la letteratura affidabile non fornisce il consumo idrico di una fibra, lo poniamo pari a zero anziché stimarlo. Il limite resta scritto nel documento metodologico, non nascosto.
+
+**Punto 04**
+- [TITOLO] Assunzione di sostituzione, comunicata come stima
+- [TESTO] L'impatto «evitato» presuppone che il capo riusato sostituisca un acquisto nuovo. È una stima documentata, non un dato certificato — e la presentiamo come tale.
+
+### Equivalenze
+
+[OCCHIELLO] Equivalenze
+
+[H2] Un numero che nessuno sa leggere non serve a niente.
+
+[PARAGRAFO] Le stime si traducono in equivalenze concrete: la CO₂ risparmiata come chilometri in auto evitati, l'acqua come numero di docce. Sono equivalenze indicative, e la fonte di ciascun fattore di conversione è sempre dichiarata nell'app.
+
+[ETICHETTA ESEMPIO] Esempio · un paio di scarpe sportive rimesso in circolo
+
+- **13,6 kg CO₂e** — *Carbon footprint di produzione* — **≈ 109 km in auto** — con un fattore prudenziale di ~125 g CO₂/km sul parco circolante
+- **≥ 1.500 L** — *Water footprint di produzione* — **≈ 19 docce** — una doccia di circa 8 minuti a ~10 L/min
+
+[NOTA FONTE] Impatto del paio di scarpe: analisi del ciclo di vita di una calzatura sportiva sintetica condotta dal Massachusetts Institute of Technology (Cheah et al., 2013), adottata come valore fisso di categoria nel documento metodologico. Fattore auto: le auto nuove immatricolate nell'UE emettono in media 106,4 g CO₂/km (2023, EEA); usiamo ~125 g/km, più prudente, per rappresentare il parco circolante. Le stime restano una sottostima: coprono la fibra, non il capo finito.
+
+### Rimando al documento metodologico (banda scura)
+
+[OCCHIELLO] Documento pubblico
+
+[H2] Fattori d'impatto, fonti e formule: è tutto scritto.
+
+[PARAGRAFO] Il metodo completo — impatto per fibra con la fonte di ogni valore, blend rappresentativi, pesi di categoria e formule di calcolo — è raccolto in un documento metodologico pubblico, liberamente consultabile e scaricabile. Chi vuole verificarne i fondamenti può farlo.
+
+[BOTTONE 1] Leggi la metodologia → pagina `/metodologia`
+[BOTTONE 2] Scarica il PDF
 
 ---
 
-## 6 · FAQ (domande frequenti)
+## 6 · COLLABORA — «Costruiamo la rete insieme» (`/collabora`)
 
-[OCCHIELLO] FAQ
+[OCCHIELLO] Collabora
 
-[H2] Domande frequenti
+[H1] Renova cresce con chi vuole costruirla.
 
-**D1.** Quanto costa al club?
-**R1.** In questa fase la partecipazione è gratuita. Stiamo coinvolgendo i primi club per testare e sviluppare il servizio: nessun costo, nessun impegno economico. 
+[PARAGRAFO]
+Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a rimettere in circolo il materiale sportivo e a diffondere una cultura della sostenibilità nello sport: federazioni, amministrazioni locali, enti del terzo settore, produttori, aziende di software gestionali. Se vedi un punto di contatto tra la tua realtà e la nostra, parliamone: **la rete si costruisce un nodo alla volta.**
 
-**D2.** È davvero gratis? E dopo la fase di test?
-**R2.** Sì: durante la fase di test il servizio è gratuito per il club e per le famiglie, senza vincoli. Il modello di business è ancora in corso di definizione ma in ogni caso il servizio è pensato per far sì che lo scambio del materiale tra i tesserati resti gratuito.
+[GRAFICA RETE — etichette dei nodi attorno a «renova»]
+- Club ASD e SSD
+- Federazioni
+- Amministrazioni
+- Terzo settore
+- Produttori
+- Software gestionali
 
-**D3.** Cosa deve fare concretamente il club?
-**R3.** Pochissimo: aderire, distribuire il codice di attivazione ai tesserati e prendersi i meriti dell'iniziativa. Tutto il resto — pubblicazione del materiale, accordi, scambio — lo gestiscono le famiglie in autonomia. Nessun carico di lavoro sulla società.
+### I due form
 
-**D4.** Il nostro è un club piccolo: funziona lo stesso?
-**R4.** Sì. Più tesserati partecipano, più scambi avvengono, ma Renova è pensata anche per realtà piccole: oltre al feed interno del club c'è un feed pubblico che mette in contatto i praticanti dello stesso sport nella stessa area geografica, ampliando le occasioni di scambio anche per le società più piccole.
+[OCCHIELLO] Scrivici
 
-**D5.** Come avviene lo scambio? È gratuito o c'è un prezzo?
-**R5.** La piattaforma fa incontrare domanda e offerta; l'accordo lo prendono le famiglie tramite la chat integrata e lo scambio avviene di persona, tra tesserati. È una scelta voluta: rafforza i rapporti dentro la community del club. Il prezzo che vedi indicato negli articoli riguarda il risparmio economico generato dallo scambio, non un importo da pagare.
+[H2] Due strade, stessa porta.
 
-**D6.** Chi è responsabile della qualità del materiale o di eventuali problemi nello scambio?
-**R6.** Renova mette in contatto le famiglie e fornisce gli strumenti per scambiarsi il materiale; la valutazione delle condizioni e l'accordo finale restano in capo a chi scambia, che si incontra di persona e può verificare l'oggetto prima di prenderlo. Il club non si fa garante dei singoli scambi. Bisogna immaginare Renova come uno spazio pubblico, il cui buon funzionamento è una responsabilità condivisa.
+**Form A**
+- [OCCHIELLO] Sei un club
+- [TITOLO] Porta Renova fra i tuoi tesserati
+- [CAMPI]
+  - Nome (obbligatorio)
+  - Club / società (obbligatorio)
+  - Ruolo
+  - Email (obbligatorio)
+  - Telefono (obbligatorio)
+  - Messaggio (opzionale) — placeholder: "Domande, dubbi, curiosità…"
+- [BOTTONE INVIO] Porta Renova nel tuo club
 
-**D7.** Come accedono i tesserati? Serve scaricare un'app?
-**R7.** Al momento no: si accede da web con il codice di attivazione del club, dallo smartphone come da computer. Nessuna installazione, nessuna procedura complicata.
+**Form B**
+- [OCCHIELLO] Sei un altro tipo di ente
+- [TITOLO] Proponici una collaborazione
+- [CAMPI]
+  - Nome (obbligatorio)
+  - Ente / organizzazione (obbligatorio)
+  - Tipo di ente (menu a tendina: Federazione · Pubblica amministrazione · Terzo settore · Azienda · Altro)
+  - Email (obbligatorio)
+  - Come vorresti collaborare — placeholder: "Raccontaci il punto di contatto che vedi con la tua realtà…"
+- [BOTTONE INVIO] Proponi una collaborazione
 
-**D8.** Come fate a misurare il risparmio e l'impatto ambientale mostrati nella dashboard?
-**R8.** Il risparmio nasce dagli scambi reali registrati sulla piattaforma. L'impatto ambientale (CO₂ e acqua) è stimato con un metodo deterministico e tracciabile, calcolato dalle fibre che compongono il capo — non un numero generico, ma una stima documentata con tre livelli di affidabilità a seconda di quanto si conosce del materiale.
+[NOTA SOTTO I FORM] Inviando il form aprirai la tua email con i dati già compilati.
 
----
-
-## 7 · CONTATTI (sezione finale con form)
+### Contatti
 
 [OCCHIELLO] Contatti
 
-[H2] Vuoi portare Renova nel tuo club?
+[H2] Parliamone.
 
-[PARAGRAFO] Non esitare a contattarci. Raccontaci della tua realtà, porta alla luce i tuoi dubbi e curiosità o aiutaci con dei suggerimenti che contribuiscano al miglioramento del servizio.
+[PARAGRAFO] Raccontaci della tua realtà, porta alla luce dubbi e curiosità, o aiutaci con suggerimenti che migliorino il servizio.
 
 [CONTATTI DIRETTI]
 - Email: «info@renovasport.it»
 - Telefono: «+39 370 3238359»
 - Sito: «renovasport.it»
 
-### Form "Prenota una call"
-
-[CAMPI]
-- Nome (obbligatorio)
-- Club / società (obbligatorio)
-- Ruolo
-- Email (obbligatorio)
-- Telefono (obbligatorio)
-- Messaggio (opzionale) — placeholder: "Domande, suggerimenti, richieste…"
-
-[BOTTONE INVIO] Prenota una call conoscitiva
-
-[NOTA SOTTO IL BOTTONE] Inviando il form aprirai la tua email con i dati già compilati.
-
 ---
 
-## 8 · FOOTER (piè di pagina)
+## 7 · FOOTER (piè di pagina, uguale su tutte le pagine)
 
 [TITOLO] Non sei ancora pronto a parlarne?
-[SOTTOTITOLO] Lascia la tua email e ti aggiorniamo sul lancio.
+[SOTTOTITOLO] Lascia la tua email e ti aggiorniamo sullo sviluppo del progetto.
 [CAMPO] placeholder: "La tua email"
 [BOTTONE] Tienimi aggiornato
 
-[COPYRIGHT] © 2026 Renova · Il marketplace second hand per ASD e SSD · renovasport.it
+[MAPPA DEL SITO] Il progetto · Come funziona · Impatto · Collabora · Metodologia d'impatto
+
+[RECAPITI] «info@renovasport.it» · «+39 370 3238359» · «renovasport.it»
+
+[COPYRIGHT] © 2026 Renova · Economia circolare per lo sport dilettantistico · renovasport.it
 
 ---
 
-## MOCKUP (testo d'esempio dentro i telefonini disegnati)
+## 8 · «CONTINUA» (in fondo a ogni pagina, non alla home)
 
-> Questi sono testi finti illustrativi mostrati negli "screenshot" dell'app
-> disegnati sulla pagina. Modificabili, ma è testo decorativo.
+[ETICHETTA] Continua
+[TITOLO] *(nome della pagina successiva — vedi §2, card dell'indice)*
+[TESTO] *(sommario della pagina successiva — vedi §2, card dell'indice)*
+[BOTTONE] Vai
 
-### Mockup feed (lista articoli)
+L'ordine di lettura è circolare: Il progetto → Come funziona → Impatto → Collabora → Il progetto.
 
+---
+
+## MOCKUP (testo d'esempio dentro il telefonino disegnato nell'hero)
+
+> Questo è testo finto illustrativo mostrato nello "screenshot" dell'app
+> disegnato nella home. Modificabile, ma è testo decorativo.
+>
+> ⚠️ Nella pagina «Come funziona» i telefonini NON sono disegnati: sono
+> immagini (`src/assets/mockups/*.webp`) e il testo al loro interno non si
+> cambia da questo file — vanno rigenerate le immagini.
+
+### Mockup feed (home, colonna destra dell'hero)
+
+- Intestazione: marchio «renova» · pill società «Bologna FC»
 - Barra ricerca: "Cerca prodotti…" · "Filtri +"
-- Tab: Tutti · Disponibili · Prenotati
-- Articolo 1: **Scarpe da calcio** — Scarpe · 42 · Buone — CO₂ 6 kg — H₂O 2.8k L
-- Articolo 2: **Divisa Bologna FC** — Maglia · M · Ottime — CO₂ 9 kg — H₂O 3.1k L *(con logo società)*
-- Articolo 3: **Parastinchi** — Protez. · Uni · Buone — CO₂ 2 kg — H₂O 0.6k L
-- Articolo 4: **Borsone sportivo** — Access. · Uni · Discr. — CO₂ 4 kg — H₂O 1.2k L
-- Badge stato: "Disp."
-
-### Mockup articolo — Feed societario
-
-- Intestazione: "Feed societario" · "Bologna FC"
-- Stato: "Disponibile"
-- Titolo: Divisa ufficiale Bologna FC
-- Sottotitolo: Maglia · Taglia M · Ottime
-- Prezzo: 28 € — "risparmio stimato"
-- ESG: CO₂: 9 kg · H₂O: 3.1k L
-- Composizione: 100% poliestere riciclato
-- CTA: Contatta venditore
-
-### Mockup articolo — Feed pubblico
-
-- Intestazione: "Feed pubblico" · "Pubblico"
-- Stato: "Disponibile"
-- Titolo: Scarpe da calcio Nike
-- Sottotitolo: Scarpe · Taglia 42 · Buone
-- Prezzo: 35 € — "risparmio stimato"
-- ESG: CO₂: 6 kg · H₂O: 2.8k L
-- Composizione: Tomaia sintetica · suola in gomma
-- CTA: Contatta venditore
-
-### Mockup chat
-
-- Contatto: Giulia M. — Divisa Bologna FC
-- Messaggio (sinistra): Ciao! La divisa è ancora disponibile?
-- Messaggio (destra): Sì! Taglia M, ottime condizioni 👍
-- Messaggio (sinistra): Perfetto. Ci vediamo agli allenamenti di giovedì?
-- Messaggio (destra): Va benissimo, te la porto in campo.
-- Input: "Scrivi un messaggio…"
-
-### Mockup impatto (dashboard)
-
-- Occhiello: Il risparmio generato dal riuso
-- Titolo: Impatto
-- Tab: La società · Il mio contributo
-- Metrica 1: **CO₂ risparmiata** — 312 kg — 2.496 km in auto evitati · 104.000 ricariche smartphone
-- Metrica 2: **Acqua risparmiata** — 98.000 L — 1.225 docce · 754 caffè (acqua nascosta)
-- Metrica 3: **Valore risparmiato** — 1.240 €
-- Nota: Equivalenze indicative · 47 scambi conclusi · metodo nel profilo
-- Riga: Fonti delle equivalenze
-
-### Mockup codice di attivazione
-
-- Etichetta: Codice di attivazione
-- Codice: DEMO-CAL (fittizio: non è un codice di accesso attivo)
-- Sottotitolo: La tua società · Calcio
-- Testo: Distribuiscilo ai tesserati: con questo codice accedono al marketplace del club.
-- CTA: Condividi con i tesserati
+- Tab: Tutti · Disponibili · Prenotati · Scambiati
+- Articolo 1: **Zaino sportivo** — Zaino · Unica · Buono — CO₂ ≥ 9 KG — H₂O ≥ 300 L — stato "Disponibile"
+- Articolo 2: **Scarpe da calcio** — Scarpe · 41 · Ottimo — CO₂ ≥ 14 KG — H₂O ≥ 1,5K L — stato "Scambiato"
+- Articolo 3: **Giacca sportiva** — Giacca · M · Ottimo — CO₂ ≥ 1 KG — H₂O ≥ 19 L — stato "Disponibile"
+- Articolo 4: **Maglia allenamento** — Maglia · S · Perfetto — CO₂ ≥ 4 KG — H₂O ≥ 600 L — stato "Prenotato"
+- Barra inferiore: Market · Impatto · (+) · Chat · Profilo

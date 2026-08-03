@@ -11,8 +11,14 @@ il risparmio ambientale (metriche ESG: CO₂ e acqua). Sito: renovasport.it.
 - **Feed societario** — articoli CON logo della società, visibili solo ai
   membri della stessa società e stesso sport.
 
-La radice `/` è "2 in 1": landing pubblica B2B rivolta ai club per gli
-anonimi, redirect al feed per gli autenticati (vedi `App.tsx`).
+La radice `/` è "2 in 1": landing pubblica per gli anonimi, redirect al feed
+per gli autenticati (vedi `App.tsx`). **La landing ospita solo l'HERO** — è la
+schermata che si raggiunge dai motori di ricerca — mentre il racconto vive su
+una pagina per voce di menu: `/progetto` · `/come-funziona` ·
+`/come-misuriamo` · `/collabora` (⚠️ l'«Impatto» del menu sta su
+`/come-misuriamo` perché `/impatto` è già la dashboard dell'app). Header,
+footer, indice e navigazione «pagina seguente» stanno in
+`src/components/sito.tsx`, insieme alle costanti di contatto.
 
 **Due domini** (stesso bundle, `src/lib/app-url.ts`): la landing sta su
 renovasport.it, l'app su un dominio suo indicato da **`VITE_APP_URL`** (es.
@@ -28,8 +34,8 @@ entrambi (remote `origin` con due push URL). Procedura e DNS Aruba nel README;
 
 Stile UI: **"Sport-Tech"** — mobile-first, sfondi bianchi/grigio chiaro,
 accento **Verde Eco fluorescente** (`--color-eco`, `#10e87f`); azzurro
-(`--color-water`) per il badge acqua. La landing è l'unica pagina responsive
-anche desktop.
+(`--color-water`) per il badge acqua. Il sito pubblico (landing, le 4 pagine
+e `/metodologia`) è l'unica parte responsive anche desktop.
 
 ## Stack
 
@@ -59,12 +65,15 @@ src/
 │                taglie.ts (set taglie per tipo categoria)
 ├─ contexts/     AuthContext.tsx — sessione + profilo (utente+società) +
 │                reset/aggiornamento password
-├─ components/   Layout (bottom-nav + badge chat non lette), ArticleCard,
+├─ components/   sito.tsx (guscio del SITO pubblico: header/footer/nav +
+│                EMAIL/TELEFONO/SURVEY_URL), Layout (bottom-nav + badge chat non lette), ArticleCard,
 │                EsgBadge, StatoBadge, GestioneStato (stato + conferma
 │                scambio), RecensioneScambio, Stelle, StoricoScambi,
 │                MetodologiaFAQ, Logo, ui.tsx (TextField/SelectField/
 │                PrimaryButton/banner), ...
-├─ pages/        Landing (B2B, pubblica), Metodologia (documento metodologico
+├─ pages/        Landing (home pubblica: solo hero + indice), Progetto,
+│                ComeFunziona, ComeMisuriamo, Collabora (le 4 pagine del sito
+│                pubblico), Metodologia (documento metodologico
 │                integrale, pubblica su /metodologia; PDF scaricabile da
 │                public/metodologia-renova.pdf — aggiornare pagina e PDF
 │                insieme), Login, Register, RecuperaPassword,
