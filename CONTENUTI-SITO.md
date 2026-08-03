@@ -166,7 +166,7 @@ renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materia
 [BOTTONE SECONDARIO] Collabora con noi → porta a «Collabora»
 
 [RIQUADRO SECONDARIO]
-Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renova.
+Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire renova.
 [LINK] Compila il sondaggio per le famiglie
 
 [BADGE DECORATIVO sul mockup]
@@ -220,10 +220,10 @@ Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo 
 [H1] Un costo che nessuno copre, un impatto già pagato.
 
 [PARAGRAFO 1]
-Lo sport dilettantistico italiano conta 107.804 enti e 12,3 milioni di tesserati. Per le famiglie il materiale tecnico pesa circa il 25% della spesa annua nei principali sport di squadra — ed è l'unica voce priva di qualsiasi sostegno pubblico: i voucher coprono l'iscrizione, non il corredo.
+Lo sport dilettantistico italiano non è un fenomeno di nicchia: 107.804 enti, 12,3 milioni di tesserati, due bambini su tre tra i 6 e i 14 anni. È una delle reti sociali più estese del Paese — e ogni stagione vi circola una quantità enorme di materiale tecnico. Per le famiglie quel materiale pesa circa il 25% della spesa annua nei principali sport di squadra, ed è l'unica voce priva di qualsiasi sostegno pubblico: i voucher coprono l'iscrizione, non il corredo.
 
 [PARAGRAFO 2]
-Allo stesso tempo, ogni capo sportivo porta con sé un impatto ambientale — CO₂ e acqua — già interamente prodotto nel momento in cui viene fabbricato. Buttarlo quando è ancora buono spreca due volte: i soldi delle famiglie e le risorse spese per produrlo.
+Ogni capo sportivo porta con sé un impatto ambientale — CO₂ e acqua — già interamente prodotto nel momento in cui è stato fabbricato. Buttarlo quando è ancora buono spreca due volte: i soldi delle famiglie e le risorse spese per produrlo. Su una scala come questa, riportare in circolo anche solo una parte di quel materiale significa un risparmio concreto per le famiglie e un impatto ambientale evitato che non è teorico: è la somma di gesti che già accadono ogni giorno — solo in modo disordinato, ristretto alle conoscenze di ciascuno e invisibile. renova li rende un sistema.
 
 [GRAFICA NUMERI DI SISTEMA]
 - **107.804** — *enti sportivi* — iscritti al Registro nazionale con almeno un tesseramento attivo (2024).
@@ -251,12 +251,12 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 
 **Blocco missione**
 - [TITOLO] La nostra missione
-- [TESTO] Rimettere in circolo il materiale sportivo ancora buono per abbassare la barriera economica di accesso allo sport ed evitare un impatto ambientale che è già stato prodotto.
+- [TESTO] Migliorare l'impatto ambientale dello sport dilettantistico attraverso l'economia circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica — intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale. Ogni capo che torna in campo invece di restare in un armadio è una risorsa non sprecata e una barriera in meno all'accesso allo sport. Facciamo funzionare come sistema ciò che oggi accade solo per prossimità, nel raggio delle conoscenze di ciascuno.
 
 **Blocco visione** *(banda scura — è dichiarata come direzione futura, non come funzione già attiva)*
 - [ETICHETTA] Direzione futura
 - [TITOLO] La nostra visione
-- [TESTO] renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che diffonde la cultura della sostenibilità nello sport — attraverso informazione, formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di collaborazione con enti di ogni tipo.
+- [TESTO] renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un dovere da assolvere, ma una convenienza. Immaginiamo una rete in cui chi rimette in circolo il proprio materiale riceve qualcosa in cambio — dagli sconti dei partner fino a borse che alleggeriscono il costo dello sport; in cui il club che si impegna sul serio trova in quell'impegno una leva per attrarre sponsor e sostegno; in cui l'azienda che collabora dà alle proprie iniziative di sostenibilità una sostanza misurabile, fatta di dati e non di dichiarazioni; in cui gli enti del terzo settore ampliano il proprio raggio d'azione digitalizzando la rete che già animano. È un obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta, una rete in cui la sostenibilità conviene a chi la pratica.
 
 ### 3c · renova e l'Agenda 2030
 
@@ -264,32 +264,45 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 
 [H2] Ogni funzione, un obiettivo di sviluppo sostenibile.
 
-[PARAGRAFO] renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
+[PARAGRAFO intro] L'Agenda 2030 è il programma d'azione sottoscritto nel 2015 da tutti i 193 Paesi membri delle Nazioni Unite. Fissa 17 Obiettivi di Sviluppo Sostenibile (Sustainable Development Goals, SDGs) e 169 traguardi da raggiungere entro il 2030: un linguaggio comune e riconosciuto a livello internazionale per orientare e misurare il progresso verso uno sviluppo che tenga insieme ambiente, economia e società.
 
-> ⚠️ Sono volutamente **cinque** obiettivi (12, 13, 3, 10, 17). L'SDG 6 (Acqua
-> pulita) NON compare come voce autonoma: la metodologia dichiara lacune sui
+[PARAGRAFO] renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
+
+[SPAZIO IMMAGINE — ruota ufficiale SDG / 17 icone] (placeholder: caricare qui l'asset ufficiale ONU nella versione SENZA emblema; le linee guida d'uso vanno pubblicate sulla stessa pagina — vedi nota vincoli sotto)
+
+> ⚠️ Sono volutamente **cinque** obiettivi, presentati in ordine numerico (3, 10, 12, 13, 17).
+> L'SDG 6 (Acqua pulita) NON compare come voce autonoma: la metodologia dichiara lacune sui
 > consumi idrici di alcune fibre sintetiche, e rivendicarlo contraddirebbe la
 > linea anti-greenwashing. Non aggiungerlo.
-
-**SDG 12 · Consumo e produzione responsabili**
-Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.
-→ *Funzione: Marketplace di scambio gratuito.*
-
-**SDG 13 · Lotta al cambiamento climatico**
-Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.
-→ *Funzione: Stima d'impatto per articolo + dashboard.*
+>
+> ⚠️ LOGO/ICONE SDG — VINCOLI D'USO (renova è un soggetto NON-ONU):
+> - usare la versione del logo SENZA emblema ONU (Versione 2);
+> - le icone non vanno mai da sole: sempre affiancate al logo renova, che deve avere preminenza;
+> - ogni icona va usata intera (numero + titolo + grafica);
+> - uso solo illustrativo/informativo, non a scopo di auto-promozione o di guadagno commerciale;
+> - requisito ONU: quando logo/icone sono online, le guidelines devono essere pubblicate sulla stessa pagina.
+> Asset ufficiali + guidelines: https://www.un.org/sustainabledevelopment/news/communications-material/
+> PDF guidelines: https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/01/SDG_Guidelines_AUG_2019_Final.pdf
 
 **SDG 3 · Salute e benessere**
 Abbassare il costo del corredo abbassa una delle barriere che tengono i ragazzi lontani dallo sport. Più materiale accessibile significa più possibilità di praticare.
-→ *Funzione: Scambio gratuito che riduce la spesa delle famiglie.*
+→ *Funzione: scambio gratuito che riduce la spesa delle famiglie.*
 
 **SDG 10 · Ridurre le disuguaglianze**
 Il beneficio economico va dove serve di più: alle famiglie con meno risorse. Il feed pubblico territoriale allarga le occasioni di scambio anche ai club più piccoli.
-→ *Funzione: Gratuità + circolazione territoriale del materiale neutro.*
+→ *Funzione: gratuità + circolazione territoriale del materiale neutro.*
+
+**SDG 12 · Consumo e produzione responsabili**
+Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.
+→ *Funzione: marketplace di scambio gratuito.*
+
+**SDG 13 · Lotta al cambiamento climatico**
+Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.
+→ *Funzione: stima d'impatto per articolo + dashboard.*
 
 **SDG 17 · Partnership per gli obiettivi**
-Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l'obiettivo.
-→ *Funzione: Apertura dell'ecosistema a partner di ogni tipo.*
+Nessun impatto di scala si costruisce da soli. renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l'obiettivo.
+→ *Funzione: apertura dell'ecosistema a partner di ogni tipo.*
 
 ---
 

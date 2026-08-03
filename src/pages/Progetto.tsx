@@ -30,7 +30,8 @@ const NUMERI_SISTEMA: Array<{ valore: string; unita: string; testo: string }> = 
   },
 ]
 
-/** Mappatura Agenda 2030 (§2c): 5 obiettivi presidiati, non uno di più.
+/** Mappatura Agenda 2030 (§2c): 5 obiettivi presidiati, non uno di più,
+ *  presentati in ordine numerico.
  *  `colore` è il colore ufficiale dell'obiettivo, usato solo come accento. */
 const SDG: Array<{
   n: string
@@ -40,28 +41,12 @@ const SDG: Array<{
   funzione: string
 }> = [
   {
-    n: '12',
-    colore: '#BF8B2E',
-    titolo: 'Consumo e produzione responsabili',
-    testo:
-      'Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.',
-    funzione: 'Marketplace di scambio gratuito.',
-  },
-  {
-    n: '13',
-    colore: '#3F7E44',
-    titolo: 'Lotta al cambiamento climatico',
-    testo:
-      'Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.',
-    funzione: 'Stima d’impatto per articolo + dashboard.',
-  },
-  {
     n: '3',
     colore: '#4C9F38',
     titolo: 'Salute e benessere',
     testo:
       'Abbassare il costo del corredo abbassa una delle barriere che tengono i ragazzi lontani dallo sport. Più materiale accessibile significa più possibilità di praticare.',
-    funzione: 'Scambio gratuito che riduce la spesa delle famiglie.',
+    funzione: 'scambio gratuito che riduce la spesa delle famiglie.',
   },
   {
     n: '10',
@@ -69,15 +54,31 @@ const SDG: Array<{
     titolo: 'Ridurre le disuguaglianze',
     testo:
       'Il beneficio economico va dove serve di più: alle famiglie con meno risorse. Il feed pubblico territoriale allarga le occasioni di scambio anche ai club più piccoli.',
-    funzione: 'Gratuità + circolazione territoriale del materiale neutro.',
+    funzione: 'gratuità + circolazione territoriale del materiale neutro.',
+  },
+  {
+    n: '12',
+    colore: '#BF8B2E',
+    titolo: 'Consumo e produzione responsabili',
+    testo:
+      'Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.',
+    funzione: 'marketplace di scambio gratuito.',
+  },
+  {
+    n: '13',
+    colore: '#3F7E44',
+    titolo: 'Lotta al cambiamento climatico',
+    testo:
+      'Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.',
+    funzione: 'stima d’impatto per articolo + dashboard.',
   },
   {
     n: '17',
     colore: '#19486A',
     titolo: 'Partnership per gli obiettivi',
     testo:
-      'Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l’obiettivo.',
-    funzione: 'Apertura dell’ecosistema a partner di ogni tipo.',
+      'Nessun impatto di scala si costruisce da soli. renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l’obiettivo.',
+    funzione: 'apertura dell’ecosistema a partner di ogni tipo.',
   },
 ]
 
@@ -104,15 +105,21 @@ function CosaE() {
           titolo={<>Un costo che nessuno copre, un impatto già pagato.</>}
         >
           <p>
-            Lo sport dilettantistico italiano conta 107.804 enti e 12,3 milioni di tesserati. Per
-            le famiglie il materiale tecnico pesa circa il 25% della spesa annua nei principali
-            sport di squadra — ed è l’unica voce priva di qualsiasi sostegno pubblico: i voucher
-            coprono l’iscrizione, non il corredo.
+            Lo sport dilettantistico italiano non è un fenomeno di nicchia: 107.804 enti, 12,3
+            milioni di tesserati, due bambini su tre tra i 6 e i 14 anni. È una delle reti sociali
+            più estese del Paese — e ogni stagione vi circola una quantità enorme di materiale
+            tecnico. Per le famiglie quel materiale pesa circa il 25% della spesa annua nei
+            principali sport di squadra, ed è l’unica voce priva di qualsiasi sostegno pubblico: i
+            voucher coprono l’iscrizione, non il corredo.
           </p>
           <p>
-            Allo stesso tempo, ogni capo sportivo porta con sé un impatto ambientale — CO₂ e acqua
-            — già interamente prodotto nel momento in cui viene fabbricato. Buttarlo quando è
-            ancora buono spreca due volte: i soldi delle famiglie e le risorse spese per produrlo.
+            Ogni capo sportivo porta con sé un impatto ambientale — CO₂ e acqua — già interamente
+            prodotto nel momento in cui è stato fabbricato. Buttarlo quando è ancora buono spreca
+            due volte: i soldi delle famiglie e le risorse spese per produrlo. Su una scala come
+            questa, riportare in circolo anche solo una parte di quel materiale significa un
+            risparmio concreto per le famiglie e un impatto ambientale evitato che non è teorico: è
+            la somma di gesti che già accadono ogni giorno — solo in modo disordinato, ristretto
+            alle conoscenze di ciascuno e invisibile. renova li rende un sistema.
           </p>
         </TestataPagina>
 
@@ -208,9 +215,13 @@ function MissionVision() {
           <div className="flex flex-col justify-center rounded-2xl border-[1.5px] border-ink bg-paper p-6 lg:p-8">
             <h2 className="text-[24px] leading-tight sm:text-[28px]">La nostra missione</h2>
             <p className="mt-4 text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
-              Rimettere in circolo il materiale sportivo ancora buono per abbassare la barriera
-              economica di accesso allo sport ed evitare un impatto ambientale che è già stato
-              prodotto.
+              Migliorare l’impatto ambientale dello sport dilettantistico attraverso l’economia
+              circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica —
+              intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale.
+              Ogni capo che torna in campo invece di restare in un armadio è una risorsa non
+              sprecata e una barriera in meno all’accesso allo sport. Facciamo funzionare come
+              sistema ciò che oggi accade solo per prossimità, nel raggio delle conoscenze di
+              ciascuno.
             </p>
           </div>
 
@@ -223,11 +234,17 @@ function MissionVision() {
               La nostra visione
             </h2>
             <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
-              renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che
-              diffonde la cultura della sostenibilità nello sport — attraverso informazione,
-              formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie
-              abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di
-              collaborazione con enti di ogni tipo.
+              renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della
+              sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un
+              dovere da assolvere, ma una convenienza. Immaginiamo una rete in cui chi rimette in
+              circolo il proprio materiale riceve qualcosa in cambio — dagli sconti dei partner
+              fino a borse che alleggeriscono il costo dello sport; in cui il club che si impegna
+              sul serio trova in quell’impegno una leva per attrarre sponsor e sostegno; in cui
+              l’azienda che collabora dà alle proprie iniziative di sostenibilità una sostanza
+              misurabile, fatta di dati e non di dichiarazioni; in cui gli enti del terzo settore
+              ampliano il proprio raggio d’azione digitalizzando la rete che già animano. È un
+              obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta, una rete
+              in cui la sostenibilità conviene a chi la pratica.
             </p>
           </div>
         </div>
@@ -250,7 +267,14 @@ function Agenda2030() {
             Ogni funzione, un obiettivo di sviluppo sostenibile.
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in
+            L’Agenda 2030 è il programma d’azione sottoscritto nel 2015 da tutti i 193 Paesi membri
+            delle Nazioni Unite. Fissa 17 Obiettivi di Sviluppo Sostenibile (Sustainable
+            Development Goals, SDGs) e 169 traguardi da raggiungere entro il 2030: un linguaggio
+            comune e riconosciuto a livello internazionale per orientare e misurare il progresso
+            verso uno sviluppo che tenga insieme ambiente, economia e società.
+          </p>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+            renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque, in
             modo diretto e difendibile — la stessa disciplina che applichiamo alla misura
             dell’impatto.
           </p>

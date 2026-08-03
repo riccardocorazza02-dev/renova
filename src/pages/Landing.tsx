@@ -89,7 +89,7 @@ function Hero() {
           <div className="mt-5 rounded-xl border border-edge bg-eco-50/60 px-4 py-3.5 sm:max-w-md">
             <p className="text-[13px] text-ink-soft">
               Sei un <span className="font-semibold text-ink">genitore o un tesserato</span>? La
-              tua opinione ci serve per costruire Renova.
+              tua opinione ci serve per costruire renova.
             </p>
             <a
               href={SURVEY_URL}
