@@ -31,7 +31,7 @@ export function ComeFunziona() {
             {/* Step 1 */}
             <StepRow
               n="1"
-              title="Il club attiva Renova"
+              title="Il club attiva renova"
               body="Il club aderisce al servizio e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi gli sforzi organizzativi della società sono finiti."
               mock={
                 <MockupPhone
@@ -257,7 +257,7 @@ function ValorePerIlClub() {
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
         <span className="eyebrow">Il valore per la società</span>
         <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
-          Perché un club sceglie Renova
+          Perché un club dovrebbe scegliere renova
         </h2>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">

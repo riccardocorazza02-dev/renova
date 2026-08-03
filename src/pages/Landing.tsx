@@ -56,12 +56,12 @@ function Hero() {
       <div className="mx-auto max-w-6xl px-5 py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-20">
         {/* Colonna sinistra: promessa + porte d'azione */}
         <div>
-          <span className="eyebrow">Economia circolare per lo sport dilettantistico</span>
+          <span className="eyebrow">Sostenibilità per lo sport dilettantistico</span>
           <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
-            La piattaforma che rimette in circolo il materiale sportivo ancora buono.
+            La prima piattaforma di economia circolare per ASD e SSD.
           </h1>
           <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
-            Renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale
+            renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale
             sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa
             il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato
             prodotto a monte.{' '}
@@ -159,8 +159,8 @@ function Indice() {
             Il progetto, per intero.
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            Renova non ha ancora utenti reali: quello che possiamo mostrare è il metodo con cui è
-            stata costruita. Ogni pagina ne racconta una parte.
+            Di seguito trovi passo per passo il metodo con cui è stata costruita renova e le
+            intenzioni che porta con sè. Ogni pagina ne racconta una parte.
           </p>
         </div>
 

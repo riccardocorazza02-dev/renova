@@ -67,7 +67,7 @@ export const PAGINE_SITO: PaginaSito[] = [
     label: 'Collabora',
     titolo: 'Costruiamo la rete insieme · Renova',
     sommario:
-      'Club, federazioni, amministrazioni, enti del terzo settore, aziende: la rete si costruisce un nodo alla volta.',
+      'Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo alla volta.',
   },
 ]
 
@@ -235,45 +235,11 @@ function ProssimaPagina() {
 }
 
 function SitoFooter() {
-  const [email, setEmail] = useState('')
   return (
     <footer className="border-t-[1.5px] border-ink bg-eco-50/40">
       <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-md">
-            <p className="text-[14px] font-semibold text-ink">Non sei ancora pronto a parlarne?</p>
-            <p className="text-[13px] text-ink-soft">
-              Lascia la tua email e ti aggiorniamo sullo sviluppo del progetto.
-            </p>
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
-                'Tienimi aggiornato sullo sviluppo di Renova',
-              )}&body=${encodeURIComponent(`Email: ${email}`)}`
-            }}
-            className="flex w-full max-w-md gap-2"
-          >
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="La tua email"
-              className="min-w-0 flex-1 rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-lg border border-ink px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper"
-            >
-              Tienimi aggiornato
-            </button>
-          </form>
-        </div>
-
         {/* Mappa del sito + recapiti */}
-        <div className="mt-9 grid gap-6 border-t border-line pt-8 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2">
           <nav className="flex flex-col gap-2 text-[13px] font-semibold text-ink-soft">
             {PAGINE_SITO.map((p) => (
               <Link key={p.to} to={p.to} className="transition hover:text-ink">
@@ -309,7 +275,7 @@ function SitoFooter() {
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
           <Logo className="text-[18px]" />
           <p className="text-center text-[11px] text-ink-muted sm:text-right">
-            © 2026 Renova · Economia circolare per lo sport dilettantistico · {SITO}
+            © 2026 renova · Economia circolare per lo sport dilettantistico · {SITO}
           </p>
         </div>
       </div>

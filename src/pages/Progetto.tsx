@@ -44,7 +44,7 @@ const SDG: Array<{
     colore: '#BF8B2E',
     titolo: 'Consumo e produzione responsabili',
     testo:
-      'Il cuore di Renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.',
+      'Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.',
     funzione: 'Marketplace di scambio gratuito.',
   },
   {
@@ -140,7 +140,7 @@ function CosaE() {
         <div className="mt-16 lg:grid lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12">
           <div className="max-w-xl">
             <h2 className="text-[26px] leading-tight sm:text-[30px]">
-              Renova rimette in circolo quel materiale.
+              renova rimette in circolo quel materiale.
             </h2>
             <p className="mt-4 text-[16px] leading-relaxed text-ink-soft">
               I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova nel
@@ -220,10 +220,10 @@ function MissionVision() {
               Direzione futura
             </span>
             <h2 className="mt-3 text-[24px] leading-tight text-paper sm:text-[28px]">
-              Il domani di Renova
+              La nostra visione
             </h2>
             <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
-              Renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che
+              renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che
               diffonde la cultura della sostenibilità nello sport — attraverso informazione,
               formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie
               abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di
@@ -245,12 +245,12 @@ function Agenda2030() {
     <section className="border-b-[1.5px] border-ink">
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
         <div className="max-w-3xl">
-          <span className="eyebrow">Renova e l’Agenda 2030</span>
+          <span className="eyebrow">renova e l’Agenda 2030</span>
           <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
             Ogni funzione, un obiettivo di sviluppo sostenibile.
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            Renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in
+            renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in
             modo diretto e difendibile — la stessa disciplina che applichiamo alla misura
             dell’impatto.
           </p>

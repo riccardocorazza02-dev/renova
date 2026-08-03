@@ -41,9 +41,9 @@ function Invito() {
   return (
     <section className="border-b-[1.5px] border-ink">
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
-        <TestataPagina occhiello="Collabora" titolo={<>Renova cresce con chi vuole costruirla.</>}>
+        <TestataPagina occhiello="Collabora" titolo={<>renova cresce con chi vuole costruirla.</>}>
           <p>
-            Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a
+            renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a
             rimettere in circolo il materiale sportivo e a diffondere una cultura della
             sostenibilità nello sport: federazioni, amministrazioni locali, enti del terzo settore,
             produttori, aziende di software gestionali. Se vedi un punto di contatto tra la tua
@@ -198,7 +198,7 @@ function FormClub() {
       className="flex flex-col rounded-2xl border-[1.5px] border-ink bg-paper p-6 shadow-sm lg:p-7"
     >
       <span className="eyebrow">Sei un club</span>
-      <h3 className="mt-1 text-[20px] leading-tight">Porta Renova fra i tuoi tesserati</h3>
+      <h3 className="mt-1 text-[20px] leading-tight">Porta renova fra i tuoi tesserati</h3>
 
       <div className="mt-6 grid flex-1 content-start gap-4 sm:grid-cols-2">
         <Field label="Nome" value={form.nome} onChange={set('nome')} required />
@@ -219,7 +219,7 @@ function FormClub() {
         </div>
       </div>
 
-      <Submit>Porta Renova nel tuo club</Submit>
+      <Submit>Porta renova nel tuo club</Submit>
     </form>
   )
 }

@@ -61,7 +61,7 @@ function Home() {
  * servito ai crawler prima che parta il JS (per questo va tenuto identico nei
  * due posti).
  */
-const TITOLO_LANDING = 'Renova — Economia circolare per lo sport dilettantistico'
+const TITOLO_LANDING = 'renova — La prima app di economia circolare per lo sport dilettantistico'
 
 function useTitoloScheda() {
   const { pathname } = useLocation()

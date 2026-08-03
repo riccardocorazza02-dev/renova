@@ -135,8 +135,8 @@
 
 ### Titolo che appare su Google (home)
 
-[TITOLO SCHEDA] Renova — Economia circolare per lo sport dilettantistico
-[DESCRIZIONE] Renova è la piattaforma che rimette in circolo il materiale sportivo ancora buono: i tesserati di ASD e SSD se lo scambiano gratuitamente, e ogni scambio misura il risparmio economico e l'impatto ambientale evitato (CO2 e acqua).
+[TITOLO SCHEDA] renova — La prima app di economia circolare per lo sport dilettantistico
+[DESCRIZIONE] renova è la piattaforma che rimette in circolo il materiale sportivo ancora buono: i tesserati di ASD e SSD se lo scambiano gratuitamente, e ogni scambio misura il risparmio economico e l'impatto ambientale evitato (CO2 e acqua).
 
 ---
 
@@ -155,12 +155,12 @@
 
 ### Hero
 
-[OCCHIELLO] Economia circolare per lo sport dilettantistico
+[OCCHIELLO] Sostenibilità per lo sport dilettantistico
 
-[H1] La piattaforma che rimette in circolo il materiale sportivo ancora buono.
+[H1] La prima piattaforma di economia circolare per ASD e SSD.
 
 [PARAGRAFO]
-Renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. **Non un'app da vendere, ma un progetto che misura ogni beneficio che genera.**
+renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. **Non un'app da vendere, ma un progetto che misura ogni beneficio che genera.**
 
 [BOTTONE PRINCIPALE] Scopri come funziona → porta a «Come funziona»
 [BOTTONE SECONDARIO] Collabora con noi → porta a «Collabora»
@@ -189,7 +189,7 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire Renov
 
 [H2] Il progetto, per intero.
 
-[PARAGRAFO] Renova non ha ancora utenti reali: quello che possiamo mostrare è il metodo con cui è stata costruita. Ogni pagina ne racconta una parte.
+[PARAGRAFO] Di seguito trovi passo per passo il metodo con cui è stata costruita renova e le intenzioni che porta con sè. Ogni pagina ne racconta una parte.
 
 > ⚠️ I quattro sommari qui sotto compaiono in **tre punti**: nelle card della
 > home, nel blocco «Continua» in fondo a ogni pagina e (solo il titolo) nel
@@ -205,7 +205,7 @@ Dall'attivazione del club al primo scambio, in quattro passaggi. Uno solo compet
 Come stimiamo il beneficio ambientale di ogni scambio, perché lo sottostimiamo apposta e dove dichiariamo i limiti.
 
 **Card 04 — Collabora**
-Club, federazioni, amministrazioni, enti del terzo settore, aziende: la rete si costruisce un nodo alla volta.
+Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo alla volta.
 
 [LINK card] Apri
 
@@ -213,7 +213,7 @@ Club, federazioni, amministrazioni, enti del terzo settore, aziende: la rete si 
 
 ## 3 · IL PROGETTO (`/progetto`)
 
-### 3a · Cosa è Renova
+### 3a · Che cos'è renova
 
 [OCCHIELLO] Il progetto
 
@@ -232,7 +232,7 @@ Allo stesso tempo, ogni capo sportivo porta con sé un impatto ambientale — CO
 
 [NOTA FONTE] Fonti: Istituto per il Credito Sportivo e Culturale & Sport e Salute, *Rapporto Sport 2025* (dati 2024) per enti e tesserati; elaborazione su Federconsumatori (2023) per l'incidenza del corredo sulla spesa annua.
 
-[H2] Renova rimette in circolo quel materiale.
+[H2] renova rimette in circolo quel materiale.
 
 [PARAGRAFO]
 I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova nel catalogo, si accordano tramite la chat interna e se lo scambiano di persona, gratuitamente. La piattaforma non ospita denaro, non movimenta merce e non chiede alla società alcuna attività di gestione.
@@ -255,16 +255,16 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 
 **Blocco visione** *(banda scura — è dichiarata come direzione futura, non come funzione già attiva)*
 - [ETICHETTA] Direzione futura
-- [TITOLO] Il domani di Renova
-- [TESTO] Renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che diffonde la cultura della sostenibilità nello sport — attraverso informazione, formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di collaborazione con enti di ogni tipo.
+- [TITOLO] La nostra visione
+- [TESTO] renova nasce come strumento di scambio, ma guarda oltre: diventare un hub che diffonde la cultura della sostenibilità nello sport — attraverso informazione, formazione e incentivi concreti che aiutino le persone a cambiare davvero le proprie abitudini. È un obiettivo che si raggiunge in un solo modo: costruendo reti fitte di collaborazione con enti di ogni tipo.
 
-### 3c · Renova e l'Agenda 2030
+### 3c · renova e l'Agenda 2030
 
-[OCCHIELLO] Renova e l'Agenda 2030
+[OCCHIELLO] renova e l'Agenda 2030
 
 [H2] Ogni funzione, un obiettivo di sviluppo sostenibile.
 
-[PARAGRAFO] Renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
+[PARAGRAFO] renova non rincorre più SDG possibile per riempire una vetrina. Ne presidia pochi, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
 
 > ⚠️ Sono volutamente **cinque** obiettivi (12, 13, 3, 10, 17). L'SDG 6 (Acqua
 > pulita) NON compare come voce autonoma: la metodologia dichiara lacune sui
@@ -272,7 +272,7 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 > linea anti-greenwashing. Non aggiungerlo.
 
 **SDG 12 · Consumo e produzione responsabili**
-Il cuore di Renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.
+Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.
 → *Funzione: Marketplace di scambio gratuito.*
 
 **SDG 13 · Lotta al cambiamento climatico**
@@ -302,7 +302,7 @@ Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di un
 [PARAGRAFO] Il club fa una cosa sola; tutto il resto lo gestiscono le famiglie in autonomia. Ecco come funziona in 4 semplici step:
 
 **Step 1**
-- [TITOLO] Il club attiva Renova
+- [TITOLO] Il club attiva renova
 - [TESTO] Il club aderisce al servizio e riceve un codice di attivazione da distribuire ai propri tesserati. Da qui in poi gli sforzi organizzativi della società sono finiti.
 
 **Step 2**
@@ -320,11 +320,11 @@ Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di un
 - [TITOLO] Il club vede l'impatto
 - [TESTO] Una dashboard mostra al club il risparmio economico generato per le famiglie e il materiale rimesso in circolo, con le metriche ambientali (CO₂ e acqua risparmiate). Dati pronti da usare in ogni momento.
 
-### Perché un club sceglie Renova
+### Perché un club sceglie renova
 
 [OCCHIELLO] Il valore per la società
 
-[H2] Perché un club sceglie Renova
+[H2] Perché un club dovrebbe scegliere renova
 
 **Leva 1**
 - [TITOLO] Zero sforzo organizzativo
@@ -343,7 +343,7 @@ Nessun impatto di scala si costruisce da soli. Renova è pensata come nodo di un
 [H1] Misuriamo il beneficio. E lo sottostimiamo apposta.
 
 [PARAGRAFO]
-Dire «riusare fa bene all'ambiente» è facile. Metterci un numero onesto è un'altra cosa. Renova stima l'impatto evitato da ogni scambio con un criterio dichiaratamente prudenziale: quando c'è un dubbio, scegliamo sempre l'ipotesi che *abbassa* il beneficio dichiarato. È il contrario del greenwashing.
+Dire «riusare fa bene all'ambiente» è facile. Metterci un numero onesto è un'altra cosa. renova stima l'impatto evitato da ogni scambio con un criterio dichiaratamente prudenziale: quando c'è un dubbio, scegliamo sempre l'ipotesi che *abbassa* il beneficio dichiarato. È il contrario del greenwashing.
 
 **Punto 01**
 - [TITOLO] Confine di sistema: cradle-to-gate a livello di fibra
@@ -393,10 +393,10 @@ Dire «riusare fa bene all'ambiente» è facile. Metterci un numero onesto è un
 
 [OCCHIELLO] Collabora
 
-[H1] Renova cresce con chi vuole costruirla.
+[H1] renova cresce con chi vuole costruirla.
 
 [PARAGRAFO]
-Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a rimettere in circolo il materiale sportivo e a diffondere una cultura della sostenibilità nello sport: federazioni, amministrazioni locali, enti del terzo settore, produttori, aziende di software gestionali. Se vedi un punto di contatto tra la tua realtà e la nostra, parliamone: **la rete si costruisce un nodo alla volta.**
+renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a rimettere in circolo il materiale sportivo e a diffondere una cultura della sostenibilità nello sport: federazioni, amministrazioni locali, enti del terzo settore, produttori, aziende di software gestionali. Se vedi un punto di contatto tra la tua realtà e la nostra, parliamone: **la rete si costruisce un nodo alla volta.**
 
 [GRAFICA RETE — etichette dei nodi attorno a «renova»]
 - Club ASD e SSD
@@ -414,7 +414,7 @@ Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
 
 **Form A**
 - [OCCHIELLO] Sei un club
-- [TITOLO] Porta Renova fra i tuoi tesserati
+- [TITOLO] Porta renova fra i tuoi tesserati
 - [CAMPI]
   - Nome (obbligatorio)
   - Club / società (obbligatorio)
@@ -422,7 +422,7 @@ Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
   - Email (obbligatorio)
   - Telefono (obbligatorio)
   - Messaggio (opzionale) — placeholder: "Domande, dubbi, curiosità…"
-- [BOTTONE INVIO] Porta Renova nel tuo club
+- [BOTTONE INVIO] Porta renova nel tuo club
 
 **Form B**
 - [OCCHIELLO] Sei un altro tipo di ente
@@ -454,16 +454,11 @@ Renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
 
 ## 7 · FOOTER (piè di pagina, uguale su tutte le pagine)
 
-[TITOLO] Non sei ancora pronto a parlarne?
-[SOTTOTITOLO] Lascia la tua email e ti aggiorniamo sullo sviluppo del progetto.
-[CAMPO] placeholder: "La tua email"
-[BOTTONE] Tienimi aggiornato
-
 [MAPPA DEL SITO] Il progetto · Come funziona · Impatto · Collabora · Metodologia d'impatto
 
 [RECAPITI] «info@renovasport.it» · «+39 370 3238359» · «renovasport.it»
 
-[COPYRIGHT] © 2026 Renova · Economia circolare per lo sport dilettantistico · renovasport.it
+[COPYRIGHT] © 2026 renova · Economia circolare per lo sport dilettantistico · renovasport.it
 
 ---
 

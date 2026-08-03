@@ -53,7 +53,7 @@ export function ComeMisuriamo() {
           >
             <p>
               Dire «riusare fa bene all’ambiente» è facile. Metterci un numero onesto è un’altra
-              cosa. Renova stima l’impatto evitato da ogni scambio con un criterio dichiaratamente
+              cosa. renova stima l’impatto evitato da ogni scambio con un criterio dichiaratamente
               prudenziale: quando c’è un dubbio, scegliamo sempre l’ipotesi che{' '}
               <i>abbassa</i> il beneficio dichiarato. È il contrario del greenwashing.
             </p>
