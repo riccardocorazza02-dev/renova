@@ -160,7 +160,8 @@
 [H1] La prima piattaforma di economia circolare per ASD e SSD.
 
 [PARAGRAFO]
-renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. **Una piattaforma che mira a redistribuire nell'ecosistema il valore che genera.**
+renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. 
+**Una piattaforma che mira a redistribuire nell'ecosistema il valore che genera.**
 
 [BOTTONE PRINCIPALE] Scopri come funziona → porta a «Come funziona»
 [BOTTONE SECONDARIO] Collabora con noi → porta a «Collabora»

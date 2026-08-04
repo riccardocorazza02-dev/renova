@@ -64,8 +64,8 @@ function Hero() {
             renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale
             sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa
             il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato
-            prodotto a monte.{' '}
-            <span className="font-semibold text-ink">
+            prodotto a monte.
+            <span className="mt-3 block font-semibold text-ink">
               Una piattaforma che mira a redistribuire nell’ecosistema il valore che genera.
             </span>
           </p>
