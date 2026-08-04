@@ -66,7 +66,7 @@ function Hero() {
             il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato
             prodotto a monte.{' '}
             <span className="font-semibold text-ink">
-              Non un’app da vendere, ma un progetto che misura ogni beneficio che genera.
+              Una piattaforma che mira a redistribuire nell’ecosistema il valore che genera.
             </span>
           </p>
 
