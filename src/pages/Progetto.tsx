@@ -274,10 +274,13 @@ function Agenda2030() {
   return (
     <section className="border-b-[1.5px] border-ink">
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
-        <div className="lg:flex lg:items-start lg:gap-12">
+        <span className="eyebrow">renova e l’Agenda 2030</span>
+
+        {/* Il logo sta a fianco del blocco titolo + paragrafi, centrato
+            verticalmente rispetto a quel blocco (da qui `items-center`). */}
+        <div className="mt-2 lg:flex lg:items-center lg:gap-12">
           <div className="max-w-3xl">
-            <span className="eyebrow">renova e l’Agenda 2030</span>
-            <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
+            <h2 className="text-[28px] leading-tight sm:text-[34px]">
               Ogni funzione, un obiettivo di sviluppo sostenibile.
             </h2>
             <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
@@ -300,7 +303,7 @@ function Agenda2030() {
             alt="Sustainable Development Goals — Obiettivi di Sviluppo Sostenibile delle Nazioni Unite"
             width={634}
             height={330}
-            className="mt-8 h-auto w-[180px] shrink-0 lg:mt-1 lg:w-[210px]"
+            className="mt-8 h-auto w-[180px] shrink-0 lg:mt-0 lg:w-[210px]"
           />
         </div>
 
