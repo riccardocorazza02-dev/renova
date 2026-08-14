@@ -105,3 +105,58 @@ input[type='number']::-webkit-inner-spin-button {
 .renova-skeleton {
   animation: renova-pulse 1.4s ease-in-out infinite;
 }
+
+/* ──────────────────────────────────────────────────────────────
+   Ragnatela della home (components/RagnatelaSito.tsx)
+   Movimenti lenti e di piccola ampiezza: la scena deve "respirare",
+   non distrarre. Tutto si ferma con «riduci animazioni» attivo.
+   ────────────────────────────────────────────────────────────── */
+
+/* Fluttuazione: le bolle e il marchio salgono e scendono di pochi px,
+   con una deriva laterale minima che evita il moto da ascensore. */
+@keyframes renova-fluttua {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(3px, -9px, 0); }
+  66% { transform: translate3d(-3px, -4px, 0); }
+}
+.renova-fluttua {
+  animation: renova-fluttua 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Il marchio è un ciclo: gira su sé stesso, molto lentamente. */
+@keyframes renova-orbita {
+  to { transform: rotate(360deg); }
+}
+.renova-orbita {
+  animation: renova-orbita 34s linear infinite;
+}
+
+/* Impulso che percorre un braccio dal centro verso la bolla.
+   `--corsa` = lunghezza del tratto + lunghezza del segmento luminoso. */
+@keyframes renova-impulso {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: calc(-1 * var(--corsa)); }
+}
+.renova-impulso {
+  animation: renova-impulso 4.5s linear infinite;
+}
+
+/* «Vai qui →» compare al passaggio del cursore; dove il cursore non esiste
+   (touch) resta sempre visibile, altrimenti l'invito non lo vedrebbe nessuno. */
+@media (hover: none) {
+  .renova-vai {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .renova-fluttua,
+  .renova-orbita,
+  .renova-impulso {
+    animation: none !important;
+  }
+  .renova-impulso {
+    opacity: 0;
+  }
+}

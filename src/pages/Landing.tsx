@@ -1,20 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/Logo'
-import {
-  ArrowOutIcon,
-  ArrowRightIcon,
-  PAGINE_SITO,
-  SURVEY_URL,
-  SitoLayout,
-} from '../components/sito'
+import { RagnatelaSito } from '../components/RagnatelaSito'
+import { ArrowOutIcon, SURVEY_URL, SitoLayout } from '../components/sito'
 
 /* ──────────────────────────────────────────────────────────────────────────
    HOME pubblica di Renova — è la schermata che si raggiunge dai motori di
    ricerca, e ospita SOLO l'hero: occhiello, promessa, dati del sondaggio,
-   due porte d'azione soft e l'indice delle pagine del sito.
+   due porte d'azione soft e, in chiusura, la ragnatela delle pagine del sito
+   (`components/RagnatelaSito.tsx`).
 
    Il racconto vero e proprio vive nelle pagine dedicate, raggiungibili
-   dall'header e dalle card qui sotto (vedi `components/sito.tsx`):
+   dall'header e dalla ragnatela qui sotto (vedi `components/sito.tsx`):
    /progetto · /come-funziona · /come-misuriamo · /collabora
 
    Principio editoriale: il sito non converte, racconta. Nessuna CTA
@@ -41,7 +37,7 @@ export function Landing() {
   return (
     <SitoLayout senzaProssima>
       <Hero />
-      <Indice />
+      <RagnatelaSito />
     </SitoLayout>
   )
 }
@@ -139,49 +135,6 @@ function Hero() {
             territorio bolognese (106 risposte, l’89% da genitori di tesserati). Rilevazione
             circoscritta: indica una tendenza, non consente generalizzazione statistica.
           </p>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   2 · INDICE DEL SITO — le card che aprono le pagine dedicate
-   ════════════════════════════════════════════════════════════════════════ */
-
-function Indice() {
-  return (
-    <section className="border-b-[1.5px] border-ink">
-      <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
-        <div className="max-w-3xl">
-          <span className="eyebrow">Il sito</span>
-          <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
-            Il progetto, per intero.
-          </h2>
-          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            Di seguito trovi passo per passo il metodo con cui è stata costruita renova e le
-            intenzioni che porta con sè. Ogni pagina ne racconta una parte.
-          </p>
-        </div>
-
-        <div className="mt-9 grid gap-4 sm:grid-cols-2">
-          {PAGINE_SITO.map((p, i) => (
-            <Link
-              key={p.to}
-              to={p.to}
-              className="group flex flex-col rounded-2xl border border-edge bg-paper p-5 transition hover:border-eco hover:shadow-sm lg:p-6"
-            >
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-muted">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="mt-2 text-[20px] leading-tight lg:text-[22px]">{p.label}</h3>
-              <p className="mt-2 flex-1 text-[14px] leading-relaxed text-ink-soft">{p.sommario}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-eco-700">
-                Apri
-                <ArrowRightIcon />
-              </span>
-            </Link>
-          ))}
         </div>
       </div>
     </section>
