@@ -10,6 +10,10 @@ import { Fonte, SitoLayout, TestataPagina } from '../components/sito'
    grafica: nessun dato inventato, nessuna traction gonfiata.
    ────────────────────────────────────────────────────────────────────────── */
 
+/** Linee guida ONU sull'uso del logo SDG e della ruota dei colori. */
+const SDG_GUIDELINES_URL =
+  'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/01/SDG_Guidelines_AUG_2019_Final.pdf'
+
 /** I numeri di sistema, resi come grafica-dato (§2a). */
 const NUMERI_SISTEMA: Array<{ valore: string; unita: string; testo: string }> = [
   {
@@ -32,10 +36,14 @@ const NUMERI_SISTEMA: Array<{ valore: string; unita: string; testo: string }> = 
 
 /** Mappatura Agenda 2030 (§2c): 5 obiettivi presidiati, non uno di più,
  *  presentati in ordine numerico.
- *  `colore` è il colore ufficiale dell'obiettivo, usato solo come accento. */
+ *  `colore` è il colore ufficiale dell'obiettivo, usato solo come accento;
+ *  `icona` è l'icona ufficiale ONU in `public/sdg/` — va usata così com'è,
+ *  senza ritagli, deformazioni o ricolorazioni (SDG Guidelines, ago. 2019:
+ *  link in fondo alla sezione). */
 const SDG: Array<{
   n: string
   colore: string
+  icona: string
   titolo: string
   testo: string
   funzione: string
@@ -43,6 +51,7 @@ const SDG: Array<{
   {
     n: '3',
     colore: '#4C9F38',
+    icona: 'sdg-03.png',
     titolo: 'Salute e benessere',
     testo:
       'Abbassare il costo del corredo abbassa una delle barriere che tengono i ragazzi lontani dallo sport. Più materiale accessibile significa più possibilità di praticare.',
@@ -51,6 +60,7 @@ const SDG: Array<{
   {
     n: '10',
     colore: '#DD1367',
+    icona: 'sdg-10.png',
     titolo: 'Ridurre le disuguaglianze',
     testo:
       'Il beneficio economico va dove serve di più: alle famiglie con meno risorse. Il feed pubblico territoriale allarga le occasioni di scambio anche ai club più piccoli.',
@@ -59,6 +69,7 @@ const SDG: Array<{
   {
     n: '12',
     colore: '#BF8B2E',
+    icona: 'sdg-12.png',
     titolo: 'Consumo e produzione responsabili',
     testo:
       'Il cuore di renova. Prolungare la vita utile del materiale è riuso puro (target 12.5): ogni scambio è un capo che non diventa rifiuto e un acquisto nuovo che non serve più.',
@@ -67,6 +78,7 @@ const SDG: Array<{
   {
     n: '13',
     colore: '#3F7E44',
+    icona: 'sdg-13.png',
     titolo: 'Lotta al cambiamento climatico',
     testo:
       'Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo diciamo e basta: lo misuriamo, capo per capo, con metodo tracciabile.',
@@ -75,6 +87,7 @@ const SDG: Array<{
   {
     n: '17',
     colore: '#19486A',
+    icona: 'sdg-17.png',
     titolo: 'Partnership per gli obiettivi',
     testo:
       'Nessun impatto di scala si costruisce da soli. renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l’obiettivo.',
@@ -261,23 +274,34 @@ function Agenda2030() {
   return (
     <section className="border-b-[1.5px] border-ink">
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
-        <div className="max-w-3xl">
-          <span className="eyebrow">renova e l’Agenda 2030</span>
-          <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
-            Ogni funzione, un obiettivo di sviluppo sostenibile.
-          </h2>
-          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            L’Agenda 2030 è il programma d’azione sottoscritto nel 2015 da tutti i 193 Paesi membri
-            delle Nazioni Unite. Fissa 17 Obiettivi di Sviluppo Sostenibile (Sustainable
-            Development Goals, SDGs) e 169 traguardi da raggiungere entro il 2030: un linguaggio
-            comune e riconosciuto a livello internazionale per orientare e misurare il progresso
-            verso uno sviluppo che tenga insieme ambiente, economia e società.
-          </p>
-          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-            renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque, in
-            modo diretto e difendibile — la stessa disciplina che applichiamo alla misura
-            dell’impatto.
-          </p>
+        <div className="lg:flex lg:items-start lg:gap-12">
+          <div className="max-w-3xl">
+            <span className="eyebrow">renova e l’Agenda 2030</span>
+            <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
+              Ogni funzione, un obiettivo di sviluppo sostenibile.
+            </h2>
+            <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+              L’Agenda 2030 è il programma d’azione sottoscritto nel 2015 da tutti i 193 Paesi
+              membri delle Nazioni Unite. Fissa 17 Obiettivi di Sviluppo Sostenibile (Sustainable
+              Development Goals, SDGs) e 169 traguardi da raggiungere entro il 2030: un linguaggio
+              comune e riconosciuto a livello internazionale per orientare e misurare il progresso
+              verso uno sviluppo che tenga insieme ambiente, economia e società.
+            </p>
+            <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+              renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque,
+              in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura
+              dell’impatto.
+            </p>
+          </div>
+
+          {/* Logo ufficiale degli SDGs — usato senza modifiche, accanto al testo */}
+          <img
+            src="/sdg/sdg-logo.png"
+            alt="Sustainable Development Goals — Obiettivi di Sviluppo Sostenibile delle Nazioni Unite"
+            width={634}
+            height={330}
+            className="mt-8 h-auto w-[180px] shrink-0 lg:mt-1 lg:w-[210px]"
+          />
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -287,15 +311,19 @@ function Agenda2030() {
               className="flex flex-col rounded-2xl border border-edge bg-paper p-5 lg:p-6"
             >
               <div className="flex items-center gap-3">
-                <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-[22px] font-extrabold leading-none tracking-[-0.04em] text-white"
-                  style={{ backgroundColor: s.colore }}
-                  aria-hidden="true"
-                >
-                  {s.n}
-                </span>
+                {/* Icona ufficiale dell'obiettivo: quadrata, integra, non ritagliata */}
+                <img
+                  src={`/sdg/${s.icona}`}
+                  alt={`Obiettivo di Sviluppo Sostenibile ${s.n} — ${s.titolo}`}
+                  width={341}
+                  height={341}
+                  className="h-14 w-14 shrink-0"
+                />
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+                  <p
+                    className="text-[10px] font-bold uppercase tracking-[0.1em]"
+                    style={{ color: s.colore }}
+                  >
                     SDG {s.n}
                   </p>
                   <h3 className="text-[15px] leading-snug">{s.titolo}</h3>
@@ -309,6 +337,22 @@ function Agenda2030() {
             </article>
           ))}
         </div>
+
+        <Fonte>
+          Il logo degli Obiettivi di Sviluppo Sostenibile e le icone dei singoli obiettivi sono
+          proprietà delle Nazioni Unite e sono riprodotti qui, senza modifiche, a scopo
+          informativo: il loro utilizzo non costituisce alcuna forma di approvazione, sponsorizzazione
+          o affiliazione di renova da parte dell’ONU. Le regole complete sono nelle{' '}
+          <a
+            href={SDG_GUIDELINES_URL}
+            target="_blank"
+            rel="noopener"
+            className="font-semibold text-ink underline decoration-eco decoration-2 underline-offset-2 hover:text-eco-700"
+          >
+            Guidelines for the Use of the SDG Logo and the Colour Wheel
+          </a>{' '}
+          (Nazioni Unite, agosto 2019).
+        </Fonte>
       </div>
     </section>
   )
