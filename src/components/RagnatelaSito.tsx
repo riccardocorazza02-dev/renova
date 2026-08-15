@@ -21,21 +21,25 @@ import { RenovaMark } from './Logo'
 
 type Punto = { x: number; y: number }
 
-/** Posizione dei quattro nodi, in % della scena. Il centro è sempre (50,50). */
+/**
+ * Posizione dei quattro nodi, in % della scena. Il centro è sempre (50,50).
+ * L'ordine è ORARIO, non a griglia: così l'anello percorre 01→02→03→04 senza
+ * tornare indietro e la lettura resta circolare.
+ */
 const NODI_DESKTOP: Punto[] = [
   { x: 15, y: 24 }, // 01 · in alto a sinistra
   { x: 85, y: 24 }, // 02 · in alto a destra
-  { x: 15, y: 76 }, // 03 · in basso a sinistra
-  { x: 85, y: 76 }, // 04 · in basso a destra
+  { x: 85, y: 76 }, // 03 · in basso a destra
+  { x: 15, y: 76 }, // 04 · in basso a sinistra
 ]
 
 /** Su schermo stretto la ragnatela resta la stessa, ma si allunga in
- *  verticale: due bolle sopra il marchio e due sotto. */
+ *  verticale: due bolle sopra il marchio e due sotto. Stesso giro orario. */
 const NODI_MOBILE: Punto[] = [
   { x: 24, y: 11 },
   { x: 76, y: 11 },
-  { x: 24, y: 89 },
   { x: 76, y: 89 },
+  { x: 24, y: 89 },
 ]
 
 /** Ritmi di fluttuazione diversi per nodo: la scena non deve pulsare a tempo. */
@@ -189,8 +193,8 @@ export function RagnatelaSito() {
                 Scopri di più
                 <FrecciaIcon />
               </Link>
-              <span className="mt-3 max-w-[200px] text-[11px] leading-snug text-ink-muted">
-                Quattro sezioni, un filo solo: parti dalla 01.
+              <span className="mt-3 text-[11px] leading-snug text-ink-muted">
+                Quattro sezioni, un solo filo
               </span>
             </div>
           </div>
@@ -277,10 +281,9 @@ function braccio(centro: Punto, nodo: Punto, core: { rx: number; ry: number }) {
 }
 
 /** Anello che unisce i quattro nodi, con gli archi spinti verso l'esterno. */
-function anello(p: Punto[]) {
-  if (p.length < 4) return ''
-  // ordine perimetrale: 01 → 02 → 04 → 03 → 01 (i nodi stanno in griglia)
-  const giro = [p[0], p[1], p[3], p[2]]
+function anello(giro: Punto[]) {
+  if (giro.length < 4) return ''
+  // i nodi sono già in ordine orario: l'anello li segue 01 → 02 → 03 → 04
   const bx = giro.reduce((s, n) => s + n.x, 0) / 4
   const by = giro.reduce((s, n) => s + n.y, 0) / 4
   const k = 0.22 // quanto l'arco si allontana dal baricentro
