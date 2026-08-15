@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PAGINE_SITO } from './sito'
 import { RenovaMark } from './Logo'
+import { anello, useRagnatela, type Punto } from './ragnatela'
 
 /* ──────────────────────────────────────────────────────────────────────────
    RAGNATELA DEL SITO — la scena interattiva che chiude la home.
@@ -12,14 +12,9 @@ import { RenovaMark } from './Logo'
    più» al centro porta alla sezione 01, così chi vuole leggere di seguito ha
    una porta sola da spingere.
 
-   Impianto: le posizioni dei nodi sono in PERCENTUALE della scena (due set,
-   mobile e desktop); un ResizeObserver misura la scena in pixel e i bracci
-   vengono disegnati in un SVG con la stessa unità, senza deformazioni. Le
-   bolle sono opache e coprono la fine del braccio: così possono fluttuare
-   senza staccarsi dal filo.
+   L'impianto (misura della scena, bracci, anello) sta in `ragnatela.ts`, in
+   comune con la ragnatela della rete di /collabora.
    ────────────────────────────────────────────────────────────────────────── */
-
-type Punto = { x: number; y: number }
 
 /**
  * Posizione dei quattro nodi, in % della scena. Il centro è sempre (50,50).
@@ -50,62 +45,11 @@ const RITMI = [
   { durata: '8.1s', ritardo: '-6.3s' },
 ]
 
-const BP_DESKTOP = '(min-width: 768px)'
-
 export function RagnatelaSito() {
-  const scena = useRef<HTMLDivElement>(null)
-  const nucleo = useRef<HTMLDivElement>(null)
-  const [box, setBox] = useState({ w: 0, h: 0 })
-  /** Semiassi del "nucleo" centrale: i bracci partono da qui, non dal centro. */
-  const [core, setCore] = useState({ rx: 120, ry: 110 })
-  const [desktop, setDesktop] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(BP_DESKTOP).matches,
+  const { scena, nucleo, box, nodi, punti, bracci, disegnabile } = useRagnatela(
+    NODI_DESKTOP,
+    NODI_MOBILE,
   )
-
-  // Le due misure che servono al disegno: larghezza/altezza della scena…
-  // (misura diretta + ResizeObserver + resize della finestra: il solo
-  // observer non basta, in una scheda che non dipinge non viene consegnato)
-  useLayoutEffect(() => {
-    const el = scena.current
-    if (!el) return
-    const misura = () => {
-      const r = el.getBoundingClientRect()
-      setBox((p) => (p.w === r.width && p.h === r.height ? p : { w: r.width, h: r.height }))
-      // …e l'ingombro del blocco centrale, da cui i bracci devono uscire:
-      // partendo dal centro geometrico passerebbero sopra al marchio e alla
-      // didascalia, rendendoli illeggibili.
-      const c = nucleo.current
-      if (c) {
-        const n = c.getBoundingClientRect()
-        const rx = n.width / 2 + 18
-        const ry = n.height / 2 + 18
-        setCore((p) => (p.rx === rx && p.ry === ry ? p : { rx, ry }))
-      }
-    }
-    misura()
-    const ro = new ResizeObserver(misura)
-    ro.observe(el)
-    window.addEventListener('resize', misura)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', misura)
-    }
-  }, [])
-
-  // …e quale dei due set di posizioni è attivo.
-  useEffect(() => {
-    const mq = window.matchMedia(BP_DESKTOP)
-    const aggiorna = () => setDesktop(mq.matches)
-    aggiorna()
-    mq.addEventListener('change', aggiorna)
-    return () => mq.removeEventListener('change', aggiorna)
-  }, [])
-
-  const nodi = desktop ? NODI_DESKTOP : NODI_MOBILE
-  const centro: Punto = { x: box.w / 2, y: box.h / 2 }
-  const punti = nodi.map((n) => ({ x: (n.x / 100) * box.w, y: (n.y / 100) * box.h }))
-  const bracci = punti.map((p) => braccio(centro, p, core))
-  const disegnabile = box.w > 0 && box.h > 0
 
   return (
     <section className="relative overflow-hidden border-b-[1.5px] border-ink bg-paper">
@@ -248,56 +192,6 @@ function Bolla({ indice }: { indice: number }) {
       </span>
     </Link>
   )
-}
-
-/* ── Geometria ── */
-
-/**
- * Braccio dal nucleo al nodo.
- *
- * Non parte dal centro geometrico ma dal punto in cui il raggio esce
- * dall'ellisse del blocco centrale (`core`): così il filo non attraversa
- * marchio, tasto e didascalia.
- *
- * L'inarcatura è appena accennata e ha lo STESSO verso di rotazione su tutti
- * e quattro i bracci: curvature alternate si incrociavano sotto al logo.
- */
-function braccio(centro: Punto, nodo: Punto, core: { rx: number; ry: number }) {
-  const dx = nodo.x - centro.x
-  const dy = nodo.y - centro.y
-
-  // t = frazione del raggio a cui si trova il bordo dell'ellisse del nucleo
-  const t = Math.min(0.85, 1 / (Math.hypot(dx / core.rx, dy / core.ry) || 1))
-  const da: Punto = { x: centro.x + dx * t, y: centro.y + dy * t }
-
-  const vx = nodo.x - da.x
-  const vy = nodo.y - da.y
-  const vlen = Math.hypot(vx, vy) || 1
-  const arco = vlen * 0.09
-  const cx = (da.x + nodo.x) / 2 + (-vy / vlen) * arco
-  const cy = (da.y + nodo.y) / 2 + (vx / vlen) * arco
-
-  return { da, len: vlen, d: `M ${da.x} ${da.y} Q ${cx} ${cy} ${nodo.x} ${nodo.y}` }
-}
-
-/** Anello che unisce i quattro nodi, con gli archi spinti verso l'esterno. */
-function anello(giro: Punto[]) {
-  if (giro.length < 4) return ''
-  // i nodi sono già in ordine orario: l'anello li segue 01 → 02 → 03 → 04
-  const bx = giro.reduce((s, n) => s + n.x, 0) / 4
-  const by = giro.reduce((s, n) => s + n.y, 0) / 4
-  const k = 0.22 // quanto l'arco si allontana dal baricentro
-
-  return giro
-    .map((n, i) => {
-      const succ = giro[(i + 1) % giro.length]
-      const mx = (n.x + succ.x) / 2
-      const my = (n.y + succ.y) / 2
-      const cx = mx + (mx - bx) * k
-      const cy = my + (my - by) * k
-      return `${i === 0 ? `M ${n.x} ${n.y} ` : ''}Q ${cx} ${cy} ${succ.x} ${succ.y}`
-    })
-    .join(' ')
 }
 
 function FrecciaIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {

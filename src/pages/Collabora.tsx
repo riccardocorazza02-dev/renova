@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { RagnatelaRete } from '../components/RagnatelaRete'
 import { EMAIL, SITO, TELEFONO, SitoLayout, TestataPagina } from '../components/sito'
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -12,16 +13,6 @@ import { EMAIL, SITO, TELEFONO, SitoLayout, TestataPagina } from '../components/
 
 /** Tipi di ente proposti nel form B. */
 const TIPI_ENTE = ['Federazione', 'Pubblica amministrazione', 'Terzo settore', 'Azienda', 'Altro']
-
-/** I nodi della rete, usati dalla grafica e dall'elenco su mobile. */
-const NODI = [
-  'Club ASD e SSD',
-  'Federazioni',
-  'Amministrazioni',
-  'Terzo settore',
-  'Produttori',
-  'Software gestionali',
-]
 
 export function Collabora() {
   return (
@@ -52,93 +43,9 @@ function Invito() {
           </p>
         </TestataPagina>
 
-        <ReteDiNodi />
+        <RagnatelaRete />
       </div>
     </section>
-  )
-}
-
-/** Grafica sobria della rete: nodo centrale + satelliti. Su mobile, dove il
- *  disegno diventerebbe illeggibile, si riduce a un elenco di etichette. */
-function ReteDiNodi() {
-  const posizioni: Array<[number, number]> = [
-    [110, 58],
-    [110, 202],
-    [360, 30],
-    [360, 230],
-    [610, 58],
-    [610, 202],
-  ]
-
-  return (
-    <div className="mt-12">
-      {/* Desktop / tablet */}
-      <svg
-        viewBox="0 0 720 260"
-        className="mx-auto hidden h-auto w-full max-w-[720px] text-ink sm:block"
-        role="img"
-        aria-label="Renova come nodo di una rete di club, federazioni, amministrazioni, enti del terzo settore, produttori e software gestionali"
-      >
-        {posizioni.map(([x, y], i) => (
-          <line
-            key={`l${i}`}
-            x1="360"
-            y1="130"
-            x2={x}
-            y2={y}
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeDasharray="4 4"
-            opacity="0.35"
-          />
-        ))}
-
-        {posizioni.map(([x, y], i) => (
-          <g key={`n${i}`}>
-            <rect
-              x={x - 88}
-              y={y - 18}
-              width="176"
-              height="36"
-              rx="18"
-              fill="var(--color-paper)"
-              stroke="var(--color-edge)"
-              strokeWidth="1.5"
-            />
-            <text
-              x={x}
-              y={y + 5}
-              textAnchor="middle"
-              fontSize="13"
-              fontWeight="600"
-              fill="var(--color-ink-soft)"
-            >
-              {NODI[i]}
-            </text>
-          </g>
-        ))}
-
-        <circle cx="360" cy="130" r="52" fill="var(--color-eco)" />
-        <text x="360" y="136" textAnchor="middle" fontSize="17" fontWeight="800" fill="#ffffff">
-          renova
-        </text>
-      </svg>
-
-      {/* Mobile */}
-      <div className="flex flex-wrap gap-2 sm:hidden">
-        <span className="rounded-full bg-eco px-3.5 py-2 text-[13px] font-bold text-white">
-          renova
-        </span>
-        {NODI.map((n) => (
-          <span
-            key={n}
-            className="rounded-full border border-edge bg-paper px-3.5 py-2 text-[13px] font-semibold text-ink-soft"
-          >
-            {n}
-          </span>
-        ))}
-      </div>
-    </div>
   )
 }
 
