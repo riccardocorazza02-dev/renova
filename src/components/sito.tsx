@@ -30,6 +30,14 @@ export const SITO = 'renovasport.it'
  * accesso e dall'Account. Vedi `pages/CookiePolicy.tsx`.
  */
 export const COOKIE_POLICY = '/cookie-policy'
+/**
+ * Informativa sulla privacy: sta accanto alla cookie policy negli stessi tre
+ * posti (footer del sito, schermate di accesso, Account) perché è l'app a
+ * trattare davvero i dati. Vedi `pages/PrivacyPolicy.tsx`.
+ * ⚠️ La pagina contiene ancora segnaposti `[DA COMPLETARE]` (titolare del
+ * trattamento e data): finché restano tali NON è pubblicabile.
+ */
+export const PRIVACY_POLICY = '/privacy-policy'
 export const TELEFONO: string = '+39 370 3238359'
 export const SURVEY_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform'
@@ -283,14 +291,26 @@ function SitoFooter() {
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
           <Logo className="text-[18px]" />
           <div className="flex flex-col items-center gap-2 sm:items-end">
-            {/* Ultima riga del sito: la cookie policy deve restare raggiungibile
-                con un clic da qualsiasi pagina (Linee guida Garante 231/2021). */}
-            <Link
-              to={COOKIE_POLICY}
-              className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
-            >
-              Cookie policy
-            </Link>
+            {/* Ultima riga del sito: le informative devono restare raggiungibili
+                con un clic da qualsiasi pagina (art. 13 GDPR per la privacy,
+                Linee guida Garante 231/2021 per i cookie). */}
+            <div className="flex items-center gap-3">
+              <Link
+                to={PRIVACY_POLICY}
+                className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
+              >
+                Privacy policy
+              </Link>
+              <span aria-hidden="true" className="text-[11px] text-ink-muted">
+                ·
+              </span>
+              <Link
+                to={COOKIE_POLICY}
+                className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
+              >
+                Cookie policy
+              </Link>
+            </div>
             <p className="text-center text-[11px] text-ink-muted sm:text-right">
               © 2026 renova · Economia circolare per lo sport dilettantistico · {SITO}
             </p>

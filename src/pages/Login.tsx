@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth, EmailNonConfermataError } from '../contexts/AuthContext'
 import { Logo } from '../components/Logo'
-import { COOKIE_POLICY } from '../components/sito'
+import { COOKIE_POLICY, PRIVACY_POLICY } from '../components/sito'
 import {
   TextField,
   PrimaryButton,
@@ -141,9 +141,17 @@ export function AuthShell({
           <p className="mb-5 mt-1 text-sm text-ink-soft">{sottotitolo}</p>
           {children}
         </div>
-        {/* L'app tiene la sessione in localStorage: la cookie policy va
-            raggiungibile anche da qui, non solo dal footer del sito. */}
-        <p className="mt-6 text-center text-[11px] text-ink-muted">
+        {/* È l'app a trattare i dati e a tenere la sessione in localStorage:
+            le informative vanno raggiungibili anche da qui, non solo dal
+            footer del sito. */}
+        <p className="mt-6 flex items-center justify-center gap-2 text-center text-[11px] text-ink-muted">
+          <Link
+            to={PRIVACY_POLICY}
+            className="font-semibold underline underline-offset-4 transition hover:text-ink"
+          >
+            Privacy policy
+          </Link>
+          <span aria-hidden="true">·</span>
           <Link
             to={COOKIE_POLICY}
             className="font-semibold underline underline-offset-4 transition hover:text-ink"

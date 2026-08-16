@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Spinner } from '../components/Spinner'
-import { COOKIE_POLICY } from '../components/sito'
+import { COOKIE_POLICY, PRIVACY_POLICY } from '../components/sito'
 import {
   TextField,
   PrimaryButton,
@@ -204,18 +204,29 @@ export function Account() {
         )}
       </section>
 
-      {/* 3. Informative — la sessione dell'app vive nel localStorage del
-          dispositivo: la cookie policy resta a un tocco anche da dentro. */}
+      {/* 3. Informative — è l'app a trattare i dati e a tenere la sessione nel
+          localStorage del dispositivo: restano a un tocco anche da dentro. */}
       <section className="mt-6 border-t border-line pt-4">
         <h2 className="mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-muted">
           Informative
         </h2>
-        <Link
-          to={COOKIE_POLICY}
-          className="text-[13px] font-semibold text-eco-700 underline underline-offset-4"
-        >
-          Cookie policy
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            to={PRIVACY_POLICY}
+            className="text-[13px] font-semibold text-eco-700 underline underline-offset-4"
+          >
+            Privacy policy
+          </Link>
+          <span aria-hidden="true" className="text-[13px] text-ink-muted">
+            ·
+          </span>
+          <Link
+            to={COOKIE_POLICY}
+            className="text-[13px] font-semibold text-eco-700 underline underline-offset-4"
+          >
+            Cookie policy
+          </Link>
+        </div>
       </section>
     </div>
   )

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Logo } from '../components/Logo'
-import { EMAIL_PRIVACY } from '../components/sito'
+import { EMAIL_PRIVACY, PRIVACY_POLICY } from '../components/sito'
 
 /* ──────────────────────────────────────────────────────────────────────────
    Pagina PUBBLICA /cookie-policy — informativa sui cookie e sugli strumenti
@@ -16,8 +16,9 @@ import { EMAIL_PRIVACY } from '../components/sito'
    ⚠️ Da completare quando renova sarà un soggetto giuridico costituito: il §2
    deve riportare denominazione, forma giuridica, sede legale e P.IVA/C.F. del
    titolare del trattamento (art. 13, par. 1, lett. a GDPR).
-   ⚠️ Il §7 rimanda a un'Informativa sulla privacy non ancora pubblicata:
-   quando esisterà, ripristinare il rimando come link alla pagina.
+   ⚠️ Il §7 rimanda ora all'Informativa sulla privacy (`/privacy-policy`), che
+   però ha a sua volta segnaposti da compilare: le due pagine vanno messe
+   online insieme.
    ────────────────────────────────────────────────────────────────────────── */
 
 export const ULTIMO_AGGIORNAMENTO = '16 agosto 2026'
@@ -364,9 +365,15 @@ export function CookiePolicy() {
           <P>
             Le informazioni complete sul trattamento dei dati personali —
             comprese le finalità, le basi giuridiche, i tempi di conservazione e
-            le tutele previste, in particolare per i minori — saranno raccolte
-            nell'Informativa sulla privacy, in corso di redazione. Fino alla sua
-            pubblicazione è possibile richiederle scrivendo a <MailPrivacy />.
+            le tutele previste, in particolare per i minori — sono raccolte
+            nell'
+            <Link
+              to={PRIVACY_POLICY}
+              className="font-semibold text-eco-700 hover:underline"
+            >
+              Informativa sulla privacy
+            </Link>
+            .
           </P>
         </Sezione>
 
