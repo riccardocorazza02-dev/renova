@@ -1,6 +1,32 @@
 @import 'tailwindcss';
 
 /* ──────────────────────────────────────────────────────────────
+   Bricolage Grotesque — SELF-HOSTED (niente Google Fonts)
+   Il file arriva dal pacchetto @fontsource-variable/bricolage-grotesque
+   (licenza SIL OFL, self-hosting lecito) e Vite lo copia in dist/assets:
+   viene quindi servito dal NOSTRO dominio, così il browser dell'utente non
+   contatta più il CDN dei font di Google e il suo IP non finisce ai loro
+   server (conformità GDPR). Non reintrodurre <link> o @import esterni.
+   Perché il taglio "opsz" e non il più leggero "wght": prima caricavamo dal
+   CDN il variabile `opsz,wght@12..96,…` e i browser applicano di default
+   `font-optical-sizing: auto` (opsz = font-size). Tenendo l'asse opsz il
+   rendering del wordmark resta identico a prima.
+   Solo subset `latin` (basta per l'italiano) e solo `normal`: l'unico testo
+   in questo font è il marchio «renova», sempre a peso 800.
+   ────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 200 800; /* variabile: un solo file copre l'intervallo */
+  font-display: swap;
+  src: url('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2')
+    format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ──────────────────────────────────────────────────────────────
    Renova · Design system — variante "Press 2A · Neutral (Helvetica)"
    Taglio editoriale: superfici avorio (#FAFAF8), regole nere nette,
    tipografia di sistema (Helvetica) con etichette MAIUSCOLE spaziate al
