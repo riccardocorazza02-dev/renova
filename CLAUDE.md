@@ -76,7 +76,9 @@ src/
 │                pubblico), Metodologia (documento metodologico
 │                integrale, pubblica su /metodologia; PDF scaricabile da
 │                public/metodologia-renova.pdf — aggiornare pagina e PDF
-│                insieme), Login, Register, RecuperaPassword,
+│                insieme), CookiePolicy (informativa cookie su
+│                /cookie-policy — vedi convenzioni), Login, Register,
+│                RecuperaPassword,
 │                AggiornaPassword, Feed, ArticleDetail, Upload,
 │                ModificaArticolo, Chat, Conversation, MieiArticoli,
 │                MieiScambi, Impatto (con MetodologiaFAQ in fondo), Profile
@@ -186,6 +188,17 @@ il calcolo lato client solo per l'anteprima.
   `signUp` rileva il caso e lo dichiara all'utente, altrimenti sembra che «non
   arrivi la mail di conferma». Attenzione quando si ripuliscono gli account di
   prova: svuotare le tabelle `public.*` NON cancella `auth.users`.
+- **Cookie policy** (`/cookie-policy`): renova usa SOLO strumenti tecnici (il
+  token di sessione Supabase in `localStorage`) → niente banner di consenso,
+  che sarebbe dovuto solo con profilazione/tracciamento. Se un domani si
+  aggiunge analytics, un pixel, un font o un embed di terze parti, servono
+  banner + consenso preventivo e va aggiornata la tabella al §3 della pagina.
+  Il link sta nel footer del sito (`sito.tsx`, costante `COOKIE_POLICY`), sotto
+  il box di accesso (`AuthShell`) e nell'Account: la policy deve restare
+  raggiungibile anche dal dominio dell'app, che è quello che scrive davvero in
+  `localStorage`. ⚠️ Due punti aperti: il §2 (titolare) va completato con
+  denominazione, sede e P.IVA/C.F. quando renova sarà costituita, e il §7
+  rimanda a un'Informativa sulla privacy ancora da redigere.
 - **Lingua**: tutta la UI e i messaggi all'utente sono in **italiano**.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti

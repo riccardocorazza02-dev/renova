@@ -21,7 +21,15 @@ import { APP_URL, HA_APP_DEDICATA } from '../lib/app-url'
    ────────────────────────────────────────────────────────────────────────── */
 
 export const EMAIL = 'info@renovasport.it'
+/** Casella dedicata a privacy e cookie policy (esercizio dei diritti GDPR). */
+export const EMAIL_PRIVACY = 'privacy@renovasport.it'
 export const SITO = 'renovasport.it'
+/**
+ * Cookie policy: raggiungibile dal footer di OGNI pagina del sito e — perché
+ * è l'app a scrivere il token in localStorage — anche dalle schermate di
+ * accesso e dall'Account. Vedi `pages/CookiePolicy.tsx`.
+ */
+export const COOKIE_POLICY = '/cookie-policy'
 export const TELEFONO: string = '+39 370 3238359'
 export const SURVEY_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform'
@@ -274,9 +282,19 @@ function SitoFooter() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
           <Logo className="text-[18px]" />
-          <p className="text-center text-[11px] text-ink-muted sm:text-right">
-            © 2026 renova · Economia circolare per lo sport dilettantistico · {SITO}
-          </p>
+          <div className="flex flex-col items-center gap-2 sm:items-end">
+            {/* Ultima riga del sito: la cookie policy deve restare raggiungibile
+                con un clic da qualsiasi pagina (Linee guida Garante 231/2021). */}
+            <Link
+              to={COOKIE_POLICY}
+              className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
+            >
+              Cookie policy
+            </Link>
+            <p className="text-center text-[11px] text-ink-muted sm:text-right">
+              © 2026 renova · Economia circolare per lo sport dilettantistico · {SITO}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

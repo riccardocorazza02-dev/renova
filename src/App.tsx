@@ -12,8 +12,9 @@ import { Progetto } from './pages/Progetto'
 import { ComeFunziona } from './pages/ComeFunziona'
 import { ComeMisuriamo } from './pages/ComeMisuriamo'
 import { Collabora } from './pages/Collabora'
-import { PAGINE_SITO } from './components/sito'
+import { PAGINE_SITO, COOKIE_POLICY } from './components/sito'
 import { Metodologia } from './pages/Metodologia'
+import { CookiePolicy } from './pages/CookiePolicy'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { RecuperaPassword } from './pages/RecuperaPassword'
@@ -70,6 +71,10 @@ function useTitoloScheda() {
       document.title = TITOLO_LANDING
       return
     }
+    if (pathname === COOKIE_POLICY) {
+      document.title = 'Cookie Policy · Renova'
+      return
+    }
     const pagina = PAGINE_SITO.find((p) => p.to === pathname)
     document.title = pagina ? pagina.titolo : 'renova'
   }, [pathname])
@@ -94,6 +99,10 @@ export default function App() {
 
       {/* Documento metodologico integrale — pubblico, senza login. */}
       <Route path="/metodologia" element={<Metodologia />} />
+
+      {/* Cookie policy — pubblica e raggiungibile anche dal dominio dell'app
+          (è lì che il token di sessione finisce in localStorage). */}
+      <Route path={COOKIE_POLICY} element={<CookiePolicy />} />
 
       {/* Pubbliche */}
       <Route
