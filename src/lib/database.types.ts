@@ -223,6 +223,11 @@ export interface ConversazioneConArticolo extends Conversazione {
  * campi sono denormalizzati al momento dello scambio, così lo storico è
  * auto-contenuto e non dipende dalla RLS di `utenti`/`articoli` (che
  * nasconderebbe la controparte di un'altra società nel feed pubblico).
+ *
+ * È il LIVELLO INDIVIDUALE del registro (privacy policy §6): collega uno
+ * scambio a utenti identificabili, quindi si conserva 12 mesi e poi la riga
+ * viene eliminata (`anonimizza_scambi()`, migrazione 0025). L'impatto non si
+ * perde: vive nel livello aggregato e anonimo `impatto_aggregato`.
  */
 export interface Scambio {
   id: number
@@ -248,7 +253,8 @@ export interface Scambio {
 /** Valutazione 1–5 stelle (senza testo) tra i due partecipanti a uno scambio. */
 export interface Recensione {
   id: number
-  id_scambio: number
+  /** null se lo scambio è uscito dalla retention (la valutazione sopravvive) */
+  id_scambio: number | null
   /** null se l'account dell'autore è stato eliminato */
   id_autore: string | null
   /** null se l'account del destinatario è stato eliminato */
@@ -257,7 +263,12 @@ export interface Recensione {
   created_at: string
 }
 
-/** Aggregato restituito dalla RPC `impatto_societa()`. */
+/**
+ * Aggregato restituito dalla RPC `impatto_societa()`. Dalla migrazione 0025
+ * arriva dal LIVELLO ANONIMO (`impatto_aggregato`, contatori per mese ×
+ * società × categoria) e non dalla somma delle righe individuali: l'impatto
+ * della società è quindi permanente, mentre lo storico personale scade.
+ */
 export interface ImpattoSocieta {
   n_scambi: number
   co2: number | string

@@ -37,9 +37,11 @@ export function Impatto() {
     async function load() {
       setLoading(true)
       setError('')
-      // Società: aggregato via RPC SECURITY DEFINER (somma tutta la società
-      // senza esporre le righe `scambi`). Personale: la RLS su `scambi`
-      // restituisce solo gli scambi a cui partecipo → li sommo lato client.
+      // I due livelli del registro (privacy policy §6, migrazione 0025):
+      // • società = livello AGGREGATO E ANONIMO, permanente, letto via RPC
+      //   SECURITY DEFINER (`impatto_aggregato`, mai esposto al client);
+      // • personale = livello INDIVIDUALE, che scade dopo 12 mesi: la RLS su
+      //   `scambi` restituisce solo gli scambi a cui partecipo, li sommo qui.
       const [agg, mine] = await Promise.all([
         supabase.rpc('impatto_societa'),
         supabase.from('scambi').select('*'),
@@ -181,7 +183,10 @@ export function Impatto() {
           cta={{ to: '/', label: 'Vai al marketplace' }}
         />
       ) : (
-        /* Dashboard personale — stessa veste della società, doppia sezione */
+        /* Dashboard personale — stessa veste della società, doppia sezione.
+           Copre gli ultimi 12 mesi: oltre quella soglia il registro
+           individuale viene reso anonimo e l'impatto resta solo nel totale
+           della società (vedi /privacy-policy §6). */
         <div className="-mx-4">
           <p className="px-5 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
             Ricevendo · {contributo.oggettiRicevuti}{' '}
@@ -210,6 +215,14 @@ export function Impatto() {
             dot="bg-sun"
             valore={formatPrezzo(contributo.valoreDonato)}
           />
+          <p className="border-t border-line px-5 py-3.5 text-[10.5px] leading-relaxed tracking-[0.03em] text-ink-faint">
+            Il contributo personale copre gli ultimi 12 mesi: dopo, il registro
+            individuale viene reso anonimo e l'impatto resta nel totale della
+            società.{' '}
+            <Link to="/privacy-policy" className="underline underline-offset-2">
+              Perché
+            </Link>
+          </p>
         </div>
       )}
 

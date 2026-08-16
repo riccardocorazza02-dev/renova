@@ -68,7 +68,8 @@ export function MieiScambi() {
           I miei scambi
         </h1>
         <p className="text-sm text-ink-soft">
-          Tutti gli scambi che hai concluso, in entrata e in uscita.
+          Gli scambi che hai concluso negli ultimi 12 mesi, in entrata e in
+          uscita.
         </p>
       </div>
 

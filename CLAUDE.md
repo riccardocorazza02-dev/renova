@@ -77,7 +77,9 @@ src/
 │                integrale, pubblica su /metodologia; PDF scaricabile da
 │                public/metodologia-renova.pdf — aggiornare pagina e PDF
 │                insieme), CookiePolicy (informativa cookie su
-│                /cookie-policy — vedi convenzioni), Login, Register,
+│                /cookie-policy — vedi convenzioni), PrivacyPolicy
+│                (informativa privacy su /privacy-policy — vedi
+│                convenzioni), Login, Register,
 │                RecuperaPassword,
 │                AggiornaPassword, Feed, ArticleDetail, Upload,
 │                ModificaArticolo, Chat, Conversation, MieiArticoli,
@@ -94,7 +96,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0021_tap_scostamento_10pct ·
                       0022_rimozione_colonne_superflue ·
                       0023_eliminazione_account ·
-                      0024_chat_dal_primo_messaggio (modello ATTUALE).
+                      0024_chat_dal_primo_messaggio ·
+                      0025_registro_scambi_due_livelli (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -134,6 +137,12 @@ file 0001→0022, ma non confrontare le cronologie per nome.
 - **Scambi e recensioni** (`0014`): `scambi` (registrati via `registra_scambio`,
   entrano nello storico/impatto di entrambi) + `recensioni` (via
   `lascia_recensione`, media mostrata nel profilo).
+- **Registro scambi a DUE LIVELLI** (`0025`, vedi convenzioni): `scambi` è il
+  livello **individuale** (dato personale, retention 12 mesi);
+  `impatto_aggregato` è il livello **anonimo permanente** — contatori
+  `n_scambi`/`co2`/`acqua`/`valore` per `(mese, id_societa, id_categoria)`,
+  senza FK verso utenti/articoli/scambi. `registra_scambio` scrive entrambi
+  nella stessa transazione; `impatto_societa()` legge SOLO l'aggregato.
 - **Fibre** (`0015`): tabella `fibre` con impatto per tipo di fibra; base del
   calcolo ESG.
 
@@ -169,6 +178,20 @@ il calcolo lato client solo per l'anteprima.
 - **Scambio definitivo**: lo stato `Scambiato` NON si scrive direttamente
   (trigger `set_scambiato_at` lo blocca): passa solo dalla RPC
   `registra_scambio`, che registra anche l'acquirente.
+- **Due livelli del registro scambi** (`0025`, GDPR): la privacy policy §6
+  dichiara che gli scambi sono tenuti su due livelli, e il codice DEVE
+  rispecchiarlo. (a) `scambi` = livello individuale, cancellato dopo 12 mesi
+  dal job notturno `anonimizza-scambi` → `anonimizza_scambi()`; «reso anonimo»
+  significa che la riga individuale sparisce e sopravvive solo il contributo
+  statistico. (b) `impatto_aggregato` = livello anonimo, permanente, scritto
+  in `registra_scambio` e MAI ricalcolato dagli scambi (ricalcolarlo dopo la
+  retention perderebbe lo storico; risommarlo lo raddoppierebbe). RLS attiva
+  senza policy: nessun accesso diretto dal client, si passa da
+  `impatto_societa()`. ⚠️ Conseguenza in UI: l'impatto della SOCIETÀ è a vita,
+  quello PERSONALE copre gli ultimi 12 mesi (detto in `Impatto.tsx` e
+  `MieiScambi.tsx`). La retention delle chat (`pulisci_conversazioni`) è
+  allineata a 12 mesi per lo stesso motivo. Se cambi una di queste finestre,
+  aggiorna il §6 di `PrivacyPolicy.tsx`.
 - **Eliminazione account** (`0023`, GDPR): RPC `elimina_account` — elimina
   articoli e chat, ANONIMIZZA lo storico scambi/recensioni («Utente
   eliminato», FK a NULL) e cancella l'utente da `auth.users`. Le foto le
@@ -196,9 +219,21 @@ il calcolo lato client solo per l'anteprima.
   Il link sta nel footer del sito (`sito.tsx`, costante `COOKIE_POLICY`), sotto
   il box di accesso (`AuthShell`) e nell'Account: la policy deve restare
   raggiungibile anche dal dominio dell'app, che è quello che scrive davvero in
-  `localStorage`. ⚠️ Due punti aperti: il §2 (titolare) va completato con
-  denominazione, sede e P.IVA/C.F. quando renova sarà costituita, e il §7
-  rimanda a un'Informativa sulla privacy ancora da redigere.
+  `localStorage`. ⚠️ Un punto aperto: il §2 (titolare) va completato con
+  denominazione, sede e P.IVA/C.F. quando renova sarà costituita.
+- **Privacy policy** (`/privacy-policy`, costante `PRIVACY_POLICY`): informativa
+  artt. 13-14 GDPR, stessa impaginazione della cookie policy e stessi tre punti
+  d'accesso (footer del sito, box di accesso, Account). Le due informative si
+  rimandano a vicenda (§2 della privacy → cookie policy, §7 della cookie policy
+  → privacy). ⚠️ **NON pubblicabile finché restano i due segnaposti
+  `[DA COMPLETARE]`**: identità del titolare (§1 — un marchio non può essere
+  titolare del trattamento: serve una persona fisica o l'entità costituita) e
+  data di ultimo aggiornamento. Adempimenti collegati fuori dal codice: casella
+  `privacy@renovasport.it` attiva, DPA di Supabase accettato, DPIA predisposta
+  (si trattano dati di minori). ⚠️ Il §6 dichiara il registro degli scambi su
+  **due livelli** (individuale con retention ~12 mesi + aggregato anonimo
+  permanente): se cambia lo schema di `scambi`/impatto, la pagina va tenuta
+  allineata, altrimenti l'informativa diventa falsa.
 - **Lingua**: tutta la UI e i messaggi all'utente sono in **italiano**.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti
