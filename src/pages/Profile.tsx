@@ -258,7 +258,7 @@ export function Profile() {
       </section>
 
       <p className="pb-2 pt-5 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
-        Renova · Sport Resale &amp; ESG
+        renova · Sport Resale &amp; ESG
       </p>
     </div>
   )

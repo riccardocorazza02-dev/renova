@@ -36,7 +36,7 @@ export function ComeFunziona() {
               mock={
                 <MockupPhone
                   src={mockCodice}
-                  alt="Schermata dell'app Renova con il codice di attivazione del club"
+                  alt="Schermata dell'app renova con il codice di attivazione del club"
                   className="max-w-[230px]"
                 />
               }
@@ -54,7 +54,7 @@ export function ComeFunziona() {
               mock={
                 <MockupPhone
                   src={mockChat}
-                  alt="Schermata della chat integrata dell'app Renova"
+                  alt="Schermata della chat integrata dell'app renova"
                   className="max-w-[230px]"
                 />
               }
@@ -68,7 +68,7 @@ export function ComeFunziona() {
               mock={
                 <MockupPhone
                   src={mockImpatto}
-                  alt="Dashboard d'impatto dell'app Renova con metriche ambientali ed economiche"
+                  alt="Dashboard d'impatto dell'app renova con metriche ambientali ed economiche"
                   className="max-w-[230px]"
                 />
               }
@@ -158,7 +158,7 @@ function Step2() {
         <figure className="flex max-w-[240px] flex-col items-center text-center">
           <MockupPhone
             src={mockMarketplace}
-            alt="Feed del marketplace nell'app Renova"
+            alt="Feed del marketplace nell'app renova"
             className="max-w-[230px]"
           />
           <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
@@ -176,7 +176,7 @@ function Step2() {
           <figure className="flex min-w-0 max-w-[240px] flex-1 flex-col items-center text-center">
             <MockupPhone
               src={mockSocietario}
-              alt="Articolo nel feed societario dell'app Renova"
+              alt="Articolo nel feed societario dell'app renova"
               className="max-w-[230px]"
             />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
@@ -189,7 +189,7 @@ function Step2() {
           <figure className="flex min-w-0 max-w-[240px] flex-1 flex-col items-center text-center">
             <MockupPhone
               src={mockPubblico}
-              alt="Articolo nel feed pubblico dell'app Renova"
+              alt="Articolo nel feed pubblico dell'app renova"
               className="max-w-[230px]"
             />
             <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">

@@ -88,7 +88,7 @@ function FormClub() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    apriEmail(`Renova nel club · ${form.club || form.nome || 'Club'}`, [
+    apriEmail(`renova nel club · ${form.club || form.nome || 'Club'}`, [
       `Nome: ${form.nome}`,
       `Club / società: ${form.club}`,
       `Ruolo: ${form.ruolo}`,

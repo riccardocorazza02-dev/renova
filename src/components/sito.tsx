@@ -59,29 +59,29 @@ export type PaginaSito = {
 export const PAGINE_SITO: PaginaSito[] = [
   {
     to: '/progetto',
-    label: 'Il progetto',
-    titolo: 'Il progetto · Renova',
+    label: 'Perché renova',
+    titolo: 'Perché renova',
     sommario:
       'Il costo che nessuno copre, l’impatto già pagato, la nostra missione e gli obiettivi dell’Agenda 2030 che presidiamo.',
   },
   {
     to: '/come-funziona',
     label: 'Come funziona',
-    titolo: 'Come funziona · Renova',
+    titolo: 'Come funziona · renova',
     sommario:
       'Dall’attivazione del club al primo scambio, in quattro passaggi. Uno solo compete alla società.',
   },
   {
     to: '/come-misuriamo',
     label: 'Impatto',
-    titolo: 'Impatto: come lo misuriamo · Renova',
+    titolo: 'Impatto: come lo misuriamo · renova',
     sommario:
       'Come stimiamo il beneficio ambientale di ogni scambio, perché lo sottostimiamo apposta e dove dichiariamo i limiti.',
   },
   {
     to: '/collabora',
     label: 'Collabora',
-    titolo: 'Costruiamo la rete insieme · Renova',
+    titolo: 'Costruiamo la rete insieme · renova',
     sommario:
       'Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo alla volta.',
   },
@@ -132,7 +132,7 @@ function SitoHeader() {
   return (
     <header className="sticky top-0 z-40 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
-        <Link to="/" onClick={chiudi} className="shrink-0" aria-label="Renova, home">
+        <Link to="/" onClick={chiudi} className="shrink-0" aria-label="renova, home">
           <Logo className="text-[22px]" />
         </Link>
 
@@ -216,13 +216,15 @@ function SitoHeader() {
 
 /**
  * Il racconto è spezzato su più pagine: in fondo a ciascuna si offre la
- * successiva, così la lettura di seguito resta possibile.
+ * successiva, così la lettura di seguito resta possibile. Il percorso è
+ * LINEARE, non circolare: sull'ultima pagina (Collabora, la pagina di
+ * conversione) il blocco non compare — chi arriva lì è al termine.
  */
 function ProssimaPagina() {
   const { pathname } = useLocation()
   const i = PAGINE_SITO.findIndex((p) => p.to === pathname)
-  if (i === -1) return null
-  const prossima = PAGINE_SITO[(i + 1) % PAGINE_SITO.length]
+  if (i === -1 || i === PAGINE_SITO.length - 1) return null
+  const prossima = PAGINE_SITO[i + 1]
 
   return (
     <section className="border-t-[1.5px] border-ink bg-eco-50/40">
@@ -250,7 +252,12 @@ function ProssimaPagina() {
   )
 }
 
-function SitoFooter() {
+/**
+ * Footer del sito: oltre che dal guscio `SitoLayout`, è usato anche dalle
+ * pagine documento fuori dal guscio (/metodologia e le due informative), così
+ * resta visibile da qualsiasi pagina.
+ */
+export function SitoFooter() {
   return (
     <footer className="border-t-[1.5px] border-ink bg-eco-50/40">
       <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8">

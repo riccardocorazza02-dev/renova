@@ -114,7 +114,7 @@ function CosaE() {
     <section className="border-b-[1.5px] border-ink">
       <div className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
         <TestataPagina
-          occhiello="Il progetto"
+          occhiello="Perché renova"
           titolo={<>Un costo che nessuno copre, un impatto già pagato.</>}
         >
           <p>
@@ -228,7 +228,7 @@ function MissionVision() {
           <div className="flex flex-col justify-center rounded-2xl border-[1.5px] border-ink bg-paper p-6 lg:p-8">
             <h2 className="text-[24px] leading-tight sm:text-[28px]">La nostra missione</h2>
             <p className="mt-4 text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
-              Migliorare l’impatto ambientale dello sport dilettantistico attraverso l’economia
+              Ridurre l’impatto ambientale dello sport dilettantistico attraverso l’economia
               circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica —
               intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale.
               Ogni capo che torna in campo invece di restare in un armadio è una risorsa non
@@ -249,15 +249,20 @@ function MissionVision() {
             <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
               renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della
               sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un
-              dovere da assolvere, ma una convenienza. Immaginiamo una rete in cui chi rimette in
-              circolo il proprio materiale riceve qualcosa in cambio — dagli sconti dei partner
-              fino a borse che alleggeriscono il costo dello sport; in cui il club che si impegna
-              sul serio trova in quell’impegno una leva per attrarre sponsor e sostegno; in cui
-              l’azienda che collabora dà alle proprie iniziative di sostenibilità una sostanza
-              misurabile, fatta di dati e non di dichiarazioni; in cui gli enti del terzo settore
-              ampliano il proprio raggio d’azione digitalizzando la rete che già animano. È un
-              obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta, una rete
-              in cui la sostenibilità conviene a chi la pratica.
+              dovere da assolvere, ma una convenienza.
+            </p>
+            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
+              Immaginiamo una rete in cui chi rimette in circolo il proprio materiale riceve
+              qualcosa in cambio: dagli sconti dei partner fino a borse che alleggeriscono il
+              costo dello sport. Una rete in cui il club che si impegna sul serio trova in
+              quell’impegno una leva per attrarre sponsor e sostegno; in cui l’azienda che
+              collabora dà alle proprie iniziative di sostenibilità una sostanza misurabile, fatta
+              di dati e non di dichiarazioni; in cui gli enti del terzo settore ampliano il
+              proprio raggio d’azione digitalizzando la rete che già animano.
+            </p>
+            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
+              È un obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta,
+              una rete in cui la sostenibilità conviene a chi la pratica.
             </p>
           </div>
         </div>

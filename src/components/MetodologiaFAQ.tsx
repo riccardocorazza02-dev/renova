@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 // ── Area Q&A: come si calcola l'impatto + criteri anti-greenwashing ──────
-// Sintesi divulgativa della nota metodologica di Renova. Vive nella pagina
+// Sintesi divulgativa della nota metodologica di renova. Vive nella pagina
 // Impatto come scheda collassabile; il documento integrale è pubblico su
 // /metodologia (linkato in fondo alle Q&A).
 
@@ -87,7 +87,7 @@ export function MetodologiaFAQ() {
       {aperta && (
         <div className="px-4 pb-4">
           <div className="-mb-1 border-t border-line pt-1">
-            <QA domanda="Come calcola Renova l'impatto di un articolo?">
+            <QA domanda="Come calcola renova l'impatto di un articolo?">
               <p>
                 Partiamo dalle <strong>fibre</strong> con cui è fatto il capo. Ogni
                 fibra ha un fattore d'impatto (CO₂ in kg CO₂e e acqua in litri per
@@ -257,7 +257,7 @@ export function MetodologiaFAQ() {
           <p className="mt-3 rounded-lg border border-line bg-surface px-3.5 py-2.5 text-[11px] leading-relaxed text-ink-soft">
             Nota: le stime descritte non costituiscono una LCA certificata e vanno
             validate prima di qualsiasi dichiarazione ambientale rivolta al mercato.
-            Sintesi della nota metodologica di Renova (versione luglio 2026).
+            Sintesi della nota metodologica di renova (versione luglio 2026).
           </p>
         </div>
       )}

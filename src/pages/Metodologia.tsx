@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/Logo'
+import { SitoFooter } from '../components/sito'
 
 /* ──────────────────────────────────────────────────────────────────────────
    Pagina PUBBLICA /metodologia — il documento metodologico integrale di
@@ -66,7 +67,7 @@ export function Metodologia() {
       {/* Header sticky con marchio e ritorno al sito */}
       <header className="sticky top-0 z-20 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-          <Link to="/" aria-label="Torna alla home di Renova">
+          <Link to="/" aria-label="Torna alla home di renova">
             <Logo className="text-[21px]" />
           </Link>
           <Link
@@ -81,7 +82,7 @@ export function Metodologia() {
       <main className="mx-auto max-w-3xl px-5 pb-16">
         {/* Intestazione documento */}
         <div className="border-b-[1.5px] border-ink pb-6 pt-8">
-          <span className="eyebrow">Trasparenza · Renova</span>
+          <span className="eyebrow">Trasparenza · renova</span>
           <h1 className="mt-1 text-[34px] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink sm:text-[42px]">
             Metodologia di stima dell'impatto ambientale dei capi sportivi di
             seconda mano
@@ -139,7 +140,7 @@ export function Metodologia() {
         <Sezione id="scopo" titolo="1. Scopo e oggetto">
           <P>
             Questo documento descrive, con finalità di trasparenza e
-            verificabilità, il metodo con cui il progetto Renova stima l'impatto
+            verificabilità, il metodo con cui il progetto renova stima l'impatto
             ambientale di produzione di ciascun capo di abbigliamento sportivo
             rimesso in circolo sulla piattaforma. L'impatto è espresso in due
             indicatori: emissioni di gas serra (carbon footprint, kg CO₂e) e
@@ -494,10 +495,14 @@ export function Metodologia() {
             disponibile nella sezione Impatto dell'app.
           </p>
           <p className="mt-4 pb-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
-            Renova · Sport Resale &amp; ESG
+            renova · Sport Resale &amp; ESG
           </p>
         </div>
       </main>
+
+      {/* Footer del sito: resta visibile anche da qui (raggiungibilità delle
+          informative e della mappa del sito da qualsiasi pagina). */}
+      <SitoFooter />
     </div>
   )
 }

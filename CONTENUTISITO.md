@@ -20,7 +20,7 @@
 >
 > | Voce di menu | Indirizzo | Sezione di questo file |
 > |---|---|---|
-> | Il progetto | `/progetto` | §3 |
+> | Perché renova | `/progetto` | §3 |
 > | Come funziona | `/come-funziona` | §4 |
 > | Impatto | `/come-misuriamo` | §5 |
 > | Collabora | `/collabora` | §6 |
@@ -156,14 +156,14 @@
 
 ### Titolo che appare su Google (home)
 
-[TITOLO SCHEDA] renova — La prima app di economia circolare per lo sport dilettantistico
+[TITOLO SCHEDA] renova — Economia circolare digitale per lo sport dilettantistico
 [DESCRIZIONE] renova è la piattaforma che rimette in circolo il materiale sportivo ancora buono: i tesserati di ASD e SSD se lo scambiano gratuitamente, e ogni scambio misura il risparmio economico e l'impatto ambientale evitato (CO2 e acqua).
 
 ---
 
 ## 1 · HEADER (barra in alto, uguale su tutte le pagine)
 
-- [VOCE MENU] Il progetto
+- [VOCE MENU] Perché renova
 - [VOCE MENU] Come funziona
 - [VOCE MENU] Impatto
 - [VOCE MENU] Collabora
@@ -178,11 +178,10 @@
 
 [OCCHIELLO] Sostenibilità per lo sport dilettantistico
 
-[H1] La prima piattaforma di economia circolare per ASD e SSD.
+[H1] La piattaforma digitale che rimette in circolo il materiale sportivo di ASD e SSD.
 
 [PARAGRAFO]
-renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte. 
-**Una piattaforma che mira a redistribuire nell'ecosistema il valore che genera.**
+renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato prodotto a monte.
 
 [BOTTONE PRINCIPALE] Scopri come funziona → porta a «Come funziona»
 [BOTTONE SECONDARIO] Collabora con noi → porta a «Collabora»
@@ -199,9 +198,9 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire renov
 
 [OCCHIELLO] Cosa ci hanno detto le famiglie
 
-- [DATO 1] **+90%** — degli intervistati è interessato a un servizio di scambio nel proprio club
-- [DATO 2] **+55%** — ogni stagione si ritrova materiale in buone condizioni rimasto inutilizzato
-- [DATO 3] **+55%** — spende oltre 100 € a stagione solo in materiale sportivo
+- [DATO 1] **92%** — degli intervistati è interessato a un servizio di scambio nel proprio club
+- [DATO 2] **55%** — ogni stagione si ritrova materiale in buone condizioni rimasto inutilizzato
+- [DATO 3] **58%** — spende oltre 100 € a stagione solo in materiale sportivo
 
 [NOTA FONTE] Indagine esplorativa condotta presso i tesserati di due società di pallacanestro del territorio bolognese (106 risposte, l'89% da genitori di tesserati). Rilevazione circoscritta: indica una tendenza, non consente generalizzazione statistica.
 
@@ -212,15 +211,15 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire renov
 > collegate da un anello tratteggiato. Le bolle sono cliccabili.
 
 [TITOLO NASCOSTO — letto solo da screen reader e motori di ricerca]
-Il progetto, per intero: le quattro sezioni del sito
+renova, per intero: le quattro sezioni del sito
 
 **Al centro**
 - [MARCHIO] renova
-- [BOTTONE] Scopri di più → porta a «Il progetto»
+- [BOTTONE] Scopri di più → porta a «Perché renova»
 - [RIGA SOTTO IL BOTTONE] Quattro sezioni, un solo filo
 
 **Le quattro bolle** *(numero + nome della sezione; «Vai qui →» compare al passaggio del cursore)*
-- 01 · Il progetto
+- 01 · Perché renova
 - 02 · Come funziona
 - 03 · Impatto
 - 04 · Collabora
@@ -232,7 +231,7 @@ Il progetto, per intero: le quattro sezioni del sito
 > a ogni pagina e — solo il titolo — il footer. Cambiandoli qui cambiano
 > ovunque.
 
-**01 — Il progetto**
+**01 — Perché renova**
 Il costo che nessuno copre, l'impatto già pagato, la nostra missione e gli obiettivi dell'Agenda 2030 che presidiamo.
 
 **02 — Come funziona**
@@ -246,11 +245,11 @@ Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo 
 
 ---
 
-## 3 · IL PROGETTO (`/progetto`)
+## 3 · PERCHÉ RENOVA (`/progetto`)
 
 ### 3a · Che cos'è renova
 
-[OCCHIELLO] Il progetto
+[OCCHIELLO] Perché renova
 
 [H1] Un costo che nessuno copre, un impatto già pagato.
 
@@ -286,12 +285,16 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 
 **Blocco missione**
 - [TITOLO] La nostra missione
-- [TESTO] Migliorare l'impatto ambientale dello sport dilettantistico attraverso l'economia circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica — intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale. Ogni capo che torna in campo invece di restare in un armadio è una risorsa non sprecata e una barriera in meno all'accesso allo sport. Facciamo funzionare come sistema ciò che oggi accade solo per prossimità, nel raggio delle conoscenze di ciascuno.
+- [TESTO] Ridurre l'impatto ambientale dello sport dilettantistico attraverso l'economia circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica — intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale. Ogni capo che torna in campo invece di restare in un armadio è una risorsa non sprecata e una barriera in meno all'accesso allo sport. Facciamo funzionare come sistema ciò che oggi accade solo per prossimità, nel raggio delle conoscenze di ciascuno.
 
 **Blocco visione** *(banda scura — è dichiarata come direzione futura, non come funzione già attiva)*
 - [ETICHETTA] Direzione futura
 - [TITOLO] La nostra visione
-- [TESTO] renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un dovere da assolvere, ma una convenienza. Immaginiamo una rete in cui chi rimette in circolo il proprio materiale riceve qualcosa in cambio — dagli sconti dei partner fino a borse che alleggeriscono il costo dello sport; in cui il club che si impegna sul serio trova in quell'impegno una leva per attrarre sponsor e sostegno; in cui l'azienda che collabora dà alle proprie iniziative di sostenibilità una sostanza misurabile, fatta di dati e non di dichiarazioni; in cui gli enti del terzo settore ampliano il proprio raggio d'azione digitalizzando la rete che già animano. È un obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta, una rete in cui la sostenibilità conviene a chi la pratica.
+- [TESTO] renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un dovere da assolvere, ma una convenienza.
+
+Immaginiamo una rete in cui chi rimette in circolo il proprio materiale riceve qualcosa in cambio: dagli sconti dei partner fino a borse che alleggeriscono il costo dello sport. Una rete in cui il club che si impegna sul serio trova in quell'impegno una leva per attrarre sponsor e sostegno; in cui l'azienda che collabora dà alle proprie iniziative di sostenibilità una sostanza misurabile, fatta di dati e non di dichiarazioni; in cui gli enti del terzo settore ampliano il proprio raggio d'azione digitalizzando la rete che già animano.
+
+È un obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta, una rete in cui la sostenibilità conviene a chi la pratica.
 
 ### 3c · renova e l'Agenda 2030
 
@@ -514,7 +517,7 @@ renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
 
 ## 7 · FOOTER (piè di pagina, uguale su tutte le pagine)
 
-[MAPPA DEL SITO] Il progetto · Come funziona · Impatto · Collabora · Metodologia d'impatto
+[MAPPA DEL SITO] Perché renova · Come funziona · Impatto · Collabora · Metodologia d'impatto
 
 [RECAPITI] «info@renovasport.it» · «+39 370 3238359» · «renovasport.it»
 
@@ -536,7 +539,12 @@ renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
 [TESTO] *(sommario della pagina successiva — vedi §2, card dell'indice)*
 [BOTTONE] Vai
 
-L'ordine di lettura è circolare: Il progetto → Come funziona → Impatto → Collabora → Il progetto.
+> ⚠️ Il blocco «Continua» compare in fondo a *Perché renova*, *Come funziona* e
+> *Impatto*, ma **NON** su *Collabora*: Collabora è la pagina di conversione
+> (form + contatti) e chiude il percorso, quindi non deve rimandare oltre.
+> Lato codice: non renderizzare `ProssimaPagina` su `/collabora`.
+
+L'ordine di lettura è lineare: Perché renova → Come funziona → Impatto → Collabora. Collabora è l'ultima pagina e non rimanda oltre: chi arriva qui è al termine del percorso.
 
 ---
 
@@ -551,7 +559,7 @@ L'ordine di lettura è circolare: Il progetto → Come funziona → Impatto → 
 
 ### Mockup feed (home, colonna destra dell'hero)
 
-- Intestazione: marchio «renova» · pill società «Bologna FC»
+- Intestazione: marchio «renova» · pill società «renova FC»
 - Barra ricerca: "Cerca prodotti…" · "Filtri +"
 - Tab: Tutti · Disponibili · Prenotati · Scambiati
 - Articolo 1: **Zaino sportivo** — Zaino · Unica · Buono — CO₂ ≥ 9 KG — H₂O ≥ 300 L — stato "Disponibile"

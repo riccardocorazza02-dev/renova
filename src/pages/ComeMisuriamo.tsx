@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRightIcon,
@@ -59,25 +60,127 @@ export function ComeMisuriamo() {
             </p>
           </TestataPagina>
 
-          <div className="mt-12 grid gap-4 lg:grid-cols-2">
-            {METODO.map((m, i) => (
-              <article key={m.titolo} className="rounded-2xl border border-edge bg-paper p-5 lg:p-6">
-                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-muted">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h2 className="mt-2 text-[18px] leading-snug lg:text-[19px]">{m.titolo}</h2>
-                <p className="mt-3 text-[14px] leading-relaxed text-ink-soft lg:text-[15px]">
-                  {m.testo}
-                </p>
-              </article>
-            ))}
-          </div>
+          <MetodoCarosello />
         </div>
       </section>
 
       <Equivalenze />
       <LeggiMetodologia />
     </SitoLayout>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Carosello del metodo — una card alla volta: davanti numero e titolo,
+   al passaggio del cursore (o al tocco) la card si gira e svela il testo;
+   le frecce ai lati portano al punto precedente/successivo.
+   ════════════════════════════════════════════════════════════════════════ */
+
+function MetodoCarosello() {
+  const [indice, setIndice] = useState(0)
+  // Sui touch l'hover non esiste: il tocco sulla card la gira e la rigira.
+  const [girata, setGirata] = useState(false)
+  const m = METODO[indice]
+
+  const vai = (di: number) => {
+    setGirata(false)
+    setIndice((i) => Math.min(METODO.length - 1, Math.max(0, i + di)))
+  }
+
+  return (
+    <div className="mt-12">
+      <div className="mx-auto flex max-w-2xl items-stretch gap-3 sm:gap-5">
+        <FrecciaCarosello
+          direzione="prev"
+          disabilitata={indice === 0}
+          onClick={() => vai(-1)}
+        />
+
+        {/* La card: contenitore con prospettiva, interno che ruota su Y. */}
+        <button
+          type="button"
+          onClick={() => setGirata((v) => !v)}
+          aria-label={
+            girata ? `${m.titolo} — nascondi la spiegazione` : `${m.titolo} — leggi la spiegazione`
+          }
+          className="group min-w-0 flex-1 cursor-pointer [perspective:1400px] focus-visible:outline-none"
+        >
+          <div
+            className={`relative h-[280px] w-full transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] sm:h-[260px] ${
+              girata ? '[transform:rotateY(180deg)]' : ''
+            }`}
+          >
+            {/* Fronte: numero + titolo */}
+            <article className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper p-6 text-center [backface-visibility:hidden] lg:p-8">
+              <span className="text-[12px] font-bold uppercase tracking-[0.12em] text-eco-700">
+                Punto {String(indice + 1).padStart(2, '0')}
+              </span>
+              <h2 className="mt-3 max-w-md text-[20px] leading-snug lg:text-[23px]">{m.titolo}</h2>
+              <span className="mt-5 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+                Passa sopra per scoprire
+              </span>
+            </article>
+
+            {/* Retro: la spiegazione */}
+            <article className="absolute inset-0 flex flex-col justify-center rounded-2xl border-[1.5px] border-eco bg-eco-50/60 p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)] lg:p-8">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-eco-700">
+                {String(indice + 1).padStart(2, '0')} · {m.titolo}
+              </span>
+              <p className="mt-3 text-[14px] leading-relaxed text-ink-soft lg:text-[15px]">
+                {m.testo}
+              </p>
+            </article>
+          </div>
+        </button>
+
+        <FrecciaCarosello
+          direzione="next"
+          disabilitata={indice === METODO.length - 1}
+          onClick={() => vai(1)}
+        />
+      </div>
+
+      {/* Segnaposto di avanzamento */}
+      <div className="mt-5 flex justify-center gap-2">
+        {METODO.map((p, i) => (
+          <button
+            key={p.titolo}
+            type="button"
+            onClick={() => {
+              setGirata(false)
+              setIndice(i)
+            }}
+            aria-label={`Vai al punto ${i + 1}: ${p.titolo}`}
+            aria-current={i === indice}
+            className={`h-2 rounded-full transition-all ${
+              i === indice ? 'w-6 bg-eco' : 'w-2 bg-edge hover:bg-ink-muted'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FrecciaCarosello({
+  direzione,
+  disabilitata,
+  onClick,
+}: {
+  direzione: 'prev' | 'next'
+  disabilitata: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabilitata}
+      aria-label={direzione === 'next' ? 'Punto successivo' : 'Punto precedente'}
+      className="my-auto inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink text-ink transition enabled:hover:bg-ink enabled:hover:text-paper disabled:cursor-default disabled:opacity-25"
+    >
+      <ArrowRightIcon className={`h-4 w-4 ${direzione === 'prev' ? 'rotate-180' : ''}`} />
+    </button>
   )
 }
 

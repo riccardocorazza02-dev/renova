@@ -8,7 +8,7 @@
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <span
-      aria-label="Renova"
+      aria-label="renova"
       className={`inline-flex select-none items-center gap-[0.22em] font-display text-ink ${className}`}
     >
       <RenovaMark className="h-[1.25em] w-[1.25em] shrink-0 text-eco" />

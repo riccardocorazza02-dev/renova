@@ -20,15 +20,15 @@ import { ArrowOutIcon, SURVEY_URL, SitoLayout } from '../components/sito'
 /** Dati dell'indagine esplorativa presso famiglie e tesserati (106 risposte). */
 const DATI_SONDAGGIO: Array<{ valore: string; testo: string }> = [
   {
-    valore: '+90%',
+    valore: '92%',
     testo: 'degli intervistati è interessato a un servizio di scambio nel proprio club',
   },
   {
-    valore: '+55%',
+    valore: '55%',
     testo: 'ogni stagione si ritrova materiale in buone condizioni rimasto inutilizzato',
   },
   {
-    valore: '+55%',
+    valore: '58%',
     testo: 'spende oltre 100 € a stagione solo in materiale sportivo',
   },
 ]
@@ -54,16 +54,13 @@ function Hero() {
         <div>
           <span className="eyebrow">Sostenibilità per lo sport dilettantistico</span>
           <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
-            La prima piattaforma di economia circolare per ASD e SSD.
+            La piattaforma digitale che rimette in circolo il materiale sportivo di ASD e SSD.
           </h1>
           <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
             renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale
             sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa
             il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato
             prodotto a monte.
-            <span className="mt-3 block font-semibold text-ink">
-              Una piattaforma che mira a redistribuire nell’ecosistema il valore che genera.
-            </span>
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -171,7 +168,7 @@ function PhoneHeader() {
       <div className="flex items-center justify-between border-b-[1.5px] border-ink px-3 py-2">
         <Logo className="text-[12px]" />
         <span className="rounded-md border border-edge px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.06em] text-ink-soft">
-          Bologna FC
+          renova FC
         </span>
       </div>
     </>

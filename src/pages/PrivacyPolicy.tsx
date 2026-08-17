@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Logo } from '../components/Logo'
-import { EMAIL_PRIVACY, COOKIE_POLICY } from '../components/sito'
+import { EMAIL_PRIVACY, COOKIE_POLICY, SitoFooter } from '../components/sito'
 
 /* ──────────────────────────────────────────────────────────────────────────
    Pagina PUBBLICA /privacy-policy — informativa sul trattamento dei dati
@@ -58,7 +58,7 @@ export function PrivacyPolicy() {
       {/* Header sticky con marchio e ritorno alla pagina di provenienza */}
       <header className="sticky top-0 z-20 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-          <Link to="/" aria-label="Torna alla home di Renova">
+          <Link to="/" aria-label="Torna alla home di renova">
             <Logo className="text-[21px]" />
           </Link>
           <button
@@ -74,7 +74,7 @@ export function PrivacyPolicy() {
       <main className="mx-auto max-w-3xl px-5 pb-16">
         {/* Intestazione documento */}
         <div className="border-b-[1.5px] border-ink pb-6 pt-8">
-          <span className="eyebrow">Informativa · Renova</span>
+          <span className="eyebrow">Informativa · renova</span>
           <h1 className="mt-1 text-[34px] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink sm:text-[42px]">
             Informativa sulla privacy
           </h1>
@@ -560,6 +560,10 @@ export function PrivacyPolicy() {
           Ultimo aggiornamento: {ULTIMO_AGGIORNAMENTO}.
         </p>
       </main>
+
+      {/* Footer del sito: resta visibile anche da qui (raggiungibilità delle
+          informative e della mappa del sito da qualsiasi pagina). */}
+      <SitoFooter />
     </div>
   )
 }

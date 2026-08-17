@@ -63,7 +63,7 @@ function Home() {
  * servito ai crawler prima che parta il JS (per questo va tenuto identico nei
  * due posti).
  */
-const TITOLO_LANDING = 'renova — La prima app di economia circolare per lo sport dilettantistico'
+const TITOLO_LANDING = 'renova — Economia circolare digitale per lo sport dilettantistico'
 
 function useTitoloScheda() {
   const { pathname } = useLocation()
@@ -73,11 +73,11 @@ function useTitoloScheda() {
       return
     }
     if (pathname === COOKIE_POLICY) {
-      document.title = 'Cookie Policy · Renova'
+      document.title = 'Cookie Policy · renova'
       return
     }
     if (pathname === PRIVACY_POLICY) {
-      document.title = 'Informativa sulla privacy · Renova'
+      document.title = 'Informativa sulla privacy · renova'
       return
     }
     const pagina = PAGINE_SITO.find((p) => p.to === pathname)

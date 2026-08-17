@@ -10,7 +10,7 @@ export function SetupNotice() {
           Configura Supabase per iniziare
         </h1>
         <p className="mt-2 text-sm text-ink-soft">
-          Le variabili d'ambiente non sono ancora impostate. Per avviare Renova:
+          Le variabili d'ambiente non sono ancora impostate. Per avviare renova:
         </p>
         <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm text-ink-soft">
           <li>

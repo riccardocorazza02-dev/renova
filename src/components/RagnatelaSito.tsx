@@ -67,7 +67,7 @@ export function RagnatelaSito() {
       <div className="relative mx-auto max-w-5xl px-5 py-10 lg:px-8 lg:py-14">
         {/* Il titolo resta per lettori di schermo e motori di ricerca: a
             video il suo posto lo prende la scena. */}
-        <h2 className="sr-only">Il progetto, per intero: le quattro sezioni del sito</h2>
+        <h2 className="sr-only">renova, per intero: le quattro sezioni del sito</h2>
 
         <div
           ref={scena}
