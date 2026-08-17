@@ -12,10 +12,11 @@
 > - I "mockup" (il telefonino disegnato nell'hero) contengono testo finto d'esempio:
 >   lo trovi in fondo, nella sezione **MOCKUP**.
 >
-> **Struttura del sito (novità).** La home (`/`) ospita **solo l'hero**: è la
+> **Struttura del sito.** La home (`/`) ospita **solo l'hero**: è la
 > schermata che si raggiunge cercando il sito su Google. Il resto del racconto
-> sta su **quattro pagine dedicate**, raggiungibili dal menu in alto e dalle
-> card in fondo alla home:
+> sta su **quattro pagine dedicate**, raggiungibili dal menu in alto e dalla
+> **ragnatela interattiva** in fondo alla home (la scena animata con il
+> marchio al centro e quattro bolle numerate):
 >
 > | Voce di menu | Indirizzo | Sezione di questo file |
 > |---|---|---|
@@ -42,9 +43,16 @@
       • src/pages/ComeFunziona.tsx→ /come-funziona
       • src/pages/ComeMisuriamo.tsx → /come-misuriamo (voce di menu «Impatto»)
       • src/pages/Collabora.tsx   → /collabora (form + contatti)
+      • src/components/RagnatelaSito.tsx → la scena animata in fondo alla home
+      • src/components/RagnatelaRete.tsx → la scena animata di /collabora
+      • src/components/ragnatela.ts → impianto comune alle due scene (misure,
+        bracci, anello): è geometria, NON contiene testo
     La pagina /metodologia (documento metodologico integrale) NON è governata
     da questo file: vive in src/pages/Metodologia.tsx e va aggiornata insieme
-    al PDF in public/metodologia-renova.pdf.
+    al PDF in public/metodologia-renova.pdf. Stesso discorso per le due
+    informative legali, linkate dal footer ma governate dal loro testo
+    giuridico: src/pages/CookiePolicy.tsx (/cookie-policy) e
+    src/pages/PrivacyPolicy.tsx (/privacy-policy).
 
  2. CONFRONTA sezione per sezione il testo di questo .md con le stringhe nei
     file e applica SOLO le differenze. Non riscrivere ciò che già coincide.
@@ -52,26 +60,35 @@
       • §1 HEADER            → `SitoHeader` in components/sito.tsx (voci nav, bottone, «Accedi»)
       • §2 HOME · Hero       → `Hero()` in pages/Landing.tsx
       • §2 HOME · Striscia   → array `DATI_SONDAGGIO` + nota, in pages/Landing.tsx
-      • §2 HOME · Indice     → `Indice()` in Landing.tsx; i titoli e i sommari
-                               delle card vengono da `PAGINE_SITO` in sito.tsx
+      • §2 HOME · Ragnatela  → `RagnatelaSito()` in components/RagnatelaSito.tsx
+                               (testi del centro e delle bolle); i nomi delle
+                               sezioni vengono da `PAGINE_SITO` in sito.tsx
                                (⚠️ gli stessi testi compaiono anche nel blocco
-                               «Continua» in fondo a ogni pagina e nel footer)
+                               «Continua» in fondo a ogni pagina e nel footer;
+                               i `sommario` non sono più a video sulla home:
+                               restano nell'aria-label delle bolle e nel
+                               blocco «Continua»)
       • §3 IL PROGETTO       → pages/Progetto.tsx: `CosaE()` (+ array `NUMERI_SISTEMA`),
                                `MissionVision()`, `Agenda2030()` (+ array `SDG`)
       • §4 COME FUNZIONA     → pages/ComeFunziona.tsx: `ComeFunziona()`,
                                `StepRow`/`Step2`, `ValorePerIlClub()`
       • §5 IMPATTO           → pages/ComeMisuriamo.tsx: array `METODO`,
                                `Equivalenze()`, `LeggiMetodologia()`
-      • §6 COLLABORA         → pages/Collabora.tsx: `Invito()`, `ReteDiNodi()`
-                               (array `NODI`), `FormClub()`, `FormEnte()`
-                               (array `TIPI_ENTE`), `Contatti()`
-      • §7 FOOTER            → `SitoFooter` in components/sito.tsx
+      • §6 COLLABORA         → pages/Collabora.tsx: `Invito()`, `FormClub()`,
+                               `FormEnte()` (array `TIPI_ENTE`), `Contatti()`;
+                               la rete disegnata è `RagnatelaRete()` in
+                               components/RagnatelaRete.tsx (array `NODI`)
+      • §7 FOOTER            → `SitoFooter` in components/sito.tsx (i link alle
+                               due informative usano le costanti
+                               `PRIVACY_POLICY` e `COOKIE_POLICY`)
       • §8 CONTINUA          → `ProssimaPagina` in components/sito.tsx
 
  3. DATI GLOBALI (§"Dati globali", valori tra « »): sono le costanti in cima a
-    src/components/sito.tsx → `EMAIL`, `SITO`, `TELEFONO`, `SURVEY_URL`. Se
-    cambiano nel .md, aggiorna quelle costanti (compaiono in più punti: footer,
-    contatti, mailto dei form).
+    src/components/sito.tsx → `EMAIL`, `EMAIL_PRIVACY`, `SITO`, `TELEFONO`,
+    `SURVEY_URL`, `PDF_METODOLOGIA`. Se cambiano nel .md, aggiorna quelle
+    costanti (compaiono in più punti: footer, contatti, mailto dei form).
+    ⚠️ `EMAIL_PRIVACY` non compare sul sito pubblico: è la casella per
+    l'esercizio dei diritti GDPR, usata dalle due informative.
 
  4. TITOLI DELLA SCHEDA (SEO): il titolo della home sta in DUE posti che devono
     restare identici — `TITOLO_LANDING` in src/App.tsx e il <title> di
@@ -97,10 +114,13 @@
     segnala che stai modificando testo decorativo.
 
  8. IMMAGINI: il sito non usa foto. Le grafiche (numeri di sistema, equivalenze,
-    rete di nodi, badge SDG) sono costruite in codice/SVG nello stile del brand.
-    Regola ferrea per il futuro: niente stock corporate (strette di mano, mondo
-    tra le mani, foglioline verdi). Se arriveranno foto, saranno scatti reali di
-    contesto sportivo.
+    ragnatele) sono costruite in codice/SVG nello stile del brand. Le uniche
+    immagini bitmap sono i mockup di «Come funziona»
+    (src/assets/mockups/*.webp) e gli asset UFFICIALI ONU degli SDG in
+    public/sdg/ (logo + le 5 icone), che vanno usati integri, senza ritagli né
+    ricolorazioni. Regola ferrea per il futuro: niente stock corporate (strette
+    di mano, mondo tra le mani, foglioline verdi). Se arriveranno foto, saranno
+    scatti reali di contesto sportivo.
 
  9. DOPO le modifiche: esegui `npm run build` (deve passare, type-check incluso)
     e, se possibile, avvia l'anteprima per verificare che le stringhe cambiate
@@ -128,6 +148,7 @@
 ## Dati globali (compaiono in più punti)
 
 - **Email:** «info@renovasport.it»
+- **Email privacy** *(non compare sul sito: la usano solo le due informative)*: «privacy@renovasport.it»
 - **Telefono:** «+39 370 3238359»
 - **Sito:** «renovasport.it»
 - **Link sondaggio famiglie:** «https://docs.google.com/forms/d/e/1FAIpQLSdNT_K8-4KZXxYKkiOF8XfazyFLKiXhI0UqRbH6oXrYuDSowg/viewform»
@@ -184,31 +205,44 @@ Sei un **genitore o un tesserato**? La tua opinione ci serve per costruire renov
 
 [NOTA FONTE] Indagine esplorativa condotta presso i tesserati di due società di pallacanestro del territorio bolognese (106 risposte, l'89% da genitori di tesserati). Rilevazione circoscritta: indica una tendenza, non consente generalizzazione statistica.
 
-### Indice delle pagine (card in fondo alla home)
+### Ragnatela delle pagine (scena animata in fondo alla home)
 
-[OCCHIELLO] Il sito
+> Al posto delle vecchie card c'è una **scena interattiva**: il marchio renova
+> al centro, quattro bracci animati e quattro bolle numerate (una per pagina),
+> collegate da un anello tratteggiato. Le bolle sono cliccabili.
 
-[H2] Il progetto, per intero.
+[TITOLO NASCOSTO — letto solo da screen reader e motori di ricerca]
+Il progetto, per intero: le quattro sezioni del sito
 
-[PARAGRAFO] Di seguito trovi passo per passo il metodo con cui è stata costruita renova e le intenzioni che porta con sè. Ogni pagina ne racconta una parte.
+**Al centro**
+- [MARCHIO] renova
+- [BOTTONE] Scopri di più → porta a «Il progetto»
+- [RIGA SOTTO IL BOTTONE] Quattro sezioni, un solo filo
 
-> ⚠️ I quattro sommari qui sotto compaiono in **tre punti**: nelle card della
-> home, nel blocco «Continua» in fondo a ogni pagina e (solo il titolo) nel
-> footer. Cambiandoli qui cambiano ovunque.
+**Le quattro bolle** *(numero + nome della sezione; «Vai qui →» compare al passaggio del cursore)*
+- 01 · Il progetto
+- 02 · Come funziona
+- 03 · Impatto
+- 04 · Collabora
+- [DICITURA AL PASSAGGIO DEL CURSORE] Vai qui
 
-**Card 01 — Il progetto**
+> ⚠️ I quattro sommari qui sotto NON sono più visibili sulla home: la bolla
+> mostra solo il nome della sezione. Restano però in **tre punti**: la
+> descrizione vocale della bolla (screen reader), il blocco «Continua» in fondo
+> a ogni pagina e — solo il titolo — il footer. Cambiandoli qui cambiano
+> ovunque.
+
+**01 — Il progetto**
 Il costo che nessuno copre, l'impatto già pagato, la nostra missione e gli obiettivi dell'Agenda 2030 che presidiamo.
 
-**Card 02 — Come funziona**
+**02 — Come funziona**
 Dall'attivazione del club al primo scambio, in quattro passaggi. Uno solo compete alla società.
 
-**Card 03 — Impatto**
+**03 — Impatto**
 Come stimiamo il beneficio ambientale di ogni scambio, perché lo sottostimiamo apposta e dove dichiariamo i limiti.
 
-**Card 04 — Collabora**
+**04 — Collabora**
 Club, federazioni, amministrazioni, ETS, aziende: la rete si costruisce un nodo alla volta.
-
-[LINK card] Apri
 
 ---
 
@@ -269,7 +303,8 @@ I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova n
 
 [PARAGRAFO] renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque, in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura dell'impatto.
 
-[SPAZIO IMMAGINE — ruota ufficiale SDG / 17 icone] (placeholder: caricare qui l'asset ufficiale ONU nella versione SENZA emblema; le linee guida d'uso vanno pubblicate sulla stessa pagina — vedi nota vincoli sotto)
+[IMMAGINE — logo ufficiale SDG, accanto al blocco di testo] Asset ONU in `public/sdg/sdg-logo.png`, versione senza emblema, riprodotto senza modifiche. *(Già caricato: non è più un placeholder.)*
+[TESTO ALTERNATIVO] Sustainable Development Goals — Obiettivi di Sviluppo Sostenibile delle Nazioni Unite
 
 > ⚠️ Sono volutamente **cinque** obiettivi, presentati in ordine numerico (3, 10, 12, 13, 17).
 > L'SDG 6 (Acqua pulita) NON compare come voce autonoma: la metodologia dichiara lacune sui
@@ -304,6 +339,11 @@ Ogni scambio evita la CO₂ legata alla produzione di un capo nuovo. Non lo dici
 **SDG 17 · Partnership per gli obiettivi**
 Nessun impatto di scala si costruisce da soli. renova è pensata come nodo di una rete di club, istituzioni ed enti che condividono l'obiettivo.
 → *Funzione: apertura dell'ecosistema a partner di ogni tipo.*
+
+> Ogni scheda mostra l'**icona ufficiale ONU** dell'obiettivo, presa da
+> `public/sdg/sdg-03.png` … `sdg-17.png` e usata intera.
+
+[NOTA FONTE] Il logo degli Obiettivi di Sviluppo Sostenibile e le icone dei singoli obiettivi sono proprietà delle Nazioni Unite e sono riprodotti qui, senza modifiche, a scopo informativo: il loro utilizzo non costituisce alcuna forma di approvazione, sponsorizzazione o affiliazione di renova da parte dell'ONU. Le regole complete sono nelle *Guidelines for the Use of the SDG Logo and the Colour Wheel* (Nazioni Unite, agosto 2019) — link al PDF ufficiale.
 
 ---
 
@@ -412,13 +452,19 @@ Dire «riusare fa bene all'ambiente» è facile. Metterci un numero onesto è un
 [PARAGRAFO]
 renova non è solo per i club. È pensata per aprirsi a chiunque possa contribuire a rimettere in circolo il materiale sportivo e a diffondere una cultura della sostenibilità nello sport: federazioni, amministrazioni locali, enti del terzo settore, produttori, aziende di software gestionali. Se vedi un punto di contatto tra la tua realtà e la nostra, parliamone: **la rete si costruisce un nodo alla volta.**
 
-[GRAFICA RETE — etichette dei nodi attorno a «renova»]
-- Club ASD e SSD
-- Federazioni
-- Amministrazioni
-- Terzo settore
-- Produttori
-- Software gestionali
+[GRAFICA RETE — ragnatela animata: «renova» al centro, cinque bolle attorno]
+
+> Stessa scena della home, ma qui le bolle **non sono cliccabili** (non c'è una
+> pagina per ogni attore: la porta d'ingresso sono i form qui sotto). Sono
+> **cinque** e non sei: produttori e software gestionali stanno insieme in
+> «Imprese private». L'ordine è orario, a partire dall'alto. La riga piccola è
+> la didascalia, nascosta sugli schermi più stretti.
+
+- **Club ASD e SSD** — dove la rete comincia
+- **Federazioni** — regole e diffusione
+- **Imprese private** — produttori e software gestionali
+- **Terzo settore** — accesso e inclusione
+- **Amministrazioni** — territorio e impianti
 
 ### I due form
 
@@ -471,6 +517,13 @@ renova non è solo per i club. È pensata per aprirsi a chiunque possa contribui
 [MAPPA DEL SITO] Il progetto · Come funziona · Impatto · Collabora · Metodologia d'impatto
 
 [RECAPITI] «info@renovasport.it» · «+39 370 3238359» · «renovasport.it»
+
+[INFORMATIVE, ultima riga] Privacy policy · Cookie policy
+
+> Le due informative devono restare raggiungibili con un clic da qualsiasi
+> pagina (art. 13 GDPR per la privacy, Linee guida Garante 231/2021 per i
+> cookie): non toglierle dal footer. Il loro TESTO non si governa da questo
+> file — vedi `src/pages/PrivacyPolicy.tsx` e `src/pages/CookiePolicy.tsx`.
 
 [COPYRIGHT] © 2026 renova · Economia circolare per lo sport dilettantistico · renovasport.it
 
