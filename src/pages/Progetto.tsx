@@ -318,14 +318,16 @@ function Agenda2030() {
               key={s.n}
               className="flex flex-col rounded-2xl border border-edge bg-paper p-5 lg:p-6"
             >
-              <div className="flex items-center gap-3">
-                {/* Icona ufficiale dell'obiettivo: quadrata, integra, non ritagliata */}
+              <div className="flex items-center gap-4">
+                {/* Icona ufficiale dell'obiettivo: quadrata, integra, non
+                    ritagliata — grande abbastanza da lasciar leggere numero e
+                    titolo stampati al suo interno. */}
                 <img
                   src={`/sdg/${s.icona}`}
                   alt={`Obiettivo di Sviluppo Sostenibile ${s.n} — ${s.titolo}`}
                   width={341}
                   height={341}
-                  className="h-14 w-14 shrink-0"
+                  className="h-24 w-24 shrink-0 lg:h-28 lg:w-28"
                 />
                 <div>
                   <p
