@@ -67,11 +67,18 @@ distinguere i due siti sono solo le *variabili di repo*.
 2. **Collega il repo locale a entrambi**, così un solo `git push` aggiorna i
    due siti:
    ```bash
-   git remote set-url --add --push origin https://github.com/riccardocorazza02-dev/renova.git
-   git remote set-url --add --push origin https://github.com/riccardocorazza02-dev/renova-app.git
+   git remote set-url --add --push origin git@github.com:riccardocorazza02-dev/renova.git
+   git remote set-url --add --push origin git@github.com:riccardocorazza02-dev/renova-app.git
    git push origin main
    ```
    (per tornare indietro: `git remote set-url --delete --push origin '.*renova-app.*'`)
+
+   ⚠️ I remote sono in **SSH**, non in HTTPS: l'accesso a GitHub è via Apple e
+   non esiste una password da dare a git (del resto GitHub non l'accetta più
+   dal 2021). L'autenticazione passa dalla chiave `~/.ssh/id_ed25519`, la cui
+   parte pubblica è registrata in *Settings → SSH and GPG keys*. Se un domani
+   si cambia macchina: `ssh-keygen -t ed25519 -C "<email>"`, si incolla la
+   `.pub` in quella pagina e si verifica con `ssh -T git@github.com`.
 3. **Secrets e variabili di `renova-app`** (Settings → *Secrets and variables*
    → *Actions*):
    - tab **Secrets**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`,
