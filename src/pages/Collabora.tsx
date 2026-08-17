@@ -65,7 +65,7 @@ function Form() {
           <FormEnte />
         </div>
 
-        <p className="mt-5 text-center text-[12px] text-ink-muted">
+        <p className="mt-5 text-center text-[12px] lg:text-[13px] text-ink-muted">
           Inviando il form aprirai la tua email con i dati già compilati.
         </p>
       </div>
@@ -105,7 +105,7 @@ function FormClub() {
       className="flex flex-col rounded-2xl border-[1.5px] border-ink bg-paper p-6 shadow-sm lg:p-7"
     >
       <span className="eyebrow">Sei un club</span>
-      <h3 className="mt-1 text-[20px] leading-tight">Porta renova fra i tuoi tesserati</h3>
+      <h3 className="mt-1 text-[20px] lg:text-[22px] leading-tight">Porta renova fra i tuoi tesserati</h3>
 
       <div className="mt-6 grid flex-1 content-start gap-4 sm:grid-cols-2">
         <Field label="Nome" value={form.nome} onChange={set('nome')} required />
@@ -162,19 +162,19 @@ function FormEnte() {
       className="flex flex-col rounded-2xl border-[1.5px] border-ink bg-paper p-6 shadow-sm lg:p-7"
     >
       <span className="eyebrow">Sei un altro tipo di ente</span>
-      <h3 className="mt-1 text-[20px] leading-tight">Proponici una collaborazione</h3>
+      <h3 className="mt-1 text-[20px] lg:text-[22px] leading-tight">Proponici una collaborazione</h3>
 
       <div className="mt-6 grid flex-1 content-start gap-4 sm:grid-cols-2">
         <Field label="Nome" value={form.nome} onChange={set('nome')} required />
         <Field label="Ente / organizzazione" value={form.ente} onChange={set('ente')} required />
         <label className="block">
-          <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+          <span className="text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.06em] text-ink-soft">
             Tipo di ente
           </span>
           <select
             value={form.tipo}
             onChange={set('tipo')}
-            className="mt-1.5 w-full rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition focus:border-eco"
+            className="mt-1.5 w-full rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] lg:text-[17px] text-ink outline-none transition focus:border-eco"
           >
             {TIPI_ENTE.map((t) => (
               <option key={t}>{t}</option>
@@ -215,7 +215,7 @@ function Contatti() {
         <div>
           <span className="eyebrow">Contatti</span>
           <h2 className="mt-2 text-[28px] leading-tight sm:text-[36px]">Parliamone.</h2>
-          <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-ink-soft">
+          <p className="mt-3 max-w-lg text-[16px] lg:text-[18px] leading-relaxed text-ink-soft">
             Raccontaci della tua realtà, porta alla luce dubbi e curiosità, o aiutaci con
             suggerimenti che migliorino il servizio.
           </p>
@@ -238,10 +238,10 @@ function Contatti() {
 function ContattoDiretto({ label, valore, href }: { label: string; valore: string; href: string }) {
   return (
     <div className="flex items-baseline gap-3">
-      <span className="w-20 shrink-0 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+      <span className="w-20 shrink-0 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
         {label}
       </span>
-      <a href={href} className="text-[16px] font-semibold text-eco-700 underline-offset-4 hover:underline">
+      <a href={href} className="text-[16px] lg:text-[18px] font-semibold text-eco-700 underline-offset-4 hover:underline">
         {valore}
       </a>
     </div>
@@ -265,7 +265,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+      <span className="text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.06em] text-ink-soft">
         {label}
         {required && <span className="text-eco"> *</span>}
       </span>
@@ -274,7 +274,7 @@ function Field({
         value={value}
         onChange={onChange}
         required={required}
-        className="mt-1.5 w-full rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
+        className="mt-1.5 w-full rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] lg:text-[17px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
       />
     </label>
   )
@@ -295,7 +295,7 @@ function TextArea({
 }) {
   return (
     <label className="block">
-      <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+      <span className="text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.06em] text-ink-soft">
         {label} {opzionale && <span className="font-normal text-ink-muted">(opzionale)</span>}
       </span>
       <textarea
@@ -303,7 +303,7 @@ function TextArea({
         onChange={onChange}
         rows={4}
         placeholder={placeholder}
-        className="mt-1.5 w-full resize-y rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
+        className="mt-1.5 w-full resize-y rounded-lg border border-edge bg-paper px-3 py-2.5 text-[15px] lg:text-[17px] text-ink outline-none transition placeholder:text-ink-faint focus:border-eco"
       />
     </label>
   )
@@ -313,7 +313,7 @@ function Submit({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="submit"
-      className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-eco px-6 py-3.5 text-[14px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
+      className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-eco px-6 py-3.5 text-[14px] lg:text-[16px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
     >
       {children}
     </button>

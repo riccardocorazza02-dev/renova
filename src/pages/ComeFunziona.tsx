@@ -121,9 +121,9 @@ function StepRow({
       <div className={reverse ? 'lg:order-2' : ''}>
         <div className="flex items-center gap-4">
           <StepNumber n={n} />
-          <h2 className="text-[22px] leading-tight sm:text-[26px]">{title}</h2>
+          <h2 className="text-[22px] leading-tight sm:text-[26px] lg:text-[30px]">{title}</h2>
         </div>
-        <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+        <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[18px]">
           {body}
         </p>
       </div>
@@ -140,11 +140,11 @@ function Step2() {
         <div>
           <div className="flex items-center gap-4">
             <StepNumber n="2" />
-            <h2 className="text-[22px] leading-tight sm:text-[26px]">
+            <h2 className="text-[22px] leading-tight sm:text-[26px] lg:text-[30px]">
               I tesserati entrano nel marketplace
             </h2>
           </div>
-          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[16px]">
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft lg:text-[18px]">
             Con il codice, le famiglie accedono al marketplace e pubblicano in pochi tap il
             materiale che non usano più. Lo stesso feed si divide automaticamente in due viste, in
             base alla presenza o meno del logo della società.
@@ -161,7 +161,7 @@ function Step2() {
             alt="Feed del marketplace nell'app renova"
             className="max-w-[230px]"
           />
-          <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+          <figcaption className="mt-3 text-[13px] lg:text-[15px] leading-snug text-ink-soft">
             <span className="font-bold text-ink">Marketplace</span>
             <br />
             Un solo posto dove pubblicare e cercare.
@@ -179,7 +179,7 @@ function Step2() {
               alt="Articolo nel feed societario dell'app renova"
               className="max-w-[230px]"
             />
-            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+            <figcaption className="mt-3 text-[13px] lg:text-[15px] leading-snug text-ink-soft">
               <span className="font-bold text-eco-700">Feed societario</span>
               <br />
               Articoli col logo societario, visibili solo ai tesserati del club.
@@ -192,7 +192,7 @@ function Step2() {
               alt="Articolo nel feed pubblico dell'app renova"
               className="max-w-[230px]"
             />
-            <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
+            <figcaption className="mt-3 text-[13px] lg:text-[15px] leading-snug text-ink-soft">
               <span className="font-bold text-ink">Feed pubblico</span>
               <br />
               Articoli senza logo, aperti ai praticanti dello stesso sport nella stessa area
@@ -241,7 +241,7 @@ function SplitConnector() {
 
 function StepNumber({ n }: { n: string }) {
   return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-eco text-[16px] font-extrabold text-white">
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-eco text-[16px] lg:text-[18px] font-extrabold text-white">
       {n}
     </span>
   )
@@ -284,9 +284,9 @@ function Leva({ icon, title, body }: { icon: React.ReactNode; title: string; bod
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-eco-50 text-eco">
           {icon}
         </span>
-        <h3 className="text-[17px] leading-snug lg:text-[18px]">{title}</h3>
+        <h3 className="text-[17px] leading-snug lg:text-[20px]">{title}</h3>
       </div>
-      <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{body}</p>
+      <p className="mt-3 text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">{body}</p>
     </div>
   )
 }

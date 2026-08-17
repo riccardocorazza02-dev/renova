@@ -132,12 +132,12 @@ export function RagnatelaSito() {
               </span>
               <Link
                 to={PAGINE_SITO[0].to}
-                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-eco px-6 py-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
+                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-eco px-6 py-3.5 text-[13px] lg:text-[15px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
               >
                 Scopri di più
                 <FrecciaIcon />
               </Link>
-              <span className="mt-3 text-[11px] leading-snug text-ink-muted">
+              <span className="mt-3 text-[11px] lg:text-[12px] leading-snug text-ink-muted">
                 Quattro sezioni, un solo filo
               </span>
             </div>
@@ -177,16 +177,16 @@ function Bolla({ indice }: { indice: number }) {
       aria-label={`${pagina.label} — ${pagina.sommario}`}
       className="group flex h-[132px] w-[132px] flex-col items-center justify-center rounded-full border-[1.5px] border-ink bg-paper px-4 text-center shadow-[0_10px_30px_-18px_rgba(0,0,0,0.55)] transition duration-300 hover:-translate-y-1 hover:border-eco hover:shadow-[0_18px_38px_-18px_rgba(22,162,89,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-eco focus-visible:ring-offset-2 sm:h-[156px] sm:w-[156px] lg:h-[176px] lg:w-[176px]"
     >
-      <span className="text-[10px] font-bold tracking-[0.14em] text-ink-muted transition group-hover:text-eco-700">
+      <span className="text-[10px] lg:text-[11px] font-bold tracking-[0.14em] text-ink-muted transition group-hover:text-eco-700">
         {String(indice + 1).padStart(2, '0')}
       </span>
-      <span className="mt-1 text-[13px] font-extrabold leading-tight tracking-[-0.02em] text-ink sm:text-[15px] lg:text-[16px]">
+      <span className="mt-1 text-[13px] font-extrabold leading-tight tracking-[-0.02em] text-ink sm:text-[15px] lg:text-[18px]">
         {pagina.label}
       </span>
       {/* Riga sempre presente nel flusso (niente scatto al passaggio del
           cursore): cambia solo l'opacità. Dove l'hover non esiste — dito su
           touch — la dicitura è mostrata da subito. */}
-      <span className="renova-vai mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.06em] text-eco-700 opacity-0 transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+      <span className="renova-vai mt-2 inline-flex items-center gap-1 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.06em] text-eco-700 opacity-0 transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
         Vai qui
         <FrecciaIcon className="h-3 w-3" />
       </span>

@@ -112,21 +112,21 @@ function MetodoCarosello() {
           >
             {/* Fronte: numero + titolo */}
             <article className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper p-6 text-center [backface-visibility:hidden] lg:p-8">
-              <span className="text-[12px] font-bold uppercase tracking-[0.12em] text-eco-700">
+              <span className="text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.12em] text-eco-700">
                 Punto {String(indice + 1).padStart(2, '0')}
               </span>
               <h2 className="mt-3 max-w-md text-[20px] leading-snug lg:text-[23px]">{m.titolo}</h2>
-              <span className="mt-5 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+              <span className="mt-5 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
                 Passa sopra per scoprire
               </span>
             </article>
 
             {/* Retro: la spiegazione */}
             <article className="absolute inset-0 flex flex-col justify-center rounded-2xl border-[1.5px] border-eco bg-eco-50/60 p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)] lg:p-8">
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-eco-700">
+              <span className="text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.1em] text-eco-700">
                 {String(indice + 1).padStart(2, '0')} · {m.titolo}
               </span>
-              <p className="mt-3 text-[14px] leading-relaxed text-ink-soft lg:text-[15px]">
+              <p className="mt-3 text-[14px] leading-relaxed text-ink-soft lg:text-[17px]">
                 {m.testo}
               </p>
             </article>
@@ -197,7 +197,7 @@ function Equivalenze() {
           <h2 className="mt-2 text-[28px] leading-tight sm:text-[34px]">
             Un numero che nessuno sa leggere non serve a niente.
           </h2>
-          <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+          <p className="mt-3 text-[16px] lg:text-[18px] leading-relaxed text-ink-soft">
             Le stime si traducono in equivalenze concrete: la CO₂ risparmiata come chilometri in
             auto evitati, l’acqua come numero di docce. Sono equivalenze indicative, e la fonte di
             ciascun fattore di conversione è sempre dichiarata nell’app.
@@ -208,7 +208,7 @@ function Equivalenze() {
             unitario del catalogo, tradotto nelle due equivalenze. */}
         <div className="mt-10 overflow-hidden rounded-2xl border-[1.5px] border-ink bg-paper">
           <div className="border-b border-line px-6 py-5 lg:px-8">
-            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+            <p className="text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.1em] text-ink-muted">
               Esempio · un paio di scarpe sportive rimesso in circolo
             </p>
           </div>
@@ -264,13 +264,13 @@ function Equivalenza({
       >
         {metrica}
       </p>
-      <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-muted">
+      <p className="mt-2 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
         {etichetta}
       </p>
-      <p className="mt-5 border-t border-line pt-4 text-[20px] font-extrabold leading-tight tracking-[-0.03em] text-ink">
+      <p className="mt-5 border-t border-line pt-4 text-[20px] lg:text-[22px] font-extrabold leading-tight tracking-[-0.03em] text-ink">
         {equivale}
       </p>
-      <p className="mt-1.5 text-[12px] leading-snug text-ink-soft">{nota}</p>
+      <p className="mt-1.5 text-[12px] lg:text-[13px] leading-snug text-ink-soft">{nota}</p>
     </div>
   )
 }
@@ -284,13 +284,13 @@ function LeggiMetodologia() {
     <section className="border-b-[1.5px] border-ink bg-ink text-paper">
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-5 py-14 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:py-16">
         <div className="max-w-2xl">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-eco">
+          <span className="text-[10px] lg:text-[11px] font-semibold uppercase tracking-[0.12em] text-eco">
             Documento pubblico
           </span>
           <h2 className="mt-2 text-[26px] leading-tight text-paper sm:text-[32px]">
             Fattori d’impatto, fonti e formule: è tutto scritto.
           </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-[#c9c8c2] lg:text-[16px]">
+          <p className="mt-3 text-[15px] leading-relaxed text-[#c9c8c2] lg:text-[18px]">
             Il metodo completo — impatto per fibra con la fonte di ogni valore, blend
             rappresentativi, pesi di categoria e formule di calcolo — è raccolto in un documento
             metodologico pubblico, liberamente consultabile e scaricabile. Chi vuole verificarne i
@@ -300,7 +300,7 @@ function LeggiMetodologia() {
         <div className="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
           <Link
             to="/metodologia"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-eco px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-eco px-7 py-4 text-[14px] lg:text-[16px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
           >
             Leggi la metodologia
             <ArrowRightIcon />
@@ -309,7 +309,7 @@ function LeggiMetodologia() {
             href={PDF_METODOLOGIA}
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center justify-center rounded-lg border border-[#4a4941] px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-paper transition hover:bg-paper hover:text-ink"
+            className="inline-flex items-center justify-center rounded-lg border border-[#4a4941] px-7 py-4 text-[14px] lg:text-[16px] font-bold uppercase tracking-[0.06em] text-paper transition hover:bg-paper hover:text-ink"
           >
             Scarica il PDF
           </a>

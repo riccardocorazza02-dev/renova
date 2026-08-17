@@ -152,10 +152,10 @@ function Bolla({ nome, nota }: { nome: string; nota: string }) {
       aria-hidden="true"
       className="flex h-[96px] w-[96px] flex-col items-center justify-center rounded-full border-[1.5px] border-ink bg-paper px-2 text-center shadow-[0_10px_30px_-18px_rgba(0,0,0,0.55)] sm:h-[136px] sm:w-[136px] sm:px-4 lg:h-[160px] lg:w-[160px]"
     >
-      <span className="text-[10px] font-extrabold leading-tight tracking-[-0.02em] text-ink sm:text-[14px] lg:text-[15px]">
+      <span className="text-[10px] font-extrabold leading-tight tracking-[-0.02em] text-ink sm:text-[14px] lg:text-[17px]">
         {nome}
       </span>
-      <span className="mt-1.5 hidden text-[10px] leading-snug text-ink-muted sm:block lg:text-[11px]">
+      <span className="mt-1.5 hidden text-[10px] leading-snug text-ink-muted sm:block lg:text-[12px]">
         {nota}
       </span>
     </div>

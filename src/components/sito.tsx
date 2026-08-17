@@ -115,7 +115,7 @@ export function SitoLayout({
   }, [pathname])
 
   return (
-    <div className="min-h-screen w-full bg-paper text-ink">
+    <div className="sito min-h-screen w-full bg-paper text-ink">
       <SitoHeader />
       <main>{children}</main>
       {!senzaProssima && <ProssimaPagina />}
@@ -133,11 +133,11 @@ function SitoHeader() {
     <header className="sticky top-0 z-40 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
         <Link to="/" onClick={chiudi} className="shrink-0" aria-label="renova, home">
-          <Logo className="text-[22px]" />
+          <Logo className="text-[22px] lg:text-[24px]" />
         </Link>
 
         {/* Nav desktop */}
-        <nav className="hidden items-center gap-7 text-[13px] font-semibold text-ink-soft lg:flex">
+        <nav className="hidden items-center gap-7 text-[13px] lg:text-[15px] font-semibold text-ink-soft lg:flex">
           {PAGINE_SITO.map((p) => (
             <Link
               key={p.to}
@@ -154,7 +154,7 @@ function SitoHeader() {
         <div className="flex items-center gap-3">
           <Link
             to="/collabora"
-            className="hidden rounded-lg bg-eco px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99] sm:inline-flex"
+            className="hidden rounded-lg bg-eco px-4 py-2.5 text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99] sm:inline-flex"
           >
             Collabora con noi
           </Link>
@@ -187,7 +187,7 @@ function SitoHeader() {
       {/* Menu mobile a tendina */}
       {menuAperto && (
         <div className="border-t border-line bg-paper px-5 py-4 lg:hidden">
-          <nav className="flex flex-col gap-1 text-[15px] font-semibold text-ink">
+          <nav className="flex flex-col gap-1 text-[15px] lg:text-[17px] font-semibold text-ink">
             {PAGINE_SITO.map((p) => (
               <Link
                 key={p.to}
@@ -203,7 +203,7 @@ function SitoHeader() {
             <Link
               to="/collabora"
               onClick={chiudi}
-              className="mt-2 rounded-lg bg-eco px-4 py-3 text-center text-[13px] font-bold uppercase tracking-[0.06em] text-white"
+              className="mt-2 rounded-lg bg-eco px-4 py-3 text-center text-[13px] lg:text-[15px] font-bold uppercase tracking-[0.06em] text-white"
             >
               Collabora con noi
             </Link>
@@ -235,14 +235,14 @@ function ProssimaPagina() {
         >
           <div>
             <span className="eyebrow">Continua</span>
-            <p className="mt-1 text-[22px] font-extrabold leading-tight tracking-[-0.03em] text-ink sm:text-[26px]">
+            <p className="mt-1 text-[22px] font-extrabold leading-tight tracking-[-0.03em] text-ink sm:text-[26px] lg:text-[30px]">
               {prossima.label}
             </p>
-            <p className="mt-1 max-w-xl text-[14px] leading-relaxed text-ink-soft">
+            <p className="mt-1 max-w-xl text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">
               {prossima.sommario}
             </p>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-2 rounded-lg border-[1.5px] border-ink px-5 py-3 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition group-hover:bg-ink group-hover:text-paper">
+          <span className="inline-flex shrink-0 items-center gap-2 rounded-lg border-[1.5px] border-ink px-5 py-3 text-[12px] lg:text-[13px] font-bold uppercase tracking-[0.06em] text-ink transition group-hover:bg-ink group-hover:text-paper">
             Vai
             <ArrowRightIcon />
           </span>
@@ -263,7 +263,7 @@ export function SitoFooter() {
       <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
         {/* Mappa del sito + recapiti */}
         <div className="grid gap-6 sm:grid-cols-2">
-          <nav className="flex flex-col gap-2 text-[13px] font-semibold text-ink-soft">
+          <nav className="flex flex-col gap-2 text-[13px] lg:text-[15px] font-semibold text-ink-soft">
             {PAGINE_SITO.map((p) => (
               <Link key={p.to} to={p.to} className="transition hover:text-ink">
                 {p.label}
@@ -273,7 +273,7 @@ export function SitoFooter() {
               Metodologia d’impatto
             </Link>
           </nav>
-          <div className="space-y-2 text-[13px]">
+          <div className="space-y-2 text-[13px] lg:text-[15px]">
             <a
               href={`mailto:${EMAIL}`}
               className="block font-semibold text-eco-700 underline-offset-4 hover:underline"
@@ -296,7 +296,7 @@ export function SitoFooter() {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
-          <Logo className="text-[18px]" />
+          <Logo className="text-[18px] lg:text-[20px]" />
           <div className="flex flex-col items-center gap-2 sm:items-end">
             {/* Ultima riga del sito: le informative devono restare raggiungibili
                 con un clic da qualsiasi pagina (art. 13 GDPR per la privacy,
@@ -304,21 +304,21 @@ export function SitoFooter() {
             <div className="flex items-center gap-3">
               <Link
                 to={PRIVACY_POLICY}
-                className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
+                className="py-1 text-[11px] lg:text-[12px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
               >
                 Privacy policy
               </Link>
-              <span aria-hidden="true" className="text-[11px] text-ink-muted">
+              <span aria-hidden="true" className="text-[11px] lg:text-[12px] text-ink-muted">
                 ·
               </span>
               <Link
                 to={COOKIE_POLICY}
-                className="py-1 text-[11px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
+                className="py-1 text-[11px] lg:text-[12px] font-semibold text-ink-soft underline underline-offset-4 transition hover:text-ink"
               >
                 Cookie policy
               </Link>
             </div>
-            <p className="text-center text-[11px] text-ink-muted sm:text-right">
+            <p className="text-center text-[11px] lg:text-[12px] text-ink-muted sm:text-right">
               © 2026 renova · Economia circolare per lo sport dilettantistico · {SITO}
             </p>
           </div>
@@ -347,7 +347,7 @@ export function TestataPagina({
       <span className="eyebrow">{occhiello}</span>
       <h1 className="mt-2 text-[30px] leading-[1.05] sm:text-[38px] lg:text-[44px]">{titolo}</h1>
       {children && (
-        <div className="mt-5 space-y-4 text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
+        <div className="mt-5 space-y-4 text-[16px] leading-relaxed text-ink-soft lg:text-[19px]">
           {children}
         </div>
       )}
@@ -357,7 +357,7 @@ export function TestataPagina({
 
 /** Nota di fonte sotto una grafica-dato: piccola, sempre esplicita. */
 export function Fonte({ children }: { children: ReactNode }) {
-  return <p className="mt-4 text-[11px] leading-relaxed text-ink-muted">{children}</p>}
+  return <p className="mt-4 text-[11px] lg:text-[12px] leading-relaxed text-ink-muted">{children}</p>}
 
 /* ── Icone condivise ── */
 

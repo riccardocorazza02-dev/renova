@@ -143,10 +143,10 @@ function CosaE() {
               <p className="text-[38px] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[44px]">
                 {n.valore}
               </p>
-              <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-eco">
+              <p className="mt-2 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-eco">
                 {n.unita}
               </p>
-              <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">{n.testo}</p>
+              <p className="mt-3 text-[13px] lg:text-[15px] leading-relaxed text-ink-soft">{n.testo}</p>
             </div>
           ))}
         </div>
@@ -162,7 +162,7 @@ function CosaE() {
             <h2 className="text-[26px] leading-tight sm:text-[30px]">
               renova rimette in circolo quel materiale.
             </h2>
-            <p className="mt-4 text-[16px] leading-relaxed text-ink-soft">
+            <p className="mt-4 text-[16px] lg:text-[18px] leading-relaxed text-ink-soft">
               I tesserati pubblicano ciò che non usano più, chi cerca un articolo lo trova nel
               catalogo, si accordano tramite la chat interna e se lo scambiano di persona,
               gratuitamente. La piattaforma non ospita denaro, non movimenta merce e non chiede
@@ -204,11 +204,11 @@ function Bacino({
       }`}
     >
       <h3
-        className={`text-[17px] leading-snug ${accento === 'eco' ? 'text-eco-700' : 'text-ink'}`}
+        className={`text-[17px] lg:text-[19px] leading-snug ${accento === 'eco' ? 'text-eco-700' : 'text-ink'}`}
       >
         {titolo}
       </h3>
-      <p className="mt-2.5 text-[14px] leading-relaxed text-ink-soft">{testo}</p>
+      <p className="mt-2.5 text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">{testo}</p>
     </div>
   )
 }
@@ -227,7 +227,7 @@ function MissionVision() {
           {/* Missione — ciò che il servizio fa già */}
           <div className="flex flex-col justify-center rounded-2xl border-[1.5px] border-ink bg-paper p-6 lg:p-8">
             <h2 className="text-[24px] leading-tight sm:text-[28px]">La nostra missione</h2>
-            <p className="mt-4 text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
+            <p className="mt-4 text-[16px] leading-relaxed text-ink-soft lg:text-[19px]">
               Ridurre l’impatto ambientale dello sport dilettantistico attraverso l’economia
               circolare e, nello stesso gesto, alleggerire il costo di chi lo pratica —
               intervenendo proprio dove nessun sostegno pubblico arriva: la spesa per il materiale.
@@ -240,18 +240,18 @@ function MissionVision() {
 
           {/* Visione — dichiarata come direzione, non come funzione attiva */}
           <div className="rounded-2xl border-[1.5px] border-eco bg-ink p-6 text-paper lg:p-8">
-            <span className="inline-flex items-center gap-2 rounded-md bg-eco px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+            <span className="inline-flex items-center gap-2 rounded-md bg-eco px-2.5 py-1 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.08em] text-white">
               Direzione futura
             </span>
             <h2 className="mt-3 text-[24px] leading-tight text-paper sm:text-[28px]">
               La nostra visione
             </h2>
-            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
+            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[19px]">
               renova nasce come scambio, ma guarda a qualcosa di più ambizioso: fare della
               sostenibilità un vantaggio concreto per ogni attore che entra nella rete — non un
               dovere da assolvere, ma una convenienza.
             </p>
-            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
+            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[19px]">
               Immaginiamo una rete in cui chi rimette in circolo il proprio materiale riceve
               qualcosa in cambio: dagli sconti dei partner fino a borse che alleggeriscono il
               costo dello sport. Una rete in cui il club che si impegna sul serio trova in
@@ -260,7 +260,7 @@ function MissionVision() {
               di dati e non di dichiarazioni; in cui gli enti del terzo settore ampliano il
               proprio raggio d’azione digitalizzando la rete che già animano.
             </p>
-            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[17px]">
+            <p className="mt-4 text-[16px] leading-relaxed text-[#c9c8c2] lg:text-[19px]">
               È un obiettivo che si raggiunge in un solo modo: costruendo, un nodo alla volta,
               una rete in cui la sostenibilità conviene a chi la pratica.
             </p>
@@ -288,14 +288,14 @@ function Agenda2030() {
             <h2 className="text-[28px] leading-tight sm:text-[34px]">
               Ogni funzione, un obiettivo di sviluppo sostenibile.
             </h2>
-            <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+            <p className="mt-3 text-[16px] lg:text-[18px] leading-relaxed text-ink-soft">
               L’Agenda 2030 è il programma d’azione sottoscritto nel 2015 da tutti i 193 Paesi
               membri delle Nazioni Unite. Fissa 17 Obiettivi di Sviluppo Sostenibile (Sustainable
               Development Goals, SDGs) e 169 traguardi da raggiungere entro il 2030: un linguaggio
               comune e riconosciuto a livello internazionale per orientare e misurare il progresso
               verso uno sviluppo che tenga insieme ambiente, economia e società.
             </p>
-            <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
+            <p className="mt-3 text-[16px] lg:text-[18px] leading-relaxed text-ink-soft">
               renova non rincorre ogni SDG possibile per riempire una vetrina. Ne presidia cinque,
               in modo diretto e difendibile — la stessa disciplina che applichiamo alla misura
               dell’impatto.
@@ -308,7 +308,7 @@ function Agenda2030() {
             alt="Sustainable Development Goals — Obiettivi di Sviluppo Sostenibile delle Nazioni Unite"
             width={634}
             height={330}
-            className="mt-8 h-auto w-[180px] shrink-0 lg:mt-0 lg:w-[210px]"
+            className="mt-8 h-auto w-[220px] shrink-0 sm:w-[240px] lg:mt-0 lg:w-[280px]"
           />
         </div>
 
@@ -318,29 +318,26 @@ function Agenda2030() {
               key={s.n}
               className="flex flex-col rounded-2xl border border-edge bg-paper p-5 lg:p-6"
             >
-              <div className="flex items-center gap-4">
-                {/* Icona ufficiale dell'obiettivo: quadrata, integra, non
-                    ritagliata — grande abbastanza da lasciar leggere numero e
-                    titolo stampati al suo interno. */}
-                <img
-                  src={`/sdg/${s.icona}`}
-                  alt={`Obiettivo di Sviluppo Sostenibile ${s.n} — ${s.titolo}`}
-                  width={341}
-                  height={341}
-                  className="h-24 w-24 shrink-0 lg:h-28 lg:w-28"
-                />
-                <div>
-                  <p
-                    className="text-[10px] font-bold uppercase tracking-[0.1em]"
-                    style={{ color: s.colore }}
-                  >
-                    SDG {s.n}
-                  </p>
-                  <h3 className="text-[15px] leading-snug">{s.titolo}</h3>
-                </div>
-              </div>
-              <p className="mt-4 flex-1 text-[14px] leading-relaxed text-ink-soft">{s.testo}</p>
-              <p className="mt-4 border-t border-line pt-3 text-[12px] leading-snug text-ink-muted">
+              {/* Icona ufficiale dell'obiettivo: quadrata, integra, non
+                  ritagliata. Sta in testa alla scheda e occupa tutta la
+                  larghezza che le serve, perché numero e titolo sono stampati
+                  DENTRO l'icona: rimpicciolita non si legge più. */}
+              <img
+                src={`/sdg/${s.icona}`}
+                alt={`Obiettivo di Sviluppo Sostenibile ${s.n} — ${s.titolo}`}
+                width={341}
+                height={341}
+                className="h-32 w-32 shrink-0 sm:h-36 sm:w-36 lg:h-40 lg:w-40"
+              />
+              <p
+                className="mt-4 text-[10px] font-bold uppercase tracking-[0.1em] lg:text-[11px]"
+                style={{ color: s.colore }}
+              >
+                SDG {s.n}
+              </p>
+              <h3 className="mt-1 text-[17px] leading-snug lg:text-[19px]">{s.titolo}</h3>
+              <p className="mt-3 flex-1 text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">{s.testo}</p>
+              <p className="mt-4 border-t border-line pt-3 text-[12px] lg:text-[13px] leading-snug text-ink-muted">
                 <span className="font-bold uppercase tracking-[0.06em] text-ink">Funzione</span>{' '}
                 — {s.funzione}
               </p>

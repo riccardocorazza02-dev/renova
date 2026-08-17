@@ -117,6 +117,22 @@ h1, h2, h3, h4 {
   color: var(--color-ink-muted);
 }
 
+/* ──────────────────────────────────────────────────────────────
+   Sito pubblico: leggibilità da desktop.
+   L'app è mobile-only e la sua tipografia resta quella; il SITO invece
+   si legge anche da PC, dove le misure pensate per il telefono
+   risultano minute. Le pagine del sito alzano di un gradino i corpi
+   testo con le varianti `lg:` di Tailwind; qui si allinea l'occhiello,
+   che è una classe CSS condivisa con l'app — da cui il contenimento
+   dentro `.sito`, la classe del guscio del sito pubblico
+   (`components/sito.tsx` e le pagine-documento).
+   ────────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .sito .eyebrow {
+    font-size: 0.6875rem; /* 11px */
+  }
+}
+
 /* Nasconde le frecce dei number input per un look più pulito */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {

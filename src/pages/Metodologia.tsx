@@ -63,16 +63,16 @@ const INDICE: Array<[string, string]> = [
 
 export function Metodologia() {
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="sito min-h-screen bg-paper">
       {/* Header sticky con marchio e ritorno al sito */}
       <header className="sticky top-0 z-20 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
           <Link to="/" aria-label="Torna alla home di renova">
-            <Logo className="text-[21px]" />
+            <Logo className="text-[21px] lg:text-[23px]" />
           </Link>
           <Link
             to="/"
-            className="text-[11px] font-bold uppercase tracking-[0.08em] text-ink-soft transition hover:text-ink"
+            className="text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-soft transition hover:text-ink"
           >
             ← Torna al sito
           </Link>
@@ -87,10 +87,10 @@ export function Metodologia() {
             Metodologia di stima dell'impatto ambientale dei capi sportivi di
             seconda mano
           </h1>
-          <p className="mt-2 text-base text-ink-soft">
+          <p className="mt-2 text-base text-ink-soft lg:text-[18px]">
             Carbon footprint e water footprint
           </p>
-          <p className="mt-3 inline-block rounded-lg border border-sun/40 bg-sun-50 px-3.5 py-2 text-[13px] leading-relaxed text-ink-soft">
+          <p className="mt-3 inline-block rounded-lg border border-sun/40 bg-sun-50 px-3.5 py-2 text-[13px] lg:text-[15px] leading-relaxed text-ink-soft">
             Documento metodologico. Le stime descritte non costituiscono una LCA
             certificata.
           </p>
@@ -98,7 +98,7 @@ export function Metodologia() {
             <a
               href={PDF_URL}
               download
-              className="inline-flex items-center gap-2 bg-eco px-5 py-3 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
+              className="inline-flex items-center gap-2 bg-eco px-5 py-3 text-[13px] lg:text-[15px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-eco-600 active:scale-[.99]"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <path
@@ -111,7 +111,7 @@ export function Metodologia() {
               </svg>
               Scarica il PDF
             </a>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+            <span className="text-[11px] lg:text-[12px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
               Versione luglio 2026
             </span>
           </div>
@@ -119,7 +119,7 @@ export function Metodologia() {
 
         {/* Indice */}
         <nav aria-label="Indice" className="border-b border-line py-5">
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+          <p className="mb-2 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.1em] text-ink-muted">
             Indice
           </p>
           <ol className="grid gap-1.5 sm:grid-cols-2">
@@ -127,7 +127,7 @@ export function Metodologia() {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="text-sm font-semibold text-eco-700 hover:underline"
+                  className="text-sm font-semibold text-eco-700 hover:underline lg:text-[16px]"
                 >
                   {label}
                 </a>
@@ -204,7 +204,7 @@ export function Metodologia() {
           </P>
 
           <div className="my-4 overflow-x-auto rounded-lg border border-line">
-            <table className="w-full min-w-[640px] border-collapse text-left text-[13px]">
+            <table className="w-full min-w-[640px] border-collapse text-left text-[13px] lg:text-[15px]">
               <thead>
                 <tr className="border-b-[1.5px] border-ink bg-surface">
                   <Th>Fibra</Th>
@@ -226,7 +226,7 @@ export function Metodologia() {
             </table>
           </div>
 
-          <h3 className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-ink">
+          <h3 className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-ink lg:text-[21px]">
             Macro-categorie di articoli e blend rappresentativi
           </h3>
           <P>
@@ -269,7 +269,7 @@ export function Metodologia() {
           </P>
 
           <div className="my-4 overflow-x-auto rounded-lg border border-line">
-            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
+            <table className="w-full min-w-[720px] border-collapse text-left text-[13px] lg:text-[15px]">
               <thead>
                 <tr className="border-b-[1.5px] border-ink bg-surface">
                   <Th>Macro</Th>
@@ -440,7 +440,7 @@ export function Metodologia() {
 
         {/* 8 */}
         <Sezione id="bibliografia" titolo="8. Bibliografia">
-          <ul className="space-y-2.5 text-[13px] leading-relaxed text-ink-soft">
+          <ul className="space-y-2.5 text-[13px] lg:text-[15px] leading-relaxed text-ink-soft">
             <Ref>
               Carbonfact (s.d.). <em>Carbon footprint knowledge base</em>:
               Polyester, Recycled polyester, Cotton, Elastane.
@@ -483,7 +483,7 @@ export function Metodologia() {
 
         {/* Chiusura */}
         <div className="mt-10 border-t-[1.5px] border-ink pt-6">
-          <p className="text-sm leading-relaxed text-ink-soft">
+          <p className="text-sm leading-relaxed text-ink-soft lg:text-[16px]">
             Domande sul metodo? Scrivici a{' '}
             <a
               href="mailto:info@renovasport.it"
@@ -494,7 +494,7 @@ export function Metodologia() {
             . Una sintesi divulgativa in forma di domande e risposte è
             disponibile nella sezione Impatto dell'app.
           </p>
-          <p className="mt-4 pb-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
+          <p className="mt-4 pb-2 text-center text-[10px] lg:text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
             renova · Sport Resale &amp; ESG
           </p>
         </div>
@@ -520,7 +520,7 @@ function Sezione({
 }) {
   return (
     <section id={id} className="scroll-mt-20 border-b border-line py-6 last:border-0">
-      <h2 className="mb-3 text-[22px] font-extrabold tracking-[-0.02em] text-ink">
+      <h2 className="mb-3 text-[22px] lg:text-[24px] font-extrabold tracking-[-0.02em] text-ink">
         {titolo}
       </h2>
       {children}
@@ -530,7 +530,7 @@ function Sezione({
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-3 text-[15px] leading-relaxed text-ink-soft last:mb-0">
+    <p className="mb-3 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft last:mb-0">
       {children}
     </p>
   )
@@ -538,7 +538,7 @@ function P({ children }: { children: React.ReactNode }) {
 
 function Formula({ children }: { children: React.ReactNode }) {
   return (
-    <p className="my-3 overflow-x-auto rounded-lg border border-line bg-surface px-4 py-3 text-center text-[14px] font-semibold text-ink">
+    <p className="my-3 overflow-x-auto rounded-lg border border-line bg-surface px-4 py-3 text-center text-[14px] lg:text-[16px] font-semibold text-ink">
       {children}
     </p>
   )
@@ -553,10 +553,10 @@ function Livello({
 }) {
   return (
     <div className="mb-3 rounded-lg border border-line bg-paper p-4 last:mb-0">
-      <h3 className="mb-1.5 text-[15px] font-extrabold tracking-[-0.01em] text-ink">
+      <h3 className="mb-1.5 text-[15px] lg:text-[17px] font-extrabold tracking-[-0.01em] text-ink">
         {nome}
       </h3>
-      <p className="text-[14px] leading-relaxed text-ink-soft">{children}</p>
+      <p className="text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">{children}</p>
     </div>
   )
 }

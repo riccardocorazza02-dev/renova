@@ -37,6 +37,16 @@ accento **Verde Eco fluorescente** (`--color-eco`, `#10e87f`); azzurro
 (`--color-water`) per il badge acqua. Il sito pubblico (landing, le 4 pagine
 e `/metodologia`) è l'unica parte responsive anche desktop.
 
+⚠️ **Tipografia del sito da desktop**: le misure base (`text-[Npx]`) sono
+pensate per il telefono e da PC risultano minute. Ogni corpo testo del sito
+porta perciò una variante **`lg:`** di un gradino più grande (13→15, 14→16,
+15→17, 16→18/19, e così via); quando c'è già una `sm:` la `lg:` deve restare
+maggiore, non minore. L'occhiello `.eyebrow` è una classe CSS condivisa con
+l'app: il suo aumento sta in `index.css` dentro `@media (min-width:1024px)`
+ed è confinato a **`.sito`**, la classe che `SitoLayout` e le tre pagine
+documento mettono sul proprio guscio. Chi aggiunge testo al sito aggiunge
+anche la `lg:`.
+
 ## Stack
 
 - **Vite + React 19 + TypeScript** (SPA), **Tailwind CSS v4** (config in

@@ -56,7 +56,7 @@ function Hero() {
           <h1 className="mt-3 text-[34px] leading-[1.02] sm:text-[44px] lg:text-[52px]">
             La piattaforma digitale che rimette in circolo il materiale sportivo di ASD e SSD.
           </h1>
-          <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[17px]">
+          <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft lg:text-[19px]">
             renova permette ai tesserati di ASD e SSD di scambiarsi gratuitamente il materiale
             sportivo ancora in buone condizioni. Un gesto semplice con un doppio effetto: abbassa
             il costo dello sport per le famiglie ed evita un impatto ambientale che è già stato
@@ -66,13 +66,13 @@ function Hero() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               to="/come-funziona"
-              className="inline-flex items-center justify-center rounded-lg bg-eco px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
+              className="inline-flex items-center justify-center rounded-lg bg-eco px-7 py-4 text-[14px] lg:text-[16px] font-bold uppercase tracking-[0.06em] text-white shadow-sm transition hover:bg-eco-600 active:scale-[.99]"
             >
               Scopri come funziona
             </Link>
             <Link
               to="/collabora"
-              className="inline-flex items-center justify-center rounded-lg border-[1.5px] border-ink px-7 py-4 text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper active:scale-[.99]"
+              className="inline-flex items-center justify-center rounded-lg border-[1.5px] border-ink px-7 py-4 text-[14px] lg:text-[16px] font-bold uppercase tracking-[0.06em] text-ink transition hover:bg-ink hover:text-paper active:scale-[.99]"
             >
               Collabora con noi
             </Link>
@@ -80,7 +80,7 @@ function Hero() {
 
           {/* Porta secondaria per genitori/tesserati — subordinata */}
           <div className="mt-5 rounded-xl border border-edge bg-eco-50/60 px-4 py-3.5 sm:max-w-md">
-            <p className="text-[13px] text-ink-soft">
+            <p className="text-[13px] lg:text-[15px] text-ink-soft">
               Sei un <span className="font-semibold text-ink">genitore o un tesserato</span>? La
               tua opinione ci serve per costruire renova.
             </p>
@@ -88,7 +88,7 @@ function Hero() {
               href={SURVEY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-bold text-eco-700 underline-offset-4 hover:underline"
+              className="mt-2 inline-flex items-center gap-1.5 text-[13px] lg:text-[15px] font-bold text-eco-700 underline-offset-4 hover:underline"
             >
               Compila il sondaggio per le famiglie
               <ArrowOutIcon />

@@ -44,17 +44,17 @@ export function CookiePolicy() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="sito min-h-screen bg-paper">
       {/* Header sticky con marchio e ritorno alla pagina di provenienza */}
       <header className="sticky top-0 z-20 border-b-[1.5px] border-ink bg-paper/95 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
           <Link to="/" aria-label="Torna alla home di renova">
-            <Logo className="text-[21px]" />
+            <Logo className="text-[21px] lg:text-[23px]" />
           </Link>
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="text-[11px] font-bold uppercase tracking-[0.08em] text-ink-soft transition hover:text-ink"
+            className="text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-soft transition hover:text-ink"
           >
             ← Indietro
           </button>
@@ -68,7 +68,7 @@ export function CookiePolicy() {
           <h1 className="mt-1 text-[34px] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink sm:text-[42px]">
             Cookie Policy
           </h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
+          <p className="mt-3 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft">
             Questa Cookie Policy spiega quali cookie e strumenti analoghi di
             archiviazione sul dispositivo vengono utilizzati dai siti{' '}
             <strong className="font-semibold text-ink">renovasport.it</strong> e{' '}
@@ -81,7 +81,7 @@ export function CookiePolicy() {
             personali (Provv. n. 231 del 10 giugno 2021).
           </p>
 
-          <div className="mt-4 rounded-lg border border-eco/40 bg-eco-50 px-4 py-3 text-[14px] leading-relaxed text-ink-soft">
+          <div className="mt-4 rounded-lg border border-eco/40 bg-eco-50 px-4 py-3 text-[14px] lg:text-[16px] leading-relaxed text-ink-soft">
             <span className="font-bold text-ink">In sintesi:</span> renova
             utilizza{' '}
             <strong className="font-semibold text-ink">
@@ -98,14 +98,14 @@ export function CookiePolicy() {
             : nessuno degli strumenti impiegati lo richiede.
           </div>
 
-          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+          <p className="mt-4 text-[11px] lg:text-[12px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
             Ultimo aggiornamento: {ULTIMO_AGGIORNAMENTO}
           </p>
         </div>
 
         {/* Indice */}
         <nav aria-label="Indice" className="border-b border-line py-5">
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+          <p className="mb-2 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.1em] text-ink-muted">
             Indice
           </p>
           <ol className="grid gap-1.5 sm:grid-cols-2">
@@ -113,7 +113,7 @@ export function CookiePolicy() {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="text-sm font-semibold text-eco-700 hover:underline"
+                  className="text-sm font-semibold text-eco-700 hover:underline lg:text-[16px]"
                 >
                   {label}
                 </a>
@@ -135,7 +135,7 @@ export function CookiePolicy() {
             del browser — che la normativa considera in modo analogo ai cookie.
           </P>
           <P>Questi strumenti si distinguono in:</P>
-          <ul className="mb-3 space-y-2 text-[15px] leading-relaxed text-ink-soft">
+          <ul className="mb-3 space-y-2 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft">
             <Punto>
               <strong className="font-semibold text-ink">
                 strumenti tecnici
@@ -185,7 +185,7 @@ export function CookiePolicy() {
           </P>
 
           <div className="my-4 overflow-x-auto rounded-lg border border-line">
-            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
+            <table className="w-full min-w-[720px] border-collapse text-left text-[13px] lg:text-[15px]">
               <thead>
                 <tr className="border-b-[1.5px] border-ink bg-surface">
                   <Th>Strumento</Th>
@@ -199,7 +199,7 @@ export function CookiePolicy() {
               <tbody>
                 <tr>
                   <Td className="font-semibold text-ink">
-                    <code className="text-[12px]">sb-…-auth-token</code>{' '}
+                    <code className="text-[12px] lg:text-[13px]">sb-…-auth-token</code>{' '}
                     (localStorage)
                   </Td>
                   <Td className="text-ink-soft">
@@ -235,10 +235,10 @@ export function CookiePolicy() {
             soggetti a consenso.
           </P>
 
-          <h3 className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-ink">
+          <h3 className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-ink lg:text-[21px]">
             Cosa renova NON utilizza
           </h3>
-          <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-ink-soft">
+          <ul className="mt-3 space-y-2 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft">
             <Punto>
               nessun cookie (all'apertura del Sito non viene installato alcun
               cookie);
@@ -311,7 +311,7 @@ export function CookiePolicy() {
             : disattivandolo non è possibile mantenere l'accesso
             all'Applicazione. L'utente può comunque, in qualsiasi momento:
           </P>
-          <ul className="mb-3 space-y-2 text-[15px] leading-relaxed text-ink-soft">
+          <ul className="mb-3 space-y-2 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft">
             <Punto>
               <strong className="font-semibold text-ink">
                 effettuare il logout
@@ -387,7 +387,7 @@ export function CookiePolicy() {
           </P>
         </Sezione>
 
-        <p className="pt-6 text-[13px] text-ink-muted">
+        <p className="pt-6 text-[13px] lg:text-[15px] text-ink-muted">
           Ultimo aggiornamento: {ULTIMO_AGGIORNAMENTO}.
         </p>
       </main>
@@ -412,7 +412,7 @@ function Sezione({
 }) {
   return (
     <section id={id} className="scroll-mt-20 border-b border-line py-6 last:border-0">
-      <h2 className="mb-3 text-[22px] font-extrabold tracking-[-0.02em] text-ink">
+      <h2 className="mb-3 text-[22px] lg:text-[24px] font-extrabold tracking-[-0.02em] text-ink">
         {titolo}
       </h2>
       {children}
@@ -422,7 +422,7 @@ function Sezione({
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-3 text-[15px] leading-relaxed text-ink-soft last:mb-0">
+    <p className="mb-3 text-[15px] lg:text-[17px] leading-relaxed text-ink-soft last:mb-0">
       {children}
     </p>
   )
