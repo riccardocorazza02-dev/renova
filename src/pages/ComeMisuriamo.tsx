@@ -116,8 +116,11 @@ function MetodoCarosello() {
                 Punto {String(indice + 1).padStart(2, '0')}
               </span>
               <h2 className="mt-3 max-w-md text-[20px] leading-snug lg:text-[23px]">{m.titolo}</h2>
+              {/* L'invito cambia con il dispositivo: col mouse basta passare
+                  sopra, sui touch la card si gira solo al tocco. */}
               <span className="mt-5 text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.08em] text-ink-muted">
-                Passa sopra per scoprire
+                <span className="[@media(hover:hover)]:hidden">Tocca per scoprire</span>
+                <span className="hidden [@media(hover:hover)]:inline">Passa sopra per scoprire</span>
               </span>
             </article>
 
