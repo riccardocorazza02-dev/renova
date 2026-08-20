@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Spinner } from '../components/Spinner'
@@ -6,10 +7,7 @@ import {
   TestataImpostazioni,
   RigaDato,
   BadgeEmailVerificata,
-  FlussoCambioEmail,
-  useRitornoDaVerificaEmail,
-  SezioneEspandibile,
-  SezionePassword,
+  VoceOperazione,
 } from '../components/impostazioni'
 import {
   TextField,
@@ -33,11 +31,6 @@ export function ImpostazioniAccount() {
   const { session, profilo, refreshProfilo, deleteAccount } = useAuth()
   const uid = session?.user.id
   const email = session?.user.email ?? ''
-
-  // Cambio email: il pannello si apre col bottone «Cambia» (o al ritorno
-  // dal link di verifica della casella attuale).
-  const emailVerificata = useRitornoDaVerificaEmail()
-  const [mostraCambioEmail, setMostraCambioEmail] = useState(emailVerificata)
 
   // Telefono (box a sé, salvataggio indipendente)
   const [telefono, setTelefono] = useState(profilo?.telefono ?? '')
@@ -138,7 +131,8 @@ export function ImpostazioniAccount() {
         descrizione="Email, telefono, anagrafiche e password. Questi dati restano privati."
       />
 
-      {/* Email di accesso: indirizzo + stato di verifica + cambio in due passi */}
+      {/* Email di accesso: indirizzo + stato di verifica; il cambio è una
+          pagina dedicata (prima verifica dell'indirizzo attuale). */}
       <section className="rounded-lg border border-edge bg-paper p-4">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
@@ -152,20 +146,13 @@ export function ImpostazioniAccount() {
               <BadgeEmailVerificata />
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setMostraCambioEmail((m) => !m)}
+          <Link
+            to="/impostazioni/account/email"
             className="shrink-0 rounded-lg border border-edge bg-paper px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition hover:border-ink"
           >
-            {mostraCambioEmail ? 'Annulla' : 'Cambia'}
-          </button>
+            Cambia
+          </Link>
         </div>
-        {mostraCambioEmail && (
-          <FlussoCambioEmail
-            pagina="/impostazioni/account"
-            emailVerificata={emailVerificata}
-          />
-        )}
       </section>
 
       {/* Società e sport (sola lettura: li fissa il codice di accesso) */}
@@ -244,13 +231,14 @@ export function ImpostazioniAccount() {
         </form>
       </section>
 
-      {/* Password — sottosezione espandibile */}
-      <SezioneEspandibile
-        titolo="Cambia la password"
-        sub="Aggiornala dall'app o via email"
-      >
-        <SezionePassword />
-      </SezioneEspandibile>
+      {/* Password — pagina dedicata */}
+      <div className="mt-1">
+        <VoceOperazione
+          to="/impostazioni/account/password"
+          titolo="Cambia la password"
+          sub="Aggiornala dall'app o via email"
+        />
+      </div>
 
       {/* Eliminazione account — definitiva (diritto all'oblio) */}
       <section className="mt-6 border-t border-line pt-4">

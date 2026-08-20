@@ -28,6 +28,11 @@ import { Impostazioni } from './pages/Impostazioni'
 import { ImpostazioniProfilo } from './pages/ImpostazioniProfilo'
 import { ImpostazioniAccount } from './pages/ImpostazioniAccount'
 import { ImpostazioniSicurezza } from './pages/ImpostazioniSicurezza'
+import { ImpostazioniEmail } from './pages/ImpostazioniEmail'
+import { ImpostazioniPassword } from './pages/ImpostazioniPassword'
+import { ImpostazioniVerificaEmail } from './pages/ImpostazioniVerificaEmail'
+import { ImpostazioniDueFattori } from './pages/ImpostazioniDueFattori'
+import { ImpostazioniAccessi } from './pages/ImpostazioniAccessi'
 import { ImpostazioniLingua } from './pages/ImpostazioniLingua'
 import { ImpostazioniTema } from './pages/ImpostazioniTema'
 import { MieiScambi } from './pages/MieiScambi'
@@ -168,6 +173,17 @@ export default function App() {
         <Route path="/impostazioni/profilo" element={<ImpostazioniProfilo />} />
         <Route path="/impostazioni/account" element={<ImpostazioniAccount />} />
         <Route path="/impostazioni/sicurezza" element={<ImpostazioniSicurezza />} />
+        {/* Pagine operazione: ogni funzione ha la sua schermata dedicata.
+            Email e password sono raggiungibili sia dall'account che dalla
+            sicurezza (:sezione = account | sicurezza). */}
+        <Route path="/impostazioni/:sezione/email" element={<ImpostazioniEmail />} />
+        <Route path="/impostazioni/:sezione/password" element={<ImpostazioniPassword />} />
+        <Route
+          path="/impostazioni/sicurezza/verifica-email"
+          element={<ImpostazioniVerificaEmail />}
+        />
+        <Route path="/impostazioni/sicurezza/2fa" element={<ImpostazioniDueFattori />} />
+        <Route path="/impostazioni/sicurezza/accessi" element={<ImpostazioniAccessi />} />
         <Route path="/impostazioni/lingua" element={<ImpostazioniLingua />} />
         <Route path="/impostazioni/tema" element={<ImpostazioniTema />} />
         {/* Vecchio «Il mio account» (dal nome nel profilo): assorbito. */}

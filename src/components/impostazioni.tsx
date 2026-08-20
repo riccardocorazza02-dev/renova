@@ -175,65 +175,55 @@ export function OpzionePreferenza({
 }
 
 /**
- * Sottosezione espandibile: riga cliccabile in elenco; il contenuto (la
- * funzionalità vera) compare solo quando l'utente la apre.
+ * Voce di un'operazione: riga cliccabile in elenco che porta alla PAGINA
+ * interamente dedicata all'operazione (niente espansioni in loco).
  */
-export function SezioneEspandibile({
+export function VoceOperazione({
+  to,
   titolo,
   sub,
   inArrivo = false,
-  apertaInizialmente = false,
-  children,
 }: {
+  to: string
   titolo: string
   sub?: string
   inArrivo?: boolean
-  apertaInizialmente?: boolean
-  children: ReactNode
 }) {
-  const [aperta, setAperta] = useState(apertaInizialmente)
   return (
-    <section className="mt-3 rounded-lg border border-edge bg-paper">
-      <button
-        type="button"
-        onClick={() => setAperta((a) => !a)}
-        aria-expanded={aperta}
-        className="flex w-full items-center gap-3 p-4 text-left transition hover:bg-surface"
-      >
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
-              {titolo}
-            </h2>
-            {inArrivo && (
-              <span className="rounded-full bg-ink/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-ink-muted">
-                In arrivo
-              </span>
-            )}
-          </div>
-          {sub && <p className="mt-0.5 text-xs text-ink-soft">{sub}</p>}
+    <Link
+      to={to}
+      className="mt-3 flex items-center gap-3 rounded-lg border border-edge bg-paper p-4 transition hover:border-ink"
+    >
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
+            {titolo}
+          </h2>
+          {inArrivo && (
+            <span className="rounded-full bg-ink/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-ink-muted">
+              In arrivo
+            </span>
+          )}
         </div>
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden
-          className={`shrink-0 text-ink-faint transition-transform ${
-            aperta ? 'rotate-90' : ''
-          }`}
-        >
-          <path
-            d="M9 6l6 6-6 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-      {aperta && <div className="border-t border-line px-4 pb-4">{children}</div>}
-    </section>
+        {sub && <p className="mt-0.5 text-xs text-ink-soft">{sub}</p>}
+      </div>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden
+        className="shrink-0 text-ink-faint"
+      >
+        <path
+          d="M9 6l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Link>
   )
 }
 
