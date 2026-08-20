@@ -93,7 +93,13 @@ src/
 │                RecuperaPassword,
 │                AggiornaPassword, Feed, ArticleDetail, Upload,
 │                ModificaArticolo, Chat, Conversation, MieiArticoli,
-│                MieiScambi, Impatto (con MetodologiaFAQ in fondo), Profile
+│                MieiScambi, Impatto (con MetodologiaFAQ in fondo), Profile,
+│                Impostazioni (menu su /impostazioni) + sottosezioni
+│                ImpostazioniProfilo (foto/nome utente/bio/città),
+│                ImpostazioniAccount (email/telefono/anagrafiche/password/
+│                eliminazione), ImpostazioniSicurezza (verifica email; 2FA e
+│                attività login «in arrivo»), ImpostazioniLingua e
+│                ImpostazioniTema (predisposte, una sola scelta attiva)
 └─ App.tsx       routing (PublicOnly / ProtectedRoute / Home "2 in 1")
 supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0004_sport_feed · 0005_rls_feed · 0006_seed_categorie ·
@@ -107,7 +113,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0022_rimozione_colonne_superflue ·
                       0023_eliminazione_account ·
                       0024_chat_dal_primo_messaggio ·
-                      0025_registro_scambi_due_livelli (modello ATTUALE).
+                      0025_registro_scambi_due_livelli ·
+                      0026_impostazioni_profilo (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -132,7 +139,17 @@ file 0001→0022, ma non confrontare le cronologie per nome.
   `fonte`, e i campi del modello a fibre: `peso_kg`, `profilo_default`
   (blend L0 prudenziale) e `materiali` (opzioni del tap L0+1).
 - `utenti` (1:1 con `auth.users`) → `id_societa` + `sport` (impostati dal
-  trigger `handle_new_user` dal codice di accesso).
+  trigger `handle_new_user` dal codice di accesso). Da `0026`:
+  **`nome_utente`** = identità PUBBLICA modificabile (unica case-insensitive,
+  3–30 char; default dal local-part dell'email, con suffisso anti-conflitto)
+  — è ciò che finisce negli snapshot nome di chat e scambi;
+  **`nome_completo`** = anagrafica PRIVATA (con `sesso`, `data_nascita`,
+  `telefono` non verificato). Più `bio`, `foto_profilo_url` e
+  `citta`/`provincia`/`regione` (dal picker comuni ISTAT in
+  `src/lib/comuni.ts` + `src/data/comuni.json`, caricato lazy). Il trigger
+  `trg_utenti_campi_immutabili` blocca la modifica di società/sport dal
+  client. La foto profilo vive nel bucket `articoli` sotto
+  `<uid>/profilo/`. Ogni nuovo dato è dichiarato nella privacy policy §2.
 - `articoli` → `categorie_item` (`id_categoria`) e → `utenti`; campi
   `prezzo` (lo fissa il venditore), `ha_logo_societa` (decide il feed),
   `id_societa` + `sport` **denormalizzati e impostati dal trigger**

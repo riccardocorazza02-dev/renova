@@ -24,7 +24,12 @@ import { Feed } from './pages/Feed'
 import { Impatto } from './pages/Impatto'
 import { Upload } from './pages/Upload'
 import { Profile } from './pages/Profile'
-import { Account } from './pages/Account'
+import { Impostazioni } from './pages/Impostazioni'
+import { ImpostazioniProfilo } from './pages/ImpostazioniProfilo'
+import { ImpostazioniAccount } from './pages/ImpostazioniAccount'
+import { ImpostazioniSicurezza } from './pages/ImpostazioniSicurezza'
+import { ImpostazioniLingua } from './pages/ImpostazioniLingua'
+import { ImpostazioniTema } from './pages/ImpostazioniTema'
 import { MieiScambi } from './pages/MieiScambi'
 import { MieiArticoli } from './pages/MieiArticoli'
 import { ArticleDetail } from './pages/ArticleDetail'
@@ -158,7 +163,18 @@ export default function App() {
         <Route path="/chat/nuova/:idArticolo" element={<Conversation />} />
         <Route path="/chat/:id" element={<Conversation />} />
         <Route path="/profilo" element={<Profile />} />
-        <Route path="/profilo/account" element={<Account />} />
+        {/* Impostazioni: menu + una pagina per sottosezione. */}
+        <Route path="/impostazioni" element={<Impostazioni />} />
+        <Route path="/impostazioni/profilo" element={<ImpostazioniProfilo />} />
+        <Route path="/impostazioni/account" element={<ImpostazioniAccount />} />
+        <Route path="/impostazioni/sicurezza" element={<ImpostazioniSicurezza />} />
+        <Route path="/impostazioni/lingua" element={<ImpostazioniLingua />} />
+        <Route path="/impostazioni/tema" element={<ImpostazioniTema />} />
+        {/* Vecchio «Il mio account» (dal nome nel profilo): assorbito. */}
+        <Route
+          path="/profilo/account"
+          element={<Navigate to="/impostazioni/account" replace />}
+        />
         <Route path="/scambi" element={<MieiScambi />} />
         <Route path="/miei-articoli" element={<MieiArticoli />} />
       </Route>

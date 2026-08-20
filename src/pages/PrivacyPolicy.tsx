@@ -170,6 +170,17 @@ export function PrivacyPolicy() {
             </Punto>
             <Punto>
               <strong className="font-semibold text-ink">
+                Dati di profilo facoltativi:
+              </strong>{' '}
+              se scegli di inserirli nelle impostazioni, anche fotografia del
+              profilo, nome utente, una breve presentazione («Su di me»), città
+              e regione di appartenenza, numero di telefono (non verificato),
+              nome e cognome, sesso e data di nascita. Foto, nome utente,
+              presentazione e città sono visibili agli altri utenti; gli altri
+              dati restano visibili solo a te.
+            </Punto>
+            <Punto>
+              <strong className="font-semibold text-ink">
                 Contenuti che pubblichi:
               </strong>{' '}
               fotografie e descrizioni degli articoli che metti a disposizione

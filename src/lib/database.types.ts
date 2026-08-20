@@ -117,9 +117,27 @@ export interface CategoriaItem {
   materiali: MaterialeOpzione[]
 }
 
+export type Sesso = 'Maschio' | 'Femmina' | 'Altro'
+
 export interface Utente {
   id: string
+  /** dato ANAGRAFICO privato (Impostazioni account); il pubblico vede nome_utente */
   nome_completo: string
+  /** identità PUBBLICA modificabile, unica case-insensitive (3–30 caratteri) */
+  nome_utente: string
+  /** «Su di me» facoltativo (max 300 caratteri) */
+  bio: string | null
+  foto_profilo_url: string | null
+  /** geografia per le aree di scambio limitrofe (dal comune scelto) */
+  citta: string | null
+  /** sigla provincia (es. BO) */
+  provincia: string | null
+  regione: string | null
+  /** facoltativo e NON verificato (nessun provider SMS) */
+  telefono: string | null
+  sesso: Sesso | null
+  /** ISO date (yyyy-mm-dd) */
+  data_nascita: string | null
   id_societa: number
   sport: Sport
   created_at: string

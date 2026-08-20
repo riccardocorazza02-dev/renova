@@ -8,17 +8,12 @@ import { ScambioCard } from '../components/StoricoScambi'
 import type { Scambio } from '../lib/database.types'
 
 export function Profile() {
-  const { session, profilo, signOut, deleteAccount } = useAuth()
+  const { session, profilo, signOut } = useAuth()
   const meId = session?.user.id
   const [conteggio, setConteggio] = useState<number | null>(null)
   const [scambi, setScambi] = useState<Scambio[]>([])
   const [valutazioni, setValutazioni] = useState<number[]>([])
   const [signingOut, setSigningOut] = useState(false)
-
-  // Eliminazione account (definitiva, con doppia conferma)
-  const [confermaElimina, setConfermaElimina] = useState(false)
-  const [eliminando, setEliminando] = useState(false)
-  const [erroreElimina, setErroreElimina] = useState('')
 
   useEffect(() => {
     let active = true
@@ -64,25 +59,12 @@ export function Profile() {
     // L'AuthProvider azzera la sessione → le rotte protette reindirizzano a /login.
   }
 
-  async function handleEliminaAccount() {
-    setEliminando(true)
-    setErroreElimina('')
-    try {
-      await deleteAccount()
-      // Sessione azzerata → le rotte protette reindirizzano fuori dall'app.
-    } catch (err) {
-      setErroreElimina(
-        err instanceof Error ? err.message : "Impossibile eliminare l'account.",
-      )
-      setEliminando(false)
-    }
-  }
-
   if (!profilo) return null
 
-  const iniziali = profilo.nome_completo
-    .split(' ')
+  const iniziali = profilo.nome_utente
+    .split(/[\s._-]+/)
     .map((p) => p[0])
+    .filter(Boolean)
     .slice(0, 2)
     .join('')
     .toUpperCase()
@@ -91,37 +73,22 @@ export function Profile() {
     <div className="-mt-1">
       {/* Intestazione profilo — editoriale, regola nera netta in fondo */}
       <section className="-mx-4 flex items-center gap-4 border-b-[1.5px] border-ink px-5 pb-5">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-eco text-xl font-extrabold text-white">
-          {iniziali || '👤'}
-        </div>
+        {profilo.foto_profilo_url ? (
+          <img
+            src={profilo.foto_profilo_url}
+            alt="Foto del profilo"
+            className="h-16 w-16 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-eco text-xl font-extrabold text-white">
+            {iniziali || '👤'}
+          </div>
+        )}
         <div className="min-w-0">
           <span className="eyebrow">{profilo.sport} · {profilo.societa.nome}</span>
-          {/* Il nome apre "Il mio account" (dati di accesso + password). */}
-          <Link
-            to="/profilo/account"
-            className="group flex items-center gap-1.5"
-            aria-label="Apri il mio account"
-          >
-            <h1 className="truncate text-[26px] font-extrabold leading-tight tracking-[-0.03em] text-ink underline decoration-eco decoration-2 underline-offset-4 transition group-hover:decoration-ink">
-              {profilo.nome_completo}
-            </h1>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-              className="shrink-0 text-ink-faint transition group-hover:text-ink"
-            >
-              <path
-                d="M9 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
+          <h1 className="truncate text-[26px] font-extrabold leading-tight tracking-[-0.03em] text-ink">
+            {profilo.nome_utente}
+          </h1>
           <p className="truncate text-xs text-ink-soft">{session?.user.email}</p>
           <div className="mt-1.5 flex items-center gap-1.5">
             {valutazioni.length > 0 ? (
@@ -143,6 +110,56 @@ export function Profile() {
           </div>
         </div>
       </section>
+
+      {/* Impostazioni — sotto il box della valutazione */}
+      <div className="-mx-4 border-b border-line">
+        <Link
+          to="/impostazioni"
+          className="flex items-center gap-3 px-5 py-4 transition hover:bg-surface"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden
+            className="shrink-0 text-ink"
+          >
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+            <path
+              d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1.03 1.56V21a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1.11-1.56 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.34-1.87 1.7 1.7 0 00-1.56-1.03H3a2 2 0 110-4h.09a1.7 1.7 0 001.56-1.11 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.34h.08a1.7 1.7 0 001.03-1.56V3a2 2 0 114 0v.09a1.7 1.7 0 001.03 1.56h.08a1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.34 1.87v.08a1.7 1.7 0 001.56 1.03H21a2 2 0 110 4h-.09a1.7 1.7 0 00-1.56 1.03z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
+              Impostazioni
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-soft">
+              Profilo, account, sicurezza e preferenze
+            </p>
+          </div>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden
+            className="shrink-0 text-ink-faint"
+          >
+            <path
+              d="M9 6l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </div>
 
       {/* Voci di navigazione — righe editoriali a regole sottili */}
       <div className="-mx-4 border-b border-line">
@@ -207,55 +224,6 @@ export function Profile() {
         {signingOut && <Spinner className="h-4 w-4" />}
         Esci dall'account
       </button>
-
-      {/* Eliminazione account — definitiva (diritto all'oblio) */}
-      <section className="mt-6 border-t border-line pt-4">
-        {erroreElimina && (
-          <p className="mb-3 border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
-            {erroreElimina}
-          </p>
-        )}
-        {!confermaElimina ? (
-          <button
-            type="button"
-            onClick={() => setConfermaElimina(true)}
-            className="w-full text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-faint transition hover:text-red-600"
-          >
-            Elimina il mio account
-          </button>
-        ) : (
-          <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm font-semibold text-ink">
-              Eliminare definitivamente il tuo account?
-            </p>
-            <p className="text-xs leading-relaxed text-ink-soft">
-              L'operazione è irreversibile: verranno cancellati il tuo profilo,
-              i tuoi articoli con le foto e tutte le tue chat. Gli scambi già
-              conclusi restano nello storico delle altre persone in forma
-              anonima («Utente eliminato»).
-            </p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleEliminaAccount}
-                disabled={eliminando}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.04em] text-white transition hover:bg-red-700 disabled:opacity-60"
-              >
-                {eliminando && <Spinner className="h-4 w-4" />}
-                {eliminando ? 'Elimino…' : 'Sì, elimina tutto'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfermaElimina(false)}
-                disabled={eliminando}
-                className="rounded-lg border border-edge bg-paper px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.04em] text-ink transition hover:border-ink disabled:opacity-60"
-              >
-                Annulla
-              </button>
-            </div>
-          </div>
-        )}
-      </section>
 
       <p className="pb-2 pt-5 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-faint">
         renova · Sport Resale &amp; ESG

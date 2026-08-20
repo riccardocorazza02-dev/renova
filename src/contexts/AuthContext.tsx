@@ -45,6 +45,12 @@ interface AuthContextValue {
   refreshProfilo: () => Promise<void>
   /** Invia l'email con il link per reimpostare la password. */
   resetPassword: (email: string) => Promise<void>
+  /**
+   * Avvia il cambio dell'email di accesso. Supabase (secure email change)
+   * invia un link di conferma a ENTRAMBI gli indirizzi: il cambio diventa
+   * effettivo solo dopo la conferma.
+   */
+  updateEmail: (nuovaEmail: string) => Promise<void>
   /** Imposta una nuova password (durante la sessione di recupero). */
   updatePassword: (password: string) => Promise<void>
   /**
@@ -221,6 +227,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw new Error(traduciErrore(error.message))
   }, [])
 
+  const updateEmail = useCallback(async (nuovaEmail: string) => {
+    const { error } = await supabase.auth.updateUser(
+      { email: nuovaEmail.trim() },
+      { emailRedirectTo: `${window.location.origin}/` },
+    )
+    if (error) throw new Error(traduciErrore(error.message))
+  }, [])
+
   const updatePassword = useCallback(async (password: string) => {
     const { error } = await supabase.auth.updateUser({ password })
     if (error) throw new Error(traduciErrore(error.message))
@@ -272,6 +286,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         deleteAccount,
         refreshProfilo,
         resetPassword,
+        updateEmail,
         updatePassword,
         changePassword,
       }}
@@ -317,6 +332,8 @@ function traduciErrore(msg: string): string {
     return 'Esiste già un account con questa email.'
   if (m.includes('password should be at least'))
     return 'La password deve avere almeno 6 caratteri.'
+  if (m.includes('email address') && m.includes('invalid'))
+    return 'Indirizzo email non valido.'
   // Supabase rifiuta il riuso della vecchia password quando l'opzione
   // "prevent reuse" è attiva sul progetto.
   if (m.includes('should be different') || m.includes('same_password'))
