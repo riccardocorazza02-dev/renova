@@ -5,7 +5,10 @@ import { Spinner } from '../components/Spinner'
 import {
   TestataImpostazioni,
   RigaDato,
-  SezioneCambioEmail,
+  BadgeEmailVerificata,
+  FlussoCambioEmail,
+  useRitornoDaVerificaEmail,
+  SezioneEspandibile,
   SezionePassword,
 } from '../components/impostazioni'
 import {
@@ -19,17 +22,22 @@ import type { Sesso } from '../lib/database.types'
 
 /**
  * Impostazioni → Impostazioni account: i dati PRIVATI dell'account.
- *  - email di accesso (visualizzazione + cambio con doppia conferma);
- *  - telefono facoltativo (non verificato: nessun provider SMS);
- *  - anagrafiche facoltative (nome e cognome, sesso, data di nascita),
- *    visibili solo all'interessato — il pubblico vede il nome utente;
- *  - gestione password;
+ *  - email di accesso con stato di verifica e cambio in due passi
+ *    (prima si riverifica la casella attuale, poi si inserisce la nuova);
+ *  - telefono facoltativo (in futuro solo per l'accesso, mai marketing);
+ *  - anagrafiche facoltative, visibili solo all'interessato;
+ *  - gestione password (sottosezione espandibile);
  *  - eliminazione definitiva dell'account (diritto all'oblio).
  */
 export function ImpostazioniAccount() {
   const { session, profilo, refreshProfilo, deleteAccount } = useAuth()
   const uid = session?.user.id
   const email = session?.user.email ?? ''
+
+  // Cambio email: il pannello si apre col bottone «Cambia» (o al ritorno
+  // dal link di verifica della casella attuale).
+  const emailVerificata = useRitornoDaVerificaEmail()
+  const [mostraCambioEmail, setMostraCambioEmail] = useState(emailVerificata)
 
   // Telefono (box a sé, salvataggio indipendente)
   const [telefono, setTelefono] = useState(profilo?.telefono ?? '')
@@ -130,17 +138,41 @@ export function ImpostazioniAccount() {
         descrizione="Email, telefono, anagrafiche e password. Questi dati restano privati."
       />
 
-      {/* Dati di accesso */}
-      <section>
-        <h2 className="mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-muted">
-          Dati di accesso
-        </h2>
-        <RigaDato etichetta="Email" valore={email || '—'} />
+      {/* Email di accesso: indirizzo + stato di verifica + cambio in due passi */}
+      <section className="rounded-lg border border-edge bg-paper p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+              Email
+            </span>
+            <div className="mt-0.5 flex items-center gap-2">
+              <span className="truncate text-sm font-bold text-ink">
+                {email || '—'}
+              </span>
+              <BadgeEmailVerificata />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMostraCambioEmail((m) => !m)}
+            className="shrink-0 rounded-lg border border-edge bg-paper px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.06em] text-ink transition hover:border-ink"
+          >
+            {mostraCambioEmail ? 'Annulla' : 'Cambia'}
+          </button>
+        </div>
+        {mostraCambioEmail && (
+          <FlussoCambioEmail
+            pagina="/impostazioni/account"
+            emailVerificata={emailVerificata}
+          />
+        )}
+      </section>
+
+      {/* Società e sport (sola lettura: li fissa il codice di accesso) */}
+      <section className="mt-4">
         <RigaDato etichetta="Società" valore={profilo.societa.nome} />
         <RigaDato etichetta="Sport" valore={profilo.sport} />
       </section>
-
-      <SezioneCambioEmail />
 
       {/* Numero di cellulare */}
       <section className="mt-4 rounded-lg border border-edge bg-paper p-4">
@@ -148,7 +180,9 @@ export function ImpostazioniAccount() {
           Numero di cellulare
         </h2>
         <p className="mb-4 mt-0.5 text-xs leading-relaxed text-ink-soft">
-          Facoltativo e non verificato. Non compare mai agli altri utenti.
+          Facoltativo e non verificato. In futuro servirà solo per l'accesso
+          all'account: non verrà mai usato per fini di marketing e non compare
+          mai agli altri utenti.
         </p>
 
         <form onSubmit={handleSalvaTelefono} className="space-y-4">
@@ -168,15 +202,11 @@ export function ImpostazioniAccount() {
         </form>
       </section>
 
-      {/* Anagrafiche */}
+      {/* Anagrafiche — solo titolo e campi */}
       <section className="mt-4 rounded-lg border border-edge bg-paper p-4">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
+        <h2 className="mb-4 text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
           Anagrafiche
         </h2>
-        <p className="mb-4 mt-0.5 text-xs leading-relaxed text-ink-soft">
-          Sesso e data di nascita sono facoltativi. Non compaiono mai agli
-          altri utenti: pubblicamente sei «{profilo.nome_utente}».
-        </p>
 
         <form onSubmit={handleSalva} className="space-y-4">
           {errore && <ErrorBanner message={errore} />}
@@ -214,7 +244,13 @@ export function ImpostazioniAccount() {
         </form>
       </section>
 
-      <SezionePassword />
+      {/* Password — sottosezione espandibile */}
+      <SezioneEspandibile
+        titolo="Cambia la password"
+        sub="Aggiornala dall'app o via email"
+      >
+        <SezionePassword />
+      </SezioneEspandibile>
 
       {/* Eliminazione account — definitiva (diritto all'oblio) */}
       <section className="mt-6 border-t border-line pt-4">

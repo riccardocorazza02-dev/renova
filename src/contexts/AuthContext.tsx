@@ -51,6 +51,12 @@ interface AuthContextValue {
    * effettivo solo dopo la conferma.
    */
   updateEmail: (nuovaEmail: string) => Promise<void>
+  /**
+   * Invia un link di verifica all'indirizzo ATTUALE (magic link che
+   * riporta a `redirectTo`): riconferma il possesso della casella prima
+   * di consentire l'inserimento della nuova email.
+   */
+  verificaEmailAttuale: (redirectTo: string) => Promise<void>
   /** Imposta una nuova password (durante la sessione di recupero). */
   updatePassword: (password: string) => Promise<void>
   /**
@@ -235,6 +241,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw new Error(traduciErrore(error.message))
   }, [])
 
+  const verificaEmailAttuale = useCallback(async (redirectTo: string) => {
+    const { data } = await supabase.auth.getSession()
+    const email = data.session?.user.email
+    if (!email) {
+      throw new Error('Sessione scaduta: accedi di nuovo e riprova.')
+    }
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${window.location.origin}${redirectTo}`,
+      },
+    })
+    if (error) throw new Error(traduciErrore(error.message))
+  }, [])
+
   const updatePassword = useCallback(async (password: string) => {
     const { error } = await supabase.auth.updateUser({ password })
     if (error) throw new Error(traduciErrore(error.message))
@@ -287,6 +309,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refreshProfilo,
         resetPassword,
         updateEmail,
+        verificaEmailAttuale,
         updatePassword,
         changePassword,
       }}

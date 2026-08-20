@@ -1,5 +1,5 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Spinner } from './Spinner'
 import {
@@ -174,43 +174,147 @@ export function OpzionePreferenza({
   )
 }
 
-/** Cartellino per le funzioni annunciate ma non ancora attive. */
-export function CardInArrivo({
+/**
+ * Sottosezione espandibile: riga cliccabile in elenco; il contenuto (la
+ * funzionalità vera) compare solo quando l'utente la apre.
+ */
+export function SezioneEspandibile({
   titolo,
-  descrizione,
+  sub,
+  inArrivo = false,
+  apertaInizialmente = false,
+  children,
 }: {
   titolo: string
-  descrizione: string
+  sub?: string
+  inArrivo?: boolean
+  apertaInizialmente?: boolean
+  children: ReactNode
 }) {
+  const [aperta, setAperta] = useState(apertaInizialmente)
   return (
-    <section className="mt-4 rounded-lg border border-dashed border-edge bg-surface p-4">
-      <div className="flex items-center gap-2">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink-soft">
-          {titolo}
-        </h2>
-        <span className="rounded-full bg-ink/8 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-ink-muted">
-          In arrivo
-        </span>
-      </div>
-      <p className="mt-0.5 text-xs leading-relaxed text-ink-soft">{descrizione}</p>
+    <section className="mt-3 rounded-lg border border-edge bg-paper">
+      <button
+        type="button"
+        onClick={() => setAperta((a) => !a)}
+        aria-expanded={aperta}
+        className="flex w-full items-center gap-3 p-4 text-left transition hover:bg-surface"
+      >
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
+              {titolo}
+            </h2>
+            {inArrivo && (
+              <span className="rounded-full bg-ink/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-ink-muted">
+                In arrivo
+              </span>
+            )}
+          </div>
+          {sub && <p className="mt-0.5 text-xs text-ink-soft">{sub}</p>}
+        </div>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden
+          className={`shrink-0 text-ink-faint transition-transform ${
+            aperta ? 'rotate-90' : ''
+          }`}
+        >
+          <path
+            d="M9 6l6 6-6 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {aperta && <div className="border-t border-line px-4 pb-4">{children}</div>}
     </section>
   )
 }
 
+/** Badge con lo stato di verifica dell'email di accesso. */
+export function BadgeEmailVerificata() {
+  const { session } = useAuth()
+  const verificata = Boolean(session?.user.email_confirmed_at)
+  return verificata ? (
+    <span className="rounded-full bg-eco-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-eco-700">
+      Verificata
+    </span>
+  ) : (
+    <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-red-600">
+      Non verificata
+    </span>
+  )
+}
+
+/** Query param che segna il ritorno dal link di verifica dell'email attuale. */
+export const PARAM_EMAIL_VERIFICATA = 'verifica-email'
+
 /**
- * Cambio email di accesso. Supabase invia il link di conferma a ENTRAMBI
- * gli indirizzi (secure email change): il cambio è effettivo solo dopo.
+ * Ritorna true se la pagina è stata raggiunta dal link di verifica
+ * dell'email attuale (e ripulisce l'URL dal parametro).
  */
-export function SezioneCambioEmail() {
-  const { session, updateEmail } = useAuth()
+export function useRitornoDaVerificaEmail(): boolean {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [verificata] = useState(
+    searchParams.get(PARAM_EMAIL_VERIFICATA) === '1',
+  )
+  useEffect(() => {
+    if (searchParams.get(PARAM_EMAIL_VERIFICATA) === '1') {
+      const puliti = new URLSearchParams(searchParams)
+      puliti.delete(PARAM_EMAIL_VERIFICATA)
+      setSearchParams(puliti, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
+  return verificata
+}
+
+/**
+ * Cambio email in due passi:
+ *  1. verifichiamo che la casella ATTUALE sia davvero dell'utente
+ *     (link di verifica via email, che riporta a `pagina`);
+ *  2. solo al ritorno dal link si può inserire la nuova email — Supabase
+ *     invia poi la conferma a entrambi gli indirizzi (secure email change).
+ */
+export function FlussoCambioEmail({
+  pagina,
+  emailVerificata,
+}: {
+  pagina: string
+  /** true quando si arriva dal link di verifica (passo 1 completato) */
+  emailVerificata: boolean
+}) {
+  const { session, updateEmail, verificaEmailAttuale } = useAuth()
   const emailAttuale = session?.user.email ?? ''
 
+  const [linkInviato, setLinkInviato] = useState(false)
+  const [inviando, setInviando] = useState(false)
   const [nuova, setNuova] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [errore, setErrore] = useState('')
-  const [inviata, setInviata] = useState(false)
+  const [confermeInviate, setConfermeInviate] = useState(false)
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleInviaVerifica() {
+    setErrore('')
+    setInviando(true)
+    try {
+      await verificaEmailAttuale(`${pagina}?${PARAM_EMAIL_VERIFICATA}=1`)
+      setLinkInviato(true)
+    } catch (err) {
+      setErrore(
+        err instanceof Error ? err.message : "Impossibile inviare l'email.",
+      )
+    } finally {
+      setInviando(false)
+    }
+  }
+
+  async function handleCambia(e: FormEvent) {
     e.preventDefault()
     setErrore('')
     if (nuova.trim().toLowerCase() === emailAttuale.toLowerCase()) {
@@ -220,7 +324,7 @@ export function SezioneCambioEmail() {
     setSalvando(true)
     try {
       await updateEmail(nuova)
-      setInviata(true)
+      setConfermeInviate(true)
     } catch (err) {
       setErrore(
         err instanceof Error ? err.message : "Impossibile cambiare l'email.",
@@ -230,38 +334,62 @@ export function SezioneCambioEmail() {
     }
   }
 
-  return (
-    <section className="mt-4 rounded-lg border border-edge bg-paper p-4">
-      <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
-        Cambia email
-      </h2>
-      <p className="mb-4 mt-0.5 text-xs leading-relaxed text-ink-soft">
-        Oggi accedi con{' '}
-        <strong className="font-semibold text-ink">{emailAttuale}</strong>. Per
-        cambiare indirizzo ti invieremo un link di conferma sia alla vecchia
-        che alla nuova email: il cambio diventa effettivo solo dopo.
-      </p>
+  if (confermeInviate) {
+    return (
+      <div className="mt-4">
+        <SuccessBanner message="Email di conferma inviate al vecchio e al nuovo indirizzo: apri entrambi i link per completare il cambio (controlla anche lo spam)." />
+      </div>
+    )
+  }
 
-      {inviata ? (
-        <SuccessBanner message="Email di conferma inviate: apri i link a entrambi gli indirizzi per completare il cambio (controlla anche lo spam)." />
+  // Passo 2 — casella attuale verificata: si può inserire la nuova email.
+  if (emailVerificata) {
+    return (
+      <form onSubmit={handleCambia} className="mt-4 space-y-4">
+        <SuccessBanner message="Indirizzo attuale verificato: ora puoi inserire la nuova email." />
+        {errore && <ErrorBanner message={errore} />}
+        <TextField
+          label="Nuova email"
+          type="email"
+          autoComplete="email"
+          required
+          value={nuova}
+          onChange={(e) => setNuova(e.target.value)}
+          placeholder="nome@esempio.it"
+        />
+        <PrimaryButton type="submit" loading={salvando}>
+          {salvando ? 'Invio…' : 'Cambia email'}
+        </PrimaryButton>
+      </form>
+    )
+  }
+
+  // Passo 1 — verifica della casella attuale.
+  return (
+    <div className="mt-4 space-y-3">
+      <p className="text-xs leading-relaxed text-ink-soft">
+        Per sicurezza dobbiamo prima verificare che{' '}
+        <strong className="font-semibold text-ink">{emailAttuale}</strong> sia
+        davvero tua: ti inviamo un link di verifica, aprilo e tornerai qui per
+        inserire la nuova email.
+      </p>
+      {errore && <ErrorBanner message={errore} />}
+      {linkInviato ? (
+        <SuccessBanner
+          message={`Link inviato a ${emailAttuale}: aprilo per continuare (controlla anche lo spam).`}
+        />
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {errore && <ErrorBanner message={errore} />}
-          <TextField
-            label="Nuova email"
-            type="email"
-            autoComplete="email"
-            required
-            value={nuova}
-            onChange={(e) => setNuova(e.target.value)}
-            placeholder="nome@esempio.it"
-          />
-          <PrimaryButton type="submit" loading={salvando}>
-            {salvando ? 'Invio…' : 'Invia conferma'}
-          </PrimaryButton>
-        </form>
+        <button
+          type="button"
+          onClick={handleInviaVerifica}
+          disabled={inviando || !emailAttuale}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-edge bg-paper px-4 py-3 text-[13px] font-bold uppercase tracking-[0.06em] text-ink transition hover:border-ink disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {inviando && <Spinner className="h-4 w-4" />}
+          {inviando ? 'Invio…' : 'Inviami il link di verifica'}
+        </button>
       )}
-    </section>
+    </div>
   )
 }
 

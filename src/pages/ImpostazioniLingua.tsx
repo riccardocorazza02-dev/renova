@@ -30,6 +30,16 @@ export function ImpostazioniLingua() {
           descrizione="La versione inglese dell'interfaccia è in preparazione."
           inArrivo
         />
+        <OpzionePreferenza
+          titolo="Français"
+          descrizione="La versione francese dell'interfaccia è in preparazione."
+          inArrivo
+        />
+        <OpzionePreferenza
+          titolo="Español"
+          descrizione="La versione spagnola dell'interfaccia è in preparazione."
+          inArrivo
+        />
       </div>
     </div>
   )
