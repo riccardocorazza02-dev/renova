@@ -110,9 +110,48 @@ export function Profile() {
           </div>
         </div>
       </section>
-
-      {/* Impostazioni — sotto il box della valutazione */}
+      {/* Voci di navigazione — righe editoriali a regole sottili */}
       <div className="-mx-4 border-b border-line">
+        <NavRow
+          to="/miei-articoli"
+          titolo="I miei articoli"
+          sub={
+            conteggio === null
+              ? 'Vedi e gestisci ciò che hai caricato'
+              : conteggio === 0
+                ? 'Non hai ancora caricato articoli'
+                : `${conteggio} ${
+                    conteggio === 1 ? 'articolo caricato' : 'articoli caricati'
+                  } · vedi stato e modifica`
+          }
+        />
+        {meId && (
+          <NavRow
+            to="/scambi"
+            titolo="I miei scambi"
+            sub={
+              scambi.length === 0
+                ? 'Nessuno scambio ancora'
+                : `${scambi.length} ${
+                    scambi.length === 1 ? 'scambio concluso' : 'scambi conclusi'
+                  } · vedi tutti`
+            }
+          />
+        )}
+      </div>
+
+      {/* Anteprima ultimo scambio */}
+      {meId && scambi.length > 0 && (
+        <div className="mt-5">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-muted">
+            Ultimo scambio
+          </p>
+          <ScambioCard scambio={scambi[0]} meId={meId} />
+        </div>
+      )}
+
+      {/* Impostazioni — sotto l'ultimo scambio */}
+      <div className="-mx-4 mt-5 border-y border-line">
         <Link
           to="/impostazioni"
           className="flex items-center gap-3 px-5 py-4 transition hover:bg-surface"
@@ -160,46 +199,6 @@ export function Profile() {
           </svg>
         </Link>
       </div>
-
-      {/* Voci di navigazione — righe editoriali a regole sottili */}
-      <div className="-mx-4 border-b border-line">
-        <NavRow
-          to="/miei-articoli"
-          titolo="I miei articoli"
-          sub={
-            conteggio === null
-              ? 'Vedi e gestisci ciò che hai caricato'
-              : conteggio === 0
-                ? 'Non hai ancora caricato articoli'
-                : `${conteggio} ${
-                    conteggio === 1 ? 'articolo caricato' : 'articoli caricati'
-                  } · vedi stato e modifica`
-          }
-        />
-        {meId && (
-          <NavRow
-            to="/scambi"
-            titolo="I miei scambi"
-            sub={
-              scambi.length === 0
-                ? 'Nessuno scambio ancora'
-                : `${scambi.length} ${
-                    scambi.length === 1 ? 'scambio concluso' : 'scambi conclusi'
-                  } · vedi tutti`
-            }
-          />
-        )}
-      </div>
-
-      {/* Anteprima ultimo scambio */}
-      {meId && scambi.length > 0 && (
-        <div className="mt-5">
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-muted">
-            Ultimo scambio
-          </p>
-          <ScambioCard scambio={scambi[0]} meId={meId} />
-        </div>
-      )}
 
       {/* Dati società */}
       <section className="mt-5">

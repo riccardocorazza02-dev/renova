@@ -31,8 +31,13 @@ export function ImpostazioniAccount() {
   const uid = session?.user.id
   const email = session?.user.email ?? ''
 
-  // Telefono + anagrafiche (un solo form)
+  // Telefono (box a sé, salvataggio indipendente)
   const [telefono, setTelefono] = useState(profilo?.telefono ?? '')
+  const [salvandoTel, setSalvandoTel] = useState(false)
+  const [erroreTel, setErroreTel] = useState('')
+  const [fattoTel, setFattoTel] = useState(false)
+
+  // Anagrafiche
   const [nomeCompleto, setNomeCompleto] = useState(profilo?.nome_completo ?? '')
   const [sesso, setSesso] = useState<'' | Sesso>(profilo?.sesso ?? '')
   const [dataNascita, setDataNascita] = useState(profilo?.data_nascita ?? '')
@@ -47,6 +52,29 @@ export function ImpostazioniAccount() {
 
   if (!profilo || !uid) return null
 
+  async function handleSalvaTelefono(e: FormEvent) {
+    e.preventDefault()
+    setErroreTel('')
+    setFattoTel(false)
+    setSalvandoTel(true)
+    const { error } = await supabase
+      .from('utenti')
+      .update({ telefono: telefono.trim() || null })
+      .eq('id', uid)
+    if (error) {
+      setErroreTel(
+        error.code === '23514'
+          ? 'Numero non valido: usa solo cifre e spazi (es. +39 333 1234567).'
+          : 'Impossibile salvare il numero. Riprova.',
+      )
+      setSalvandoTel(false)
+      return
+    }
+    await refreshProfilo()
+    setSalvandoTel(false)
+    setFattoTel(true)
+  }
+
   async function handleSalva(e: FormEvent) {
     e.preventDefault()
     setErrore('')
@@ -59,7 +87,6 @@ export function ImpostazioniAccount() {
     const { error } = await supabase
       .from('utenti')
       .update({
-        telefono: telefono.trim() || null,
         nome_completo: nomeCompleto.trim(),
         sesso: sesso || null,
         data_nascita: dataNascita || null,
@@ -68,7 +95,7 @@ export function ImpostazioniAccount() {
     if (error) {
       setErrore(
         error.code === '23514'
-          ? 'Controlla i dati inseriti: numero di telefono o data di nascita non validi.'
+          ? 'Controlla i dati inseriti: data di nascita non valida.'
           : 'Impossibile salvare le modifiche. Riprova.',
       )
       setSalvando(false)
@@ -115,19 +142,18 @@ export function ImpostazioniAccount() {
 
       <SezioneCambioEmail />
 
-      {/* Telefono + anagrafiche */}
+      {/* Numero di cellulare */}
       <section className="mt-4 rounded-lg border border-edge bg-paper p-4">
         <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
-          Telefono e anagrafiche
+          Numero di cellulare
         </h2>
         <p className="mb-4 mt-0.5 text-xs leading-relaxed text-ink-soft">
-          Tutti facoltativi tranne nome e cognome. Non compaiono mai agli
-          altri utenti: pubblicamente sei «{profilo.nome_utente}».
+          Facoltativo e non verificato. Non compare mai agli altri utenti.
         </p>
 
-        <form onSubmit={handleSalva} className="space-y-4">
-          {errore && <ErrorBanner message={errore} />}
-          {fatto && <SuccessBanner message="Dati aggiornati." />}
+        <form onSubmit={handleSalvaTelefono} className="space-y-4">
+          {erroreTel && <ErrorBanner message={erroreTel} />}
+          {fattoTel && <SuccessBanner message="Numero aggiornato." />}
           <TextField
             label="Numero di cellulare"
             type="tel"
@@ -135,8 +161,26 @@ export function ImpostazioniAccount() {
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             placeholder="+39 333 1234567"
-            hint="Facoltativo e non verificato."
           />
+          <PrimaryButton type="submit" loading={salvandoTel}>
+            {salvandoTel ? 'Salvo…' : 'Salva numero'}
+          </PrimaryButton>
+        </form>
+      </section>
+
+      {/* Anagrafiche */}
+      <section className="mt-4 rounded-lg border border-edge bg-paper p-4">
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
+          Anagrafiche
+        </h2>
+        <p className="mb-4 mt-0.5 text-xs leading-relaxed text-ink-soft">
+          Sesso e data di nascita sono facoltativi. Non compaiono mai agli
+          altri utenti: pubblicamente sei «{profilo.nome_utente}».
+        </p>
+
+        <form onSubmit={handleSalva} className="space-y-4">
+          {errore && <ErrorBanner message={errore} />}
+          {fatto && <SuccessBanner message="Dati aggiornati." />}
           <TextField
             label="Nome e cognome"
             autoComplete="name"
