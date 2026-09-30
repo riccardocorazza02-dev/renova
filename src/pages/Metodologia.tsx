@@ -14,15 +14,15 @@ const PDF_URL = '/metodologia-renova.pdf'
 
 /** Tabella 1 — fattori d'impatto per fibra (§3). */
 const FIBRE: Array<[string, string, string, string]> = [
-  ['Poliestere vergine (PET)', '3,12', '62', 'Carbonfact (valore indicato). Acqua: Fiber Bible p.2, Tab. 2.5 (p. 89).'],
-  ['Poliestere riciclato (rPET)', '1,12', '19', 'Carbonfact: valore centrale tra 0,68 e 1,56. Acqua: Qian et al. (2021), 1,9 m³/100 kg = 19 L/kg.'],
-  ['Cotone', '4,32', '4.800', 'Carbonfact: valore centrale (conv. 5,7–7,5; bio 1,2–3,2). Acqua: Fiber Bible, Fig. 10 (p. 52).'],
-  ['Elastan', '19', 'n.d.', 'Carbonfact: calcolato per proporzione (0,17 kg CO₂ per capo / 8,76 g). Acqua non disponibile → esclusa.'],
-  ['Poliammide / Nylon (PA)', '9,04', '424', 'CarbonCloud. Acqua: Fiber Bible, Tab. 2.6 (p. 93), centrale tra PA6 (185) e PA66 (663).'],
-  ['Poliuretano (PU)', '4,83', 'n.d.', 'Fiber Bible, Tab. 2.6 (granulato → sottostima). Acqua non disponibile → esclusa.'],
-  ['Acrilico', '5,4', '200', 'Fiber Bible, Fig. 9 (p. 51) per la CO₂ e Fig. 10 (p. 53) per l’acqua.'],
-  ['Lana', '38,2', '500', 'MDPI Resources (2022): centrale tra vergine e riciclata. Acqua: Fiber Bible, Fig. 10 (p. 52).'],
-  ['Viscosa', '3,8', '400', 'Fiber Bible, Fig. 9 (p. 50) e Fig. 10 (p. 52).'],
+  ['Poliestere vergine (PET)', '3,12', '62', 'CO₂: Carbonfact. Acqua: Fiber Bible p.2, Tab. 2.5 (p. 89).'],
+  ['Poliestere riciclato (rPET)', '1,12', '19', 'CO₂: Carbonfact, valore centrale tra 0,68 e 1,56. Acqua: Qian et al. (2021), 1,9 m³/100 kg = 19 L/kg.'],
+  ['Cotone', '4,32', '4.800', 'CO₂: Carbonfact, valore centrale (conv. 5,7–7,5; bio 1,2–3,2). Acqua: Fiber Bible, Fig. 10 (p. 52).'],
+  ['Elastan', '19', 'n.d.', 'CO₂: Carbonfact, calcolato per proporzione (0,17 kg CO₂ per capo / 8,76 g). Acqua non disponibile → esclusa.'],
+  ['Poliammide / Nylon (PA)', '9,04', '424', 'CO₂: CarbonCloud. Acqua: Fiber Bible, Tab. 2.6 (p. 93), centrale tra PA6 (185) e PA66 (663).'],
+  ['Poliuretano (PU)', '4,83', 'n.d.', 'CO₂: Fiber Bible, Tab. 2.6 (granulato → sottostima). Acqua non disponibile → esclusa.'],
+  ['Acrilico', '5,4', '200', 'CO₂: Fiber Bible, Fig. 9 (p. 51). Acqua: Fig. 10 (p. 53).'],
+  ['Lana', '38,2', '500', 'CO₂: MDPI Resources (2022): centrale tra vergine e riciclata. Acqua: Fiber Bible, Fig. 10 (p. 52).'],
+  ['Viscosa', '3,8', '400', 'CO₂: Fiber Bible, Fig. 9 (p. 50). Acqua: Fig. 10 (p. 52).'],
   ['Polipropilene (PP)', '2,0', '17', 'Fiber Bible, Fig. 9/10. Il PP compare quasi solo in accessori.'],
 ]
 
