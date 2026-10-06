@@ -390,8 +390,9 @@ export function Metodologia() {
           <Livello nome="Livello 2 — Stima verificata">
             Nella fase finale del caricamento all'utente è chiesto
             (facoltativamente) di fotografare l'etichetta di composizione. Un
-            modello di riconoscimento ne legge le percentuali e l'utente
-            conferma o corregge. È il livello a massima confidenza e non
+            modello di riconoscimento del testo ne legge le percentuali
+            direttamente sul dispositivo dell'utente — la foto non viene
+            caricata né conservata — e l'utente conferma o corregge. È il livello a massima confidenza e non
             richiede di digitare nulla, risolvendo il problema delle etichette
             difficili da trascrivere. In alternativa, in caso di
             malfunzionamento della lettura dell'etichetta l'utente può inserire

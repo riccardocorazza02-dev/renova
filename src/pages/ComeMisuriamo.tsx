@@ -29,7 +29,7 @@ const METODO: Array<{ titolo: string; testo: string }> = [
   {
     titolo: 'Stima a livelli di confidenza crescente',
     testo:
-      'Livello 0 (profilo prudenziale di categoria) e Livello 1 (blend selezionato dall’utente) sono attivi; il Livello 2 (riconoscimento fotografico dell’etichetta) è progettato per il futuro. In mancanza di prova, assumiamo sempre la fibra a impatto più basso.',
+      'Tutti e tre i livelli sono attivi: Livello 0 (profilo prudenziale di categoria), Livello 1 (blend selezionato dall’utente) e Livello 2 (composizione letta dalla foto dell’etichetta, direttamente sul dispositivo dell’utente, e da lui confermata). In mancanza di prova, assumiamo sempre la fibra a impatto più basso.',
   },
   {
     titolo: 'Lacune dichiarate, non colmate con numeri inventati',

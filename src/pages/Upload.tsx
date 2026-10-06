@@ -13,6 +13,11 @@ import { TextField, SelectField, PrimaryButton, ErrorBanner } from '../component
 import { EsgBadge } from '../components/EsgBadge'
 import { tagliePer } from '../lib/taglie'
 import { Spinner } from '../components/Spinner'
+import {
+  MaterialeBlend,
+  BLEND_INIZIALE,
+  type StatoBlend,
+} from '../components/MaterialeBlend'
 
 const MAX_FOTO = 3
 
@@ -20,9 +25,6 @@ const MAX_FOTO = 3
 function valoreRif(c: CategoriaItem): number {
   return c.valore != null ? Number(c.valore) : 0
 }
-
-/** Chiave dell'opzione "non lo so" → ricade sul priore L0. */
-const CHIAVE_NON_SO = 'non_so'
 
 /**
  * Impatto di un blend per un dato peso (kg), coi fattori delle fibre.
@@ -65,10 +67,8 @@ export function Upload() {
   const [condizione, setCondizione] = useState<Condizione | ''>('')
   const [haLogo, setHaLogo] = useState(false)
   const [foto, setFoto] = useState<FotoSel[]>([])
-  // Materiale scelto dall'utente (tap L0+1); '' quando la categoria non chiede il tap.
-  const [materialeChiave, setMaterialeChiave] = useState<string>('')
-  // Foto facoltativa dell'etichetta di composizione (per la futura lettura L2).
-  const [fotoEtichetta, setFotoEtichetta] = useState<FotoSel | null>(null)
+  // Materiale del capo (L2 etichetta / L1 tap / L0), gestito da MaterialeBlend.
+  const [blend, setBlend] = useState<StatoBlend>(BLEND_INIZIALE)
 
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -116,14 +116,12 @@ export function Upload() {
 
   // ── Stima d'impatto a livelli ──────────────────────────────────
   const opzioniMateriale = selezionata?.materiali ?? []
-  const opzSelezionata =
-    opzioniMateriale.find((o) => o.chiave === materialeChiave) ?? null
   const isTessile =
     !!selezionata?.profilo_default && selezionata?.peso_kg != null
-  // Blend usato per la stima: scelta esplicita dell'utente, altrimenti il
-  // profilo prudenziale L0 della categoria.
+  // Blend usato per la stima: quello indicato nel box materiale (etichetta L2
+  // o tap L1), altrimenti il profilo prudenziale L0 della categoria.
   const blendStima: Composizione | null =
-    opzSelezionata?.blend ?? selezionata?.profilo_default ?? null
+    blend.composizione ?? selezionata?.profilo_default ?? null
   const haFibre = Object.keys(fibre).length > 0
   const impattoPreview =
     isTessile && blendStima && haFibre && selezionata?.peso_kg != null
@@ -132,8 +130,8 @@ export function Upload() {
           co2: Number(selezionata?.co2_tipico ?? 0),
           acqua: Number(selezionata?.acqua_tipico ?? 0),
         }
-  // "Almeno X" finché l'utente non sceglie un materiale specifico (capi tessili).
-  const impattoMinimo = isTessile && !opzSelezionata?.blend
+  // "Almeno X" finché l'utente non indica il materiale (capi tessili).
+  const impattoMinimo = isTessile && !blend.composizione
 
   // Al cambio categoria: imposta default logo, prezzo e taglia coerenti.
   function onCategoriaChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -144,8 +142,8 @@ export function Upload() {
     setHaLogo(cat.default_ha_logo)
     setPrezzo(cat.richiede_prezzo ? '' : String(valoreRif(cat)))
     setTaglia(cat.tipo_taglia === 'unica' ? 'Unica' : '')
-    // Se la categoria chiede il materiale (tap L0+1), parte da "Non lo so" (L0).
-    setMaterialeChiave(cat.materiali?.length ? CHIAVE_NON_SO : '')
+    // Il box materiale riparte da zero (è rimontato con key = categoria).
+    setBlend(BLEND_INIZIALE)
   }
 
   // ── Gestione foto multiple (max 3) ──
@@ -167,24 +165,6 @@ export function Upload() {
     setFoto((prev) => {
       URL.revokeObjectURL(prev[i].url)
       return prev.filter((_, j) => j !== i)
-    })
-  }
-
-  // ── Foto etichetta (facoltativa, una sola) ──
-  function onAddEtichetta(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setFotoEtichetta((prev) => {
-      if (prev) URL.revokeObjectURL(prev.url)
-      return { file, url: URL.createObjectURL(file) }
-    })
-    e.target.value = ''
-  }
-
-  function removeEtichetta() {
-    setFotoEtichetta((prev) => {
-      if (prev) URL.revokeObjectURL(prev.url)
-      return null
     })
   }
 
@@ -214,7 +194,9 @@ export function Upload() {
     !!idCategoria &&
     !!taglia &&
     !!condizione &&
-    prezzoValido
+    prezzoValido &&
+    // Un blend in lettura o da verificare va confermato prima di pubblicare.
+    blend.pronto
 
   // Valore economico risparmiato: input utente se manuale, altrimenti valore rif.
   const risparmioEconomico = selezionata
@@ -233,20 +215,15 @@ export function Upload() {
         (u): u is string => !!u,
       )
 
-      // Foto etichetta (facoltativa) — best-effort, non blocca la creazione.
-      const etichettaUrl = fotoEtichetta
-        ? await uploadUna(fotoEtichetta.file)
-        : null
-
       const prezzoFinale = selezionata.richiede_prezzo
         ? Number(prezzo) || 0
         : valoreRif(selezionata)
 
-      // Materiale: inviamo la composizione SOLO se l'utente ha scelto un
-      // materiale specifico (L0+1). Con "Non lo so" o categoria non tessile la
-      // lasciamo null → il trigger applica il profilo prudenziale (L0).
-      const composizione = opzSelezionata?.blend ?? null
-      const fonteImpatto = composizione ? 'utente' : 'categoria'
+      // Materiale: blend dell'etichetta (L2) o del tap (L1); null con
+      // "Non lo so" o categoria non tessile → il trigger applica L0.
+      // La foto dell'etichetta NON viene caricata: è servita solo in locale.
+      const composizione = blend.composizione
+      const fonteImpatto = blend.fonte
 
       // id_societa, sport, co2 e acqua NON vengono inviati: li impostano i
       // trigger lato DB (contesto utente + calcolo dell'impatto).
@@ -256,7 +233,6 @@ export function Upload() {
         condizione,
         foto_url: urls[0] ?? null, // copertina
         foto_urls: urls,
-        foto_etichetta_url: etichettaUrl,
         id_categoria: Number(idCategoria),
         prezzo: prezzoFinale,
         ha_logo_societa: haLogo,
@@ -455,84 +431,15 @@ export function Upload() {
           </SelectField>
         )}
 
-        {/* Materiale del capo — alimenta la stima d'impatto (L2 etichetta + L0+1 tap) */}
+        {/* Materiale del capo — alimenta la stima d'impatto: si parte dalla
+            foto dell'etichetta (L2), con ripiego sul tap del materiale (L1). */}
         {selezionata && opzioniMateriale.length > 0 && (
-          <div className="space-y-3 rounded-lg border border-line bg-surface/60 p-4">
-            <div>
-              <span className="block text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
-                Di cosa è fatto?{' '}
-                <span className="font-semibold normal-case text-ink-faint">
-                  (facoltativo)
-                </span>
-              </span>
-              <span className="mt-0.5 block text-xs text-ink-soft">
-                Ci aiuta a stimare meglio l'impatto. Se non lo sai, useremo una
-                stima prudenziale.
-              </span>
-            </div>
-
-            {/* L2 — foto dell'etichetta (facoltativa) */}
-            <div className="flex items-center gap-3">
-              {fotoEtichetta ? (
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-edge">
-                  <img
-                    src={fotoEtichetta.url}
-                    alt="Etichetta"
-                    className="h-full w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeEtichetta}
-                    aria-label="Rimuovi foto etichetta"
-                    className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs font-bold text-white"
-                  >
-                    ×
-                  </button>
-                </div>
-              ) : (
-                <label className="flex h-16 w-16 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-ink/25 bg-paper text-center transition hover:border-eco">
-                  <span className="text-lg leading-none text-eco-700">＋</span>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.04em] text-eco-700">
-                    Etichetta
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={onAddEtichetta}
-                  />
-                </label>
-              )}
-              <p className="flex-1 text-xs text-ink-soft">
-                Fotografa l'etichetta di composizione: in futuro ci permetterà di
-                leggere il materiale con precisione.
-              </p>
-            </div>
-
-            {/* L0+1 — selezione guidata del materiale */}
-            <div className="space-y-1.5">
-              {opzioniMateriale.map((o) => {
-                const sel = o.chiave === materialeChiave
-                return (
-                  <button
-                    key={o.chiave}
-                    type="button"
-                    onClick={() => setMaterialeChiave(o.chiave)}
-                    className={`flex w-full flex-col items-start rounded-lg border px-3 py-2 text-left transition ${
-                      sel
-                        ? 'border-eco bg-eco-50 ring-1 ring-eco'
-                        : 'border-edge bg-paper hover:border-eco/50'
-                    }`}
-                  >
-                    <span className="text-sm font-semibold text-ink">
-                      {o.label}
-                    </span>
-                    <span className="text-[11px] text-ink-soft">{o.hint}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+          <MaterialeBlend
+            key={selezionata.id}
+            opzioni={opzioniMateriale}
+            fibre={fibre}
+            onChange={setBlend}
+          />
         )}
 
         {/* Toggle logo → decide la visibilità. Default dalla categoria. */}
@@ -574,7 +481,9 @@ export function Upload() {
             <p className="mb-3 mt-1 text-[11px] text-ink-soft">
               {impattoMinimo
                 ? 'Stima prudenziale: il risparmio reale è almeno questo.'
-                : 'Stima sul materiale indicato (vedi metodologia).'}
+                : blend.fonte === 'etichetta'
+                  ? "Stima verificata sulla composizione dell'etichetta (vedi metodologia)."
+                  : 'Stima sul materiale indicato (vedi metodologia).'}
             </p>
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1.5">
               <EsgBadge
@@ -592,6 +501,11 @@ export function Upload() {
           </div>
         )}
 
+        {!blend.pronto && (
+          <p className="text-center text-xs font-semibold text-ink-soft">
+            Conferma il blend del materiale per pubblicare.
+          </p>
+        )}
         <PrimaryButton type="submit" loading={submitting} disabled={!formValido}>
           Pubblica articolo
         </PrimaryButton>

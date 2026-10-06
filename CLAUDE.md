@@ -66,18 +66,23 @@ anche la `lg:`.
 | `npm run lint`    | Solo type-check (`tsc -b`)       |
 
 Verifica sempre con `npm run build` prima di considerare un lavoro finito.
+`predev`/`prebuild` lanciano `scripts/copia-tesseract.mjs`, che copia in
+`public/tesseract/` (non versionata) i file dell'OCR — vedi «Lettura
+dell'etichetta» nelle convenzioni.
 
 ## Struttura
 
 ```
 src/
 ├─ lib/          supabase.ts, database.types.ts (tipi manuali), format.ts,
-│                taglie.ts (set taglie per tipo categoria)
+│                taglie.ts (set taglie per tipo categoria), etichetta.ts
+│                (Livello 2: OCR in locale + parser sinonimi → codici fibre)
 ├─ contexts/     AuthContext.tsx — sessione + profilo (utente+società) +
 │                reset/aggiornamento password
 ├─ components/   sito.tsx (guscio del SITO pubblico: header/footer/nav +
 │                EMAIL/TELEFONO/SURVEY_URL), Layout (bottom-nav + badge chat non lette), ArticleCard,
-│                EsgBadge, StatoBadge, GestioneStato (stato + conferma
+│                EsgBadge, MaterialeBlend (box materiale: etichetta L2 →
+│                manuale → tap L1), StatoBadge, GestioneStato (stato + conferma
 │                scambio), RecensioneScambio, Stelle, StoricoScambi,
 │                MetodologiaFAQ, Logo, ui.tsx (TextField/SelectField/
 │                PrimaryButton/banner), ...
@@ -114,7 +119,9 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0023_eliminazione_account ·
                       0024_chat_dal_primo_messaggio ·
                       0025_registro_scambi_due_livelli ·
-                      0026_impostazioni_profilo (modello ATTUALE).
+                      0026_impostazioni_profilo ·
+                      0027_validazione_composizione ·
+                      0028_registra_scambio_fix (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -123,7 +130,7 @@ supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
 con nomi diversi dai file del repo (es. `0012_chat_revoke_anon`,
 `0013_chat_pulizia_cron`, `0017_dashboard_societa` + rollback,
 `rinomina_loop_renova` = 0019 del repo): lo SCHEMA risultante è allineato ai
-file 0001→0022, ma non confrontare le cronologie per nome.
+file 0001→0028, ma non confrontare le cronologie per nome.
 
 ## Modello dati (attuale, da 0004 in poi)
 
@@ -156,7 +163,8 @@ file 0001→0022, ma non confrontare le cronologie per nome.
   `set_articolo_context`; `co2`/`acqua`/`fonte_impatto` impostati dal trigger
   `set_articolo_impatto` (il client NON li invia → non falsificabili);
   `composizione` (blend scelto dall'utente, NULL = stima L0),
-  `foto_etichetta_url` (per la futura lettura L2), `scambiato_at`.
+  `foto_etichetta_url` (storica: dal L2 attivo resta NULL, la foto non si
+  carica più), `scambiato_at`.
 - **Chat** (`0012`/`0013`): `conversazioni` (una per coppia articolo+interessato)
   + `messaggi`, con RPC `inizia_conversazione`/`segna_letto` e realtime.
   `primo_messaggio_at` (`0024`) segna il primo messaggio: finché è NULL la
@@ -179,7 +187,9 @@ tracciabile (funzione SQL `renova_impatto_blend`, richiamata dal trigger; vedi
 documento metodologico). Tre livelli di affidabilità: L2 etichetta, L1
 materiale indicato (tap con opzioni dai blend osservati, criterio scostamento
 >10% — cfr. 0020/0021), L0 valore prudenziale («almeno»). `Upload.tsx` replica
-il calcolo lato client solo per l'anteprima.
+il calcolo lato client solo per l'anteprima (`impattoBlend`). Tutti e tre i
+livelli sono ATTIVI; il L2 è `fonte_impatto = 'etichetta'` (e solo quello: la
+scheda articolo mostra «Verificata da etichetta»).
 
 ## Regole / convenzioni (IMPORTANTE)
 
@@ -205,6 +215,11 @@ il calcolo lato client solo per l'anteprima.
 - **Scambio definitivo**: lo stato `Scambiato` NON si scrive direttamente
   (trigger `set_scambiato_at` lo blocca): passa solo dalla RPC
   `registra_scambio`, che registra anche l'acquirente.
+  ⚠️ La guardia è la variabile di sessione **`renova.scambio_ok`**: chi
+  ricrea `registra_scambio` deve usare quel nome (0025/0026 avevano
+  reintrodotto `loop.scambio_ok` → ogni conferma falliva; corretto in
+  `0028`). Lo snapshot co2/acqua dello scambio viene dall'ARTICOLO (blend
+  L1/L2 × peso), non da `co2_tipico` della categoria.
 - **Due livelli del registro scambi** (`0025`, GDPR): la privacy policy §6
   dichiara che gli scambi sono tenuti su due livelli, e il codice DEVE
   rispecchiarlo. (a) `scambi` = livello individuale, cancellato dopo 12 mesi
@@ -265,6 +280,30 @@ il calcolo lato client solo per l'anteprima.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti
   a «Loop» sopravvivono SOLO nei commenti delle migrazioni storiche.
+- **Lettura dell'etichetta (Livello 2)** — `src/lib/etichetta.ts`: tutto nel
+  BROWSER, nessun servizio esterno (zero costi, nessun nuovo trattamento di
+  dati). tesseract.js (ita+eng) è importato dinamicamente solo quando l'utente
+  aggiunge la foto; worker, core WASM (varianti LSTM) e lingue arrivano da
+  `public/tesseract/` del NOSTRO dominio (mai CDN: `workerPath`/`corePath`/
+  `langPath` sono espliciti). Pipeline: canvas (lato lungo 2000 px, grigi,
+  stretching 2°–98° percentile) → OCR (seconda passata PSM 6 se vuota;
+  timeout 90 s) → parser sinonimi multilingua e sigle ISO → codici `fibre`
+  (`rPET` solo se l'etichetta dice «riciclato/recycled»); le ripetizioni in
+  più lingue si spezzano in blocchi da 100% e vale il primo. UI nel
+  componente `MaterialeBlend.tsx` (box «Di cosa è fatto?», NON più
+  «facoltativo»): all'inizio mostra SOLO il tasto «Fotografa l'etichetta»
+  (+ link discreto «L'etichetta non c'è o è illeggibile?»). Letta bene → il
+  blend in grande (percentuale + fibra + barra) con «È corretto?» Sì /
+  Correggi; lettura fallita/parziale/fibre fuori tabella → PRIMA
+  l'inserimento manuale delle percentuali (resta L2, `fonte = 'etichetta'`),
+  in alternativa «Scegli il materiale più simile» (tap L1). Finché il blend
+  è in lettura o da verificare, «Pubblica» è disattivato (`pronto: false`). La foto NON si carica nello storage. La composizione è validata
+  anche nel DB (`0027`): trigger `trg_articoli_composizione_valida` (BEFORE
+  INSERT/UPDATE OF composizione, nome scelto per scattare PRIMA del calcolo
+  d'impatto) → `renova_composizione_errore(jsonb)`: oggetto non vuoto, codici
+  solo da `fibre`, valori numerici in (0,100], somma 100 ±0,01; altrimenti
+  errore `23514` col motivo in italiano. NULL resta ammesso (stima L0). Se si
+  aggiunge una fibra alla tabella, aggiungerne i sinonimi in `FIBRE_NOTE`.
 - **Storage foto**: bucket pubblico `articoli`; se non configurato, l'upload
   degrada a un placeholder senza bloccare la creazione dell'articolo (vedi
   `Upload.tsx`).
