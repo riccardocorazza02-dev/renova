@@ -81,7 +81,8 @@ src/
 │                reset/aggiornamento password
 ├─ components/   sito.tsx (guscio del SITO pubblico: header/footer/nav +
 │                EMAIL/TELEFONO/SURVEY_URL), Layout (bottom-nav + badge chat non lette), ArticleCard,
-│                EsgBadge, StatoBadge, GestioneStato (stato + conferma
+│                EsgBadge, MaterialeBlend (box materiale: etichetta L2 →
+│                manuale → tap L1), StatoBadge, GestioneStato (stato + conferma
 │                scambio), RecensioneScambio, Stelle, StoricoScambi,
 │                MetodologiaFAQ, Logo, ui.tsx (TextField/SelectField/
 │                PrimaryButton/banner), ...
@@ -282,10 +283,15 @@ scheda articolo mostra «Verificata da etichetta»).
   stretching 2°–98° percentile) → OCR (seconda passata PSM 6 se vuota;
   timeout 90 s) → parser sinonimi multilingua e sigle ISO → codici `fibre`
   (`rPET` solo se l'etichetta dice «riciclato/recycled»); le ripetizioni in
-  più lingue si spezzano in blocchi da 100% e vale il primo. L'utente
-  conferma o corregge le righe (somma 100, fibre solo dalla tabella); fibre
-  fuori tabella o lettura fallita → stesse righe vuote; «Annulla» torna al
-  tap L1. La foto NON si carica nello storage. La composizione è validata
+  più lingue si spezzano in blocchi da 100% e vale il primo. UI nel
+  componente `MaterialeBlend.tsx` (box «Di cosa è fatto?», NON più
+  «facoltativo»): all'inizio mostra SOLO il tasto «Fotografa l'etichetta»
+  (+ link discreto «L'etichetta non c'è o è illeggibile?»). Letta bene → il
+  blend in grande (percentuale + fibra + barra) con «È corretto?» Sì /
+  Correggi; lettura fallita/parziale/fibre fuori tabella → PRIMA
+  l'inserimento manuale delle percentuali (resta L2, `fonte = 'etichetta'`),
+  in alternativa «Scegli il materiale più simile» (tap L1). Finché il blend
+  è in lettura o da verificare, «Pubblica» è disattivato (`pronto: false`). La foto NON si carica nello storage. La composizione è validata
   anche nel DB (`0027`): trigger `trg_articoli_composizione_valida` (BEFORE
   INSERT/UPDATE OF composizione, nome scelto per scattare PRIMA del calcolo
   d'impatto) → `renova_composizione_errore(jsonb)`: oggetto non vuoto, codici

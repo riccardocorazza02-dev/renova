@@ -343,15 +343,22 @@ function cartellaTesseract(): string {
  */
 const TIMEOUT_LETTURA_MS = 90_000
 
+/** Avanzamento mostrato all'utente: prima si carica il lettore, poi si legge. */
+export interface ProgressoLettura {
+  fase: 'carico' | 'leggo'
+  /** 0–1 */
+  p: number
+}
+
 /**
- * Legge l'etichetta e restituisce le righe proposte. `onProgresso` riceve un
- * valore 0–1 durante il riconoscimento. Se la prima passata (impaginazione
+ * Legge l'etichetta e restituisce le righe proposte. `onProgresso` riceve la
+ * fase (caricamento del lettore / lettura del testo) e un valore 0–1. Se la prima passata (impaginazione
  * automatica) non trova coppie, ne tenta una seconda come blocco unico di
  * testo, più adatta alle etichette strette.
  */
 export async function leggiEtichetta(
   file: Blob,
-  onProgresso?: (p: number) => void,
+  onProgresso?: (stato: ProgressoLettura) => void,
 ): Promise<EsitoLettura> {
   let worker: import('tesseract.js').Worker | null = null
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -375,7 +382,10 @@ export async function leggiEtichetta(
       // Niente cache IndexedDB delle lingue: i file arrivano già dalla cache HTTP.
       cacheMethod: 'none',
       logger: (m) => {
-        if (m.status === 'recognizing text') onProgresso?.(m.progress)
+        onProgresso?.({
+          fase: m.status === 'recognizing text' ? 'leggo' : 'carico',
+          p: m.progress,
+        })
       },
     })
     let { data } = await worker.recognize(canvas)

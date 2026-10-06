@@ -12,14 +12,12 @@ import { CONDIZIONI, MACRO_CATEGORIE_ORDINE } from '../lib/database.types'
 import { TextField, SelectField, PrimaryButton, ErrorBanner } from '../components/ui'
 import { EsgBadge } from '../components/EsgBadge'
 import { tagliePer } from '../lib/taglie'
-import { formatComposizione } from '../lib/format'
 import { Spinner } from '../components/Spinner'
 import {
-  leggiEtichetta,
-  righeAComposizione,
-  sommaRighe,
-  type RigaLetta,
-} from '../lib/etichetta'
+  MaterialeBlend,
+  BLEND_INIZIALE,
+  type StatoBlend,
+} from '../components/MaterialeBlend'
 
 const MAX_FOTO = 3
 
@@ -27,9 +25,6 @@ const MAX_FOTO = 3
 function valoreRif(c: CategoriaItem): number {
   return c.valore != null ? Number(c.valore) : 0
 }
-
-/** Chiave dell'opzione "non lo so" → ricade sul priore L0. */
-const CHIAVE_NON_SO = 'non_so'
 
 /**
  * Impatto di un blend per un dato peso (kg), coi fattori delle fibre.
@@ -57,27 +52,6 @@ interface FotoSel {
   url: string
 }
 
-/**
- * Lettura dell'etichetta (Livello 2), tutta in locale:
- * vuota → lettura (OCR nel browser) → revisione (righe modificabili) →
- * confermata. Da «revisione» l'utente può rinunciare e tornare al tap L1.
- */
-type FaseEtichetta = 'vuota' | 'lettura' | 'revisione' | 'confermata'
-
-/** Riga modificabile della composizione; pct è testo per l'input. */
-interface RigaModifica {
-  id: number
-  codice: string
-  pct: string
-}
-
-let prossimoIdRiga = 1
-const nuovaRiga = (r?: RigaLetta): RigaModifica => ({
-  id: prossimoIdRiga++,
-  codice: r?.codice ?? '',
-  pct: r ? String(r.pct) : '',
-})
-
 export function Upload() {
   const { session, profilo } = useAuth()
   const navigate = useNavigate()
@@ -93,18 +67,8 @@ export function Upload() {
   const [condizione, setCondizione] = useState<Condizione | ''>('')
   const [haLogo, setHaLogo] = useState(false)
   const [foto, setFoto] = useState<FotoSel[]>([])
-  // Materiale scelto dall'utente (tap L0+1); '' quando la categoria non chiede il tap.
-  const [materialeChiave, setMaterialeChiave] = useState<string>('')
-  // Foto facoltativa dell'etichetta di composizione (Livello 2): letta in
-  // locale e MAI caricata nello storage — serve solo all'anteprima.
-  const [fotoEtichetta, setFotoEtichetta] = useState<FotoSel | null>(null)
-  const [faseEtichetta, setFaseEtichetta] = useState<FaseEtichetta>('vuota')
-  const [progressoLettura, setProgressoLettura] = useState(0)
-  const [righeEtichetta, setRigheEtichetta] = useState<RigaModifica[]>([])
-  // Messaggio mostrato sopra le righe quando la lettura non è andata a buon fine.
-  const [avvisoEtichetta, setAvvisoEtichetta] = useState('')
-  // Composizione confermata dall'utente (fonte_impatto = 'etichetta').
-  const [compEtichetta, setCompEtichetta] = useState<Composizione | null>(null)
+  // Materiale del capo (L2 etichetta / L1 tap / L0), gestito da MaterialeBlend.
+  const [blend, setBlend] = useState<StatoBlend>(BLEND_INIZIALE)
 
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -152,14 +116,12 @@ export function Upload() {
 
   // ── Stima d'impatto a livelli ──────────────────────────────────
   const opzioniMateriale = selezionata?.materiali ?? []
-  const opzSelezionata =
-    opzioniMateriale.find((o) => o.chiave === materialeChiave) ?? null
   const isTessile =
     !!selezionata?.profilo_default && selezionata?.peso_kg != null
-  // Blend usato per la stima: etichetta confermata (L2), poi scelta esplicita
-  // dell'utente (L1), altrimenti il profilo prudenziale L0 della categoria.
+  // Blend usato per la stima: quello indicato nel box materiale (etichetta L2
+  // o tap L1), altrimenti il profilo prudenziale L0 della categoria.
   const blendStima: Composizione | null =
-    compEtichetta ?? opzSelezionata?.blend ?? selezionata?.profilo_default ?? null
+    blend.composizione ?? selezionata?.profilo_default ?? null
   const haFibre = Object.keys(fibre).length > 0
   const impattoPreview =
     isTessile && blendStima && haFibre && selezionata?.peso_kg != null
@@ -169,7 +131,7 @@ export function Upload() {
           acqua: Number(selezionata?.acqua_tipico ?? 0),
         }
   // "Almeno X" finché l'utente non indica il materiale (capi tessili).
-  const impattoMinimo = isTessile && !compEtichetta && !opzSelezionata?.blend
+  const impattoMinimo = isTessile && !blend.composizione
 
   // Al cambio categoria: imposta default logo, prezzo e taglia coerenti.
   function onCategoriaChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -180,9 +142,8 @@ export function Upload() {
     setHaLogo(cat.default_ha_logo)
     setPrezzo(cat.richiede_prezzo ? '' : String(valoreRif(cat)))
     setTaglia(cat.tipo_taglia === 'unica' ? 'Unica' : '')
-    // Se la categoria chiede il materiale (tap L0+1), parte da "Non lo so" (L0).
-    setMaterialeChiave(cat.materiali?.length ? CHIAVE_NON_SO : '')
-    removeEtichetta()
+    // Il box materiale riparte da zero (è rimontato con key = categoria).
+    setBlend(BLEND_INIZIALE)
   }
 
   // ── Gestione foto multiple (max 3) ──
@@ -205,86 +166,6 @@ export function Upload() {
       URL.revokeObjectURL(prev[i].url)
       return prev.filter((_, j) => j !== i)
     })
-  }
-
-  // ── Foto etichetta (facoltativa, una sola) → lettura in locale ──
-  async function onAddEtichetta(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (!file) return
-    setFotoEtichetta((prev) => {
-      if (prev) URL.revokeObjectURL(prev.url)
-      return { file, url: URL.createObjectURL(file) }
-    })
-    setCompEtichetta(null)
-    setAvvisoEtichetta('')
-    setProgressoLettura(0)
-    setFaseEtichetta('lettura')
-    try {
-      const esito = await leggiEtichetta(file, setProgressoLettura)
-      // Codici non presenti nella tabella `fibre` caricata (non dovrebbe
-      // succedere): li trattiamo come fibre sconosciute.
-      const note = esito.righe.filter((r) => !haFibre || fibre[r.codice])
-      setRigheEtichetta(note.length ? note.map(nuovaRiga) : [nuovaRiga()])
-      if (esito.sconosciute.length) {
-        setAvvisoEtichetta(
-          `Abbiamo letto ${esito.sconosciute.join(', ')}: ${
-            esito.sconosciute.length === 1 ? 'non è tra le fibre' : 'non sono tra le fibre'
-          } del nostro metodo. Inserisci la composizione a mano con le fibre più simili, oppure annulla e scegli il materiale qui sotto.`,
-        )
-      } else if (note.length === 0) {
-        setAvvisoEtichetta(
-          'Non siamo riusciti a leggere la composizione. Inseriscila a mano oppure annulla e scegli il materiale.',
-        )
-      } else if (!esito.completa) {
-        setAvvisoEtichetta('Lettura parziale: controlla le percentuali, il totale deve fare 100.')
-      }
-    } catch (err) {
-      console.warn('[Renova] Lettura etichetta non riuscita:', err)
-      setRigheEtichetta([nuovaRiga()])
-      setAvvisoEtichetta(
-        'La lettura automatica non è disponibile su questo dispositivo. Inserisci la composizione a mano oppure annulla e scegli il materiale.',
-      )
-    }
-    setFaseEtichetta('revisione')
-  }
-
-  /** Rinuncia al Livello 2: via foto e righe, resta la scelta del materiale. */
-  function removeEtichetta() {
-    setFotoEtichetta((prev) => {
-      if (prev) URL.revokeObjectURL(prev.url)
-      return null
-    })
-    setFaseEtichetta('vuota')
-    setRigheEtichetta([])
-    setAvvisoEtichetta('')
-    setCompEtichetta(null)
-  }
-
-  function aggiornaRiga(id: number, campo: 'codice' | 'pct', valore: string) {
-    setRigheEtichetta((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, [campo]: valore } : r)),
-    )
-  }
-
-  // Righe valide: fibra della tabella + percentuale > 0, senza doppioni, totale 100.
-  const righeNumeriche = righeEtichetta.map((r) => ({
-    codice: r.codice,
-    pct: Number(r.pct.replace(',', '.')),
-  }))
-  const totaleEtichetta = sommaRighe(righeNumeriche)
-  const codiciUsati = righeEtichetta.map((r) => r.codice).filter(Boolean)
-  const righeValide =
-    righeNumeriche.length > 0 &&
-    righeNumeriche.every((r) => !!fibre[r.codice] && r.pct > 0 && r.pct <= 100) &&
-    new Set(codiciUsati).size === codiciUsati.length &&
-    totaleEtichetta === 100
-
-  function confermaEtichetta() {
-    if (!righeValide) return
-    setCompEtichetta(righeAComposizione(righeNumeriche))
-    setAvvisoEtichetta('')
-    setFaseEtichetta('confermata')
   }
 
   async function uploadUna(file: File): Promise<string | null> {
@@ -314,8 +195,8 @@ export function Upload() {
     !!taglia &&
     !!condizione &&
     prezzoValido &&
-    // Una lettura dell'etichetta in corso va confermata o annullata prima.
-    (faseEtichetta === 'vuota' || faseEtichetta === 'confermata')
+    // Un blend in lettura o da verificare va confermato prima di pubblicare.
+    blend.pronto
 
   // Valore economico risparmiato: input utente se manuale, altrimenti valore rif.
   const risparmioEconomico = selezionata
@@ -338,16 +219,11 @@ export function Upload() {
         ? Number(prezzo) || 0
         : valoreRif(selezionata)
 
-      // Materiale: composizione letta dall'etichetta e confermata (L2), oppure
-      // il materiale scelto col tap (L0+1). Con "Non lo so" o categoria non
-      // tessile resta null → il trigger applica il profilo prudenziale (L0).
+      // Materiale: blend dell'etichetta (L2) o del tap (L1); null con
+      // "Non lo so" o categoria non tessile → il trigger applica L0.
       // La foto dell'etichetta NON viene caricata: è servita solo in locale.
-      const composizione = compEtichetta ?? opzSelezionata?.blend ?? null
-      const fonteImpatto = compEtichetta
-        ? 'etichetta'
-        : composizione
-          ? 'utente'
-          : 'categoria'
+      const composizione = blend.composizione
+      const fonteImpatto = blend.fonte
 
       // id_societa, sport, co2 e acqua NON vengono inviati: li impostano i
       // trigger lato DB (contesto utente + calcolo dell'impatto).
@@ -555,220 +431,15 @@ export function Upload() {
           </SelectField>
         )}
 
-        {/* Materiale del capo — alimenta la stima d'impatto (L2 etichetta + L0+1 tap) */}
+        {/* Materiale del capo — alimenta la stima d'impatto: si parte dalla
+            foto dell'etichetta (L2), con ripiego sul tap del materiale (L1). */}
         {selezionata && opzioniMateriale.length > 0 && (
-          <div className="space-y-3 rounded-lg border border-line bg-surface/60 p-4">
-            <div>
-              <span className="block text-[13px] font-bold uppercase tracking-[0.04em] text-ink">
-                Di cosa è fatto?{' '}
-                <span className="font-semibold normal-case text-ink-faint">
-                  (facoltativo)
-                </span>
-              </span>
-              <span className="mt-0.5 block text-xs text-ink-soft">
-                Ci aiuta a stimare meglio l'impatto. Se non lo sai, useremo una
-                stima prudenziale.
-              </span>
-            </div>
-
-            {/* L2 — foto dell'etichetta (facoltativa), letta sul dispositivo */}
-            <div className="flex items-center gap-3">
-              {fotoEtichetta ? (
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-edge">
-                  <img
-                    src={fotoEtichetta.url}
-                    alt="Etichetta"
-                    className="h-full w-full object-cover"
-                  />
-                  {faseEtichetta !== 'lettura' && (
-                    <button
-                      type="button"
-                      onClick={removeEtichetta}
-                      aria-label="Rimuovi foto etichetta"
-                      className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs font-bold text-white"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <label className="flex h-16 w-16 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-ink/25 bg-paper text-center transition hover:border-eco">
-                  <span className="text-lg leading-none text-eco-700">＋</span>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.04em] text-eco-700">
-                    Etichetta
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={onAddEtichetta}
-                  />
-                </label>
-              )}
-              <div className="flex-1 text-xs text-ink-soft">
-                {faseEtichetta === 'vuota' && (
-                  <p>
-                    Fotografa l'etichetta di composizione: leggiamo il materiale
-                    direttamente sul tuo dispositivo. La foto non viene caricata
-                    né conservata.
-                  </p>
-                )}
-                {faseEtichetta === 'lettura' && (
-                  <p className="flex items-center gap-2">
-                    <Spinner className="h-4 w-4 shrink-0 text-eco-600" />
-                    <span>
-                      Leggo l'etichetta…{' '}
-                      {progressoLettura > 0 && `${Math.round(progressoLettura * 100)}%`}
-                      <span className="block text-[11px] text-ink-faint">
-                        La prima volta può servire qualche secondo in più.
-                      </span>
-                    </span>
-                  </p>
-                )}
-                {faseEtichetta === 'revisione' && (
-                  <p>Controlla la composizione e correggila se serve.</p>
-                )}
-                {faseEtichetta === 'confermata' && compEtichetta && (
-                  <p>
-                    <span className="font-semibold text-ink">
-                      {formatComposizione(compEtichetta)}
-                    </span>
-                    <span className="block">
-                      Letta dall'etichetta e confermata da te.{' '}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCompEtichetta(null)
-                          setFaseEtichetta('revisione')
-                        }}
-                        className="font-semibold text-eco-700 hover:underline"
-                      >
-                        Modifica
-                      </button>
-                    </span>
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* L2 — righe modificabili: l'utente conferma o corregge */}
-            {faseEtichetta === 'revisione' && (
-              <div className="space-y-2 rounded-lg border border-edge bg-paper p-3">
-                {avvisoEtichetta && (
-                  <p className="rounded-md bg-sun-50 px-2.5 py-2 text-[11px] leading-relaxed text-ink-soft">
-                    {avvisoEtichetta}
-                  </p>
-                )}
-                {righeEtichetta.map((r) => (
-                  <div key={r.id} className="flex items-center gap-2">
-                    <select
-                      value={r.codice}
-                      onChange={(e) => aggiornaRiga(r.id, 'codice', e.target.value)}
-                      aria-label="Fibra"
-                      className="min-w-0 flex-1 rounded-lg border border-edge bg-paper px-2.5 py-2 text-sm text-ink focus:border-eco focus:outline-none"
-                    >
-                      <option value="" disabled>
-                        Fibra…
-                      </option>
-                      {Object.values(fibre).map((f) => (
-                        <option key={f.codice} value={f.codice}>
-                          {f.nome}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="flex items-center gap-1">
-                      <input
-                        type="number"
-                        inputMode="decimal"
-                        min={0}
-                        max={100}
-                        step="any"
-                        value={r.pct}
-                        onChange={(e) => aggiornaRiga(r.id, 'pct', e.target.value)}
-                        aria-label="Percentuale"
-                        className="w-16 rounded-lg border border-edge bg-paper px-2 py-2 text-right text-sm text-ink focus:border-eco focus:outline-none"
-                      />
-                      <span className="text-sm text-ink-soft">%</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setRigheEtichetta((prev) => prev.filter((x) => x.id !== r.id))
-                      }
-                      aria-label="Rimuovi riga"
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-base text-ink-soft hover:bg-surface"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <div className="flex items-center justify-between pt-0.5">
-                  <button
-                    type="button"
-                    onClick={() => setRigheEtichetta((prev) => [...prev, nuovaRiga()])}
-                    className="text-xs font-semibold text-eco-700 hover:underline"
-                  >
-                    ＋ Aggiungi fibra
-                  </button>
-                  <span
-                    className={`text-xs font-bold ${
-                      totaleEtichetta === 100 ? 'text-eco-700' : 'text-ink-soft'
-                    }`}
-                  >
-                    Totale {totaleEtichetta}%{totaleEtichetta !== 100 && ' · deve fare 100'}
-                  </span>
-                </div>
-                {new Set(codiciUsati).size !== codiciUsati.length && (
-                  <p className="text-[11px] text-ink-soft">
-                    Ogni fibra va indicata una sola volta.
-                  </p>
-                )}
-                <div className="flex gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={confermaEtichetta}
-                    disabled={!righeValide}
-                    className="flex-1 rounded-lg bg-ink px-3 py-2 text-xs font-bold uppercase tracking-[0.04em] text-white transition disabled:opacity-40"
-                  >
-                    Conferma
-                  </button>
-                  <button
-                    type="button"
-                    onClick={removeEtichetta}
-                    className="rounded-lg border border-edge px-3 py-2 text-xs font-bold uppercase tracking-[0.04em] text-ink-soft transition hover:border-ink/40"
-                  >
-                    Annulla
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* L0+1 — selezione guidata del materiale (se non c'è l'etichetta) */}
-            {faseEtichetta === 'vuota' && (
-              <div className="space-y-1.5">
-                {opzioniMateriale.map((o) => {
-                  const sel = o.chiave === materialeChiave
-                  return (
-                    <button
-                      key={o.chiave}
-                      type="button"
-                      onClick={() => setMaterialeChiave(o.chiave)}
-                      className={`flex w-full flex-col items-start rounded-lg border px-3 py-2 text-left transition ${
-                        sel
-                          ? 'border-eco bg-eco-50 ring-1 ring-eco'
-                          : 'border-edge bg-paper hover:border-eco/50'
-                      }`}
-                    >
-                      <span className="text-sm font-semibold text-ink">
-                        {o.label}
-                      </span>
-                      <span className="text-[11px] text-ink-soft">{o.hint}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            )}
-          </div>
+          <MaterialeBlend
+            key={selezionata.id}
+            opzioni={opzioniMateriale}
+            fibre={fibre}
+            onChange={setBlend}
+          />
         )}
 
         {/* Toggle logo → decide la visibilità. Default dalla categoria. */}
@@ -810,7 +481,7 @@ export function Upload() {
             <p className="mb-3 mt-1 text-[11px] text-ink-soft">
               {impattoMinimo
                 ? 'Stima prudenziale: il risparmio reale è almeno questo.'
-                : compEtichetta
+                : blend.fonte === 'etichetta'
                   ? "Stima verificata sulla composizione dell'etichetta (vedi metodologia)."
                   : 'Stima sul materiale indicato (vedi metodologia).'}
             </p>
@@ -830,6 +501,11 @@ export function Upload() {
           </div>
         )}
 
+        {!blend.pronto && (
+          <p className="text-center text-xs font-semibold text-ink-soft">
+            Conferma il blend del materiale per pubblicare.
+          </p>
+        )}
         <PrimaryButton type="submit" loading={submitting} disabled={!formValido}>
           Pubblica articolo
         </PrimaryButton>
