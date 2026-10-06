@@ -118,7 +118,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0023_eliminazione_account ·
                       0024_chat_dal_primo_messaggio ·
                       0025_registro_scambi_due_livelli ·
-                      0026_impostazioni_profilo (modello ATTUALE).
+                      0026_impostazioni_profilo ·
+                      0027_validazione_composizione (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -284,10 +285,13 @@ scheda articolo mostra «Verificata da etichetta»).
   più lingue si spezzano in blocchi da 100% e vale il primo. L'utente
   conferma o corregge le righe (somma 100, fibre solo dalla tabella); fibre
   fuori tabella o lettura fallita → stesse righe vuote; «Annulla» torna al
-  tap L1. La foto NON si carica nello storage. ⚠️ Il trigger accetta
-  qualunque JSON in `composizione` (codici ignoti contano 0, somma non
-  verificata): la validazione sta nel client. Se si aggiunge una fibra alla
-  tabella, aggiungerne i sinonimi in `FIBRE_NOTE`.
+  tap L1. La foto NON si carica nello storage. La composizione è validata
+  anche nel DB (`0027`): trigger `trg_articoli_composizione_valida` (BEFORE
+  INSERT/UPDATE OF composizione, nome scelto per scattare PRIMA del calcolo
+  d'impatto) → `renova_composizione_errore(jsonb)`: oggetto non vuoto, codici
+  solo da `fibre`, valori numerici in (0,100], somma 100 ±0,01; altrimenti
+  errore `23514` col motivo in italiano. NULL resta ammesso (stima L0). Se si
+  aggiunge una fibra alla tabella, aggiungerne i sinonimi in `FIBRE_NOTE`.
 - **Storage foto**: bucket pubblico `articoli`; se non configurato, l'upload
   degrada a un placeholder senza bloccare la creazione dell'articolo (vedi
   `Upload.tsx`).
