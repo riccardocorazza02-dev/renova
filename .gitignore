@@ -26,3 +26,6 @@ dist-ssr
 
 # Claude Code — impostazioni locali (permessi specifici della macchina)
 .claude/settings.local.json
+
+# File di tesseract.js copiati da scripts/copia-tesseract.mjs
+public/tesseract/

@@ -165,7 +165,11 @@ export interface Articolo {
   /** impatto del singolo capo, calcolato dal trigger (blend × peso) o fisso */
   co2: number
   acqua: number
-  /** foto dell'etichetta di composizione (per la futura lettura L2); null se assente */
+  /**
+   * Storico: URL della foto dell'etichetta. Dal Livello 2 attivo l'etichetta
+   * è letta in locale nel browser e la foto NON viene più caricata → null per
+   * i nuovi articoli (la prova L2 è fonte_impatto = 'etichetta').
+   */
   foto_etichetta_url: string | null
   /** istante in cui lo stato è diventato 'Scambiato' (impostato dal trigger) */
   scambiato_at: string | null

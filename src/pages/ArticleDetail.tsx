@@ -155,16 +155,16 @@ export function ArticleDetail() {
   const { categoria } = articolo
 
   // Livello di affidabilità della stima d'impatto, con nomi pensati per
-  // l'utente (L2 = c'è la foto dell'etichetta; L1 = materiale indicato dal
+  // l'utente (L2 = composizione letta dall'etichetta e confermata; L1 = materiale indicato dal
   // venditore; L0 = non specificato → valore minimo prudenziale «almeno»).
   const livello =
-    articolo.fonte_impatto === 'etichetta' || articolo.foto_etichetta_url
+    articolo.fonte_impatto === 'etichetta'
       ? {
           tag: 'L2',
-          nome: 'Stima verificata',
+          nome: 'Verificata da etichetta',
           pill: 'bg-eco-50 text-eco-700 ring-eco/30',
           dot: 'bg-eco',
-          desc: "C'è la foto dell'etichetta di composizione: è l'informazione più affidabile sul materiale.",
+          desc: "La composizione è stata letta dalla foto dell'etichetta del capo e confermata dal venditore: è l'informazione più affidabile sul materiale.",
         }
       : articolo.fonte_impatto === 'utente'
         ? {

@@ -143,8 +143,9 @@ export function MetodologiaFAQ() {
                   riconoscerlo al tatto e alla vista.
                 </li>
                 <li>
-                  <strong>Stima verificata:</strong> c'è la foto dell'etichetta, da
-                  cui leggere la composizione reale — la massima affidabilità.
+                  <strong>Stima verificata:</strong> fotografi l'etichetta, ne
+                  leggiamo la composizione sul tuo dispositivo e tu la confermi —
+                  la massima affidabilità. La foto non viene caricata.
                 </li>
               </ul>
               <p>
@@ -202,8 +203,9 @@ export function MetodologiaFAQ() {
               </p>
               <ul className="space-y-1.5">
                 <li>
-                  📷 Se c'è la <strong>foto dell'etichetta</strong>, sappiamo
-                  esattamente di cosa è fatto: la stima è precisa.
+                  📷 Se il venditore <strong>fotografa l'etichetta</strong> e
+                  conferma la composizione letta, sappiamo esattamente di cosa è
+                  fatto: la stima è precisa.
                 </li>
                 <li>
                   👉 Se il venditore <strong>indica il materiale</strong> (es.

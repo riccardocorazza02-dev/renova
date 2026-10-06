@@ -66,13 +66,17 @@ anche la `lg:`.
 | `npm run lint`    | Solo type-check (`tsc -b`)       |
 
 Verifica sempre con `npm run build` prima di considerare un lavoro finito.
+`predev`/`prebuild` lanciano `scripts/copia-tesseract.mjs`, che copia in
+`public/tesseract/` (non versionata) i file dell'OCR — vedi «Lettura
+dell'etichetta» nelle convenzioni.
 
 ## Struttura
 
 ```
 src/
 ├─ lib/          supabase.ts, database.types.ts (tipi manuali), format.ts,
-│                taglie.ts (set taglie per tipo categoria)
+│                taglie.ts (set taglie per tipo categoria), etichetta.ts
+│                (Livello 2: OCR in locale + parser sinonimi → codici fibre)
 ├─ contexts/     AuthContext.tsx — sessione + profilo (utente+società) +
 │                reset/aggiornamento password
 ├─ components/   sito.tsx (guscio del SITO pubblico: header/footer/nav +
@@ -156,7 +160,8 @@ file 0001→0022, ma non confrontare le cronologie per nome.
   `set_articolo_context`; `co2`/`acqua`/`fonte_impatto` impostati dal trigger
   `set_articolo_impatto` (il client NON li invia → non falsificabili);
   `composizione` (blend scelto dall'utente, NULL = stima L0),
-  `foto_etichetta_url` (per la futura lettura L2), `scambiato_at`.
+  `foto_etichetta_url` (storica: dal L2 attivo resta NULL, la foto non si
+  carica più), `scambiato_at`.
 - **Chat** (`0012`/`0013`): `conversazioni` (una per coppia articolo+interessato)
   + `messaggi`, con RPC `inizia_conversazione`/`segna_letto` e realtime.
   `primo_messaggio_at` (`0024`) segna il primo messaggio: finché è NULL la
@@ -179,7 +184,9 @@ tracciabile (funzione SQL `renova_impatto_blend`, richiamata dal trigger; vedi
 documento metodologico). Tre livelli di affidabilità: L2 etichetta, L1
 materiale indicato (tap con opzioni dai blend osservati, criterio scostamento
 >10% — cfr. 0020/0021), L0 valore prudenziale («almeno»). `Upload.tsx` replica
-il calcolo lato client solo per l'anteprima.
+il calcolo lato client solo per l'anteprima (`impattoBlend`). Tutti e tre i
+livelli sono ATTIVI; il L2 è `fonte_impatto = 'etichetta'` (e solo quello: la
+scheda articolo mostra «Verificata da etichetta»).
 
 ## Regole / convenzioni (IMPORTANTE)
 
@@ -265,6 +272,22 @@ il calcolo lato client solo per l'anteprima.
 - **Denominazione**: il progetto si chiama **Renova** (ex Loop). Ogni nuovo
   identificatore (funzioni SQL, classi CSS, config) usa `renova`; i riferimenti
   a «Loop» sopravvivono SOLO nei commenti delle migrazioni storiche.
+- **Lettura dell'etichetta (Livello 2)** — `src/lib/etichetta.ts`: tutto nel
+  BROWSER, nessun servizio esterno (zero costi, nessun nuovo trattamento di
+  dati). tesseract.js (ita+eng) è importato dinamicamente solo quando l'utente
+  aggiunge la foto; worker, core WASM (varianti LSTM) e lingue arrivano da
+  `public/tesseract/` del NOSTRO dominio (mai CDN: `workerPath`/`corePath`/
+  `langPath` sono espliciti). Pipeline: canvas (lato lungo 2000 px, grigi,
+  stretching 2°–98° percentile) → OCR (seconda passata PSM 6 se vuota;
+  timeout 90 s) → parser sinonimi multilingua e sigle ISO → codici `fibre`
+  (`rPET` solo se l'etichetta dice «riciclato/recycled»); le ripetizioni in
+  più lingue si spezzano in blocchi da 100% e vale il primo. L'utente
+  conferma o corregge le righe (somma 100, fibre solo dalla tabella); fibre
+  fuori tabella o lettura fallita → stesse righe vuote; «Annulla» torna al
+  tap L1. La foto NON si carica nello storage. ⚠️ Il trigger accetta
+  qualunque JSON in `composizione` (codici ignoti contano 0, somma non
+  verificata): la validazione sta nel client. Se si aggiunge una fibra alla
+  tabella, aggiungerne i sinonimi in `FIBRE_NOTE`.
 - **Storage foto**: bucket pubblico `articoli`; se non configurato, l'upload
   degrada a un placeholder senza bloccare la creazione dell'articolo (vedi
   `Upload.tsx`).
