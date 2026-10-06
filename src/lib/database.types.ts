@@ -264,7 +264,7 @@ export interface Scambio {
   titolo_articolo: string
   foto_url: string | null
   id_societa: number | null
-  /** impatto = valore tipico della categoria al momento dello scambio */
+  /** impatto dell’ARTICOLO (blend × peso) al momento dello scambio (0028) */
   co2: number | string
   acqua: number | string
   /** valore economico risparmiato all'acquirente (prezzo dell'articolo) */

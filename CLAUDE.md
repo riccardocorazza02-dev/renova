@@ -120,7 +120,8 @@ supabase/migrations/  0001_init · 0002_rls · 0003_seed (storico) →
                       0024_chat_dal_primo_messaggio ·
                       0025_registro_scambi_due_livelli ·
                       0026_impostazioni_profilo ·
-                      0027_validazione_composizione (modello ATTUALE).
+                      0027_validazione_composizione ·
+                      0028_registra_scambio_fix (modello ATTUALE).
 supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
                       rigenerarlo quando si aggiunge una migrazione.
 ```
@@ -129,7 +130,7 @@ supabase/setup_all.sql = tutte le migrazioni concatenate (setup da zero);
 con nomi diversi dai file del repo (es. `0012_chat_revoke_anon`,
 `0013_chat_pulizia_cron`, `0017_dashboard_societa` + rollback,
 `rinomina_loop_renova` = 0019 del repo): lo SCHEMA risultante è allineato ai
-file 0001→0022, ma non confrontare le cronologie per nome.
+file 0001→0028, ma non confrontare le cronologie per nome.
 
 ## Modello dati (attuale, da 0004 in poi)
 
@@ -214,6 +215,11 @@ scheda articolo mostra «Verificata da etichetta»).
 - **Scambio definitivo**: lo stato `Scambiato` NON si scrive direttamente
   (trigger `set_scambiato_at` lo blocca): passa solo dalla RPC
   `registra_scambio`, che registra anche l'acquirente.
+  ⚠️ La guardia è la variabile di sessione **`renova.scambio_ok`**: chi
+  ricrea `registra_scambio` deve usare quel nome (0025/0026 avevano
+  reintrodotto `loop.scambio_ok` → ogni conferma falliva; corretto in
+  `0028`). Lo snapshot co2/acqua dello scambio viene dall'ARTICOLO (blend
+  L1/L2 × peso), non da `co2_tipico` della categoria.
 - **Due livelli del registro scambi** (`0025`, GDPR): la privacy policy §6
   dichiara che gli scambi sono tenuti su due livelli, e il codice DEVE
   rispecchiarlo. (a) `scambi` = livello individuale, cancellato dopo 12 mesi
