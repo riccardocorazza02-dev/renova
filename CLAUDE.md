@@ -285,11 +285,23 @@ scheda articolo mostra «Verificata da etichetta»).
   dati). tesseract.js (ita+eng) è importato dinamicamente solo quando l'utente
   aggiunge la foto; worker, core WASM (varianti LSTM) e lingue arrivano da
   `public/tesseract/` del NOSTRO dominio (mai CDN: `workerPath`/`corePath`/
-  `langPath` sono espliciti). Pipeline: canvas (lato lungo 2000 px, grigi,
-  stretching 2°–98° percentile) → OCR (seconda passata PSM 6 se vuota;
-  timeout 90 s) → parser sinonimi multilingua e sigle ISO → codici `fibre`
-  (`rPET` solo se l'etichetta dice «riciclato/recycled»); le ripetizioni in
-  più lingue si spezzano in blocchi da 100% e vale il primo. UI nel
+  `langPath` sono espliciti). Pipeline tarata su foto REALI (iPhone, ott
+  2026): ritaglio automatico sull'etichetta (blocchi «chiari e fitti di
+  bordi» su miniatura 1000 px — la riduzione DEVE essere
+  `imageSmoothingQuality='high'`, altrimenti l'aliasing del tessuto sembra
+  testo) → scala per AREA (5 MP, max ×3: le etichette sono lunghe e strette)
+  → fino a 3 passate (contrasto/PSM 3 → soglia Bradley/PSM 3 → soglia/PSM
+  11), ci si ferma appena la composizione è completa; timeout 120 s →
+  parser: nomi fibre in ~30 lingue con tolleranza agli errori OCR
+  (Levenshtein ≤1–2, sigle ISO solo esatte; `rPET` solo se dichiarato
+  «riciclato/recycled») → VOTO tra le ripetizioni multilingua (vince la
+  composizione letta più spesso, poi la moda per fibra) → se si legge UNA
+  sola fibra senza percentuale, 100% «dedotto» (con nota da verificare).
+  Fibre fuori tabella o illeggibili, e «Altra fibra» nelle righe manuali,
+  si contano come la fibra a MINOR impatto (`fibraMinimoImpatto`: CO₂ +
+  acqua normalizzate, escluse le fibre senza dato idrico → oggi `rPET`),
+  con nota visibile (anti-greenwashing). Le righe manuali partono da UNA
+  riga: «100% cotone» deve bastare. UI nel
   componente `MaterialeBlend.tsx` (box «Di cosa è fatto?», NON più
   «facoltativo»): all'inizio mostra SOLO il tasto «Fotografa l'etichetta»
   (+ link discreto «L'etichetta non c'è o è illeggibile?»). Letta bene → il

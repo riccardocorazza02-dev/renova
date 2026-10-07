@@ -6,6 +6,8 @@ import type {
   MaterialeOpzione,
 } from '../lib/database.types'
 import {
+  conIgnoteRicondotte,
+  fibraMinimoImpatto,
   leggiEtichetta,
   righeAComposizione,
   sommaRighe,
@@ -26,6 +28,9 @@ import { Spinner } from './Spinner'
  *
  * Le percentuali inserite a mano «come da etichetta» restano Livello 2
  * (documento metodologico §6): fonte_impatto = 'etichetta'.
+ * Una fibra fuori tabella o illeggibile (anche «Altra fibra» nelle righe
+ * manuali) è contata come la fibra a MINOR impatto della tabella: senza
+ * prova si assume l'impatto più basso (principio anti-greenwashing).
  * La foto è letta in locale e non viene mai caricata.
  */
 
@@ -49,7 +54,6 @@ type Fase = 'vuota' | 'lettura' | 'letta' | 'manuale' | 'opzioni' | 'confermata'
 /** Come è finita la lettura: decide il messaggio sopra l'inserimento manuale. */
 type Esito =
   | { tipo: 'parziale' }
-  | { tipo: 'sconosciute'; nomi: string[] }
   | { tipo: 'fallita' }
   | { tipo: 'senza_foto' }
   | { tipo: 'correzione' }
@@ -59,6 +63,9 @@ interface RigaModifica {
   codice: string
   pct: string
 }
+
+/** Voce «Altra fibra / non in elenco» delle righe manuali. */
+const ALTRA = '__altra'
 
 let prossimoIdRiga = 1
 const nuovaRiga = (r?: RigaLetta): RigaModifica => ({
@@ -86,6 +93,8 @@ export function MaterialeBlend({
   const [confermata, setConfermata] = useState<Composizione | null>(null)
   const [daFoto, setDaFoto] = useState(false)
   const [opzione, setOpzione] = useState<string>('')
+  // Avvertenze sulla lettura: percentuale dedotta, fibre sostituite.
+  const [note, setNote] = useState<string[]>([])
 
   // Revoca l'anteprima locale della foto quando cambia o si smonta il box.
   useEffect(() => () => void (foto && URL.revokeObjectURL(foto)), [foto])
@@ -105,6 +114,10 @@ export function MaterialeBlend({
   }, [fase, confermata, opzione, opzioni, onChange])
 
   const nomeFibra = (cod: string) => fibre[cod]?.nome ?? cod
+  // Fibra a minor impatto: sostituisce quelle fuori tabella o illeggibili.
+  const minimo = fibraMinimoImpatto(fibre)
+  const notaSostituzione = (cosa: string) =>
+    `${cosa}: la contiamo come ${minimo ? nomeFibra(minimo).toLowerCase() : 'la fibra a impatto più basso'}, la fibra a impatto più basso della nostra tabella (criterio prudenziale).`
 
   async function onFoto(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -113,27 +126,40 @@ export function MaterialeBlend({
     setFoto(URL.createObjectURL(file))
     setProgresso(null)
     setFase('lettura')
+    setNote([])
     try {
       const r = await leggiEtichetta(file, setProgresso)
-      // Solo codici presenti nella tabella `fibre` (se caricata).
-      const note = r.righe.filter((x) => Object.keys(fibre).length === 0 || fibre[x.codice])
-      setLetta(note)
-      setRighe(note.length ? note.map(nuovaRiga) : [nuovaRiga(), nuovaRiga()])
-      if (r.completa && note.length === r.righe.length) {
+      // Fibre ignote → fibra a minor impatto; solo codici della tabella `fibre`.
+      const lette = conIgnoteRicondotte(r, minimo).filter(
+        (x) => Object.keys(fibre).length === 0 || fibre[x.codice],
+      )
+      const avvisi: string[] = []
+      if (r.dedotta && lette[0]) {
+        avvisi.push(
+          `Abbiamo letto «${nomeFibra(lette[0].codice).toLowerCase()}» ma non la percentuale: è l'unica fibra indicata, quindi la consideriamo al 100%.`,
+        )
+      }
+      for (const ig of r.ignote) {
+        avvisi.push(
+          notaSostituzione(
+            ig.nome
+              ? `«${ig.nome}» (${ig.pct}%) non è tra le fibre del nostro metodo`
+              : `Una fibra (${ig.pct}%) non si legge`,
+          ),
+        )
+      }
+      setNote(avvisi)
+      setLetta(lette)
+      setRighe(lette.length ? lette.map(nuovaRiga) : [nuovaRiga()])
+      if (r.completa && sommaRighe(lette) === 100) {
         setFase('letta')
         return
       }
-      setEsito(
-        r.sconosciute.length
-          ? { tipo: 'sconosciute', nomi: r.sconosciute }
-          : note.length
-            ? { tipo: 'parziale' }
-            : { tipo: 'fallita' },
-      )
+      setEsito(lette.length ? { tipo: 'parziale' } : { tipo: 'fallita' })
     } catch (err) {
       console.warn('[Renova] Lettura etichetta non riuscita:', err)
       setLetta([])
-      setRighe([nuovaRiga(), nuovaRiga()])
+      setRighe([nuovaRiga()])
       setEsito({ tipo: 'fallita' })
     }
     setFase('manuale')
@@ -146,6 +172,7 @@ export function MaterialeBlend({
     setRighe([])
     setConfermata(null)
     setOpzione('')
+    setNote([])
     setFase('vuota')
   }
 
@@ -156,18 +183,37 @@ export function MaterialeBlend({
   }
 
   // ── Righe dell'inserimento manuale ──
-  const righeNum = righe.map((r) => ({
+  // Le righe lasciate del tutto vuote non contano: «100% cotone» è UNA riga.
+  const righeCompilate = righe.filter((r) => r.codice || r.pct.trim())
+  const righeNum = righeCompilate.map((r) => ({
     codice: r.codice,
     pct: Number(r.pct.replace(',', '.')),
   }))
   const totale = sommaRighe(righeNum)
-  const codiciUsati = righe.map((r) => r.codice).filter(Boolean)
+  const codiciUsati = righeCompilate.map((r) => r.codice).filter((c) => c && c !== ALTRA)
   const doppioni = new Set(codiciUsati).size !== codiciUsati.length
   const righeValide =
     righeNum.length > 0 &&
-    righeNum.every((r) => !!fibre[r.codice] && r.pct > 0 && r.pct <= 100) &&
+    righeNum.every(
+      (r) => (!!fibre[r.codice] || (r.codice === ALTRA && !!minimo)) && r.pct > 0 && r.pct <= 100,
+    ) &&
     !doppioni &&
     totale === 100
+
+  /** Conferma delle righe manuali: «Altra fibra» → fibra a minor impatto. */
+  function confermaManuale() {
+    if (!righeValide || !minimo) return
+    const altra = righeNum.filter((r) => r.codice === ALTRA)
+    setNote(
+      altra.length
+        ? [notaSostituzione(`«Altra fibra» (${sommaRighe(altra)}%) non è tra le fibre del nostro metodo`)]
+        : [],
+    )
+    conferma(
+      righeAComposizione(righeNum.map((r) => (r.codice === ALTRA ? { ...r, codice: minimo } : r))),
+      !!foto,
+    )
+  }
 
   const inputFoto = (
     <input type="file" accept="image/*" className="hidden" onChange={onFoto} />
@@ -205,7 +251,7 @@ export function MaterialeBlend({
           <button
             type="button"
             onClick={() => {
-              setRighe([nuovaRiga(), nuovaRiga()])
+              setRighe([nuovaRiga()])
               setLetta([])
               setEsito({ tipo: 'senza_foto' })
               setFase('manuale')
@@ -260,6 +306,7 @@ export function MaterialeBlend({
               </div>
             </div>
             <BlendGrande righe={letta} nomeFibra={nomeFibra} />
+            <Note note={note} />
           </div>
           <p className="text-center text-sm font-semibold text-ink">
             Corrisponde all'etichetta?
@@ -271,6 +318,7 @@ export function MaterialeBlend({
             <Bottone
               onClick={() => {
                 setRighe(letta.map(nuovaRiga))
+                setNote([])
                 setEsito({ tipo: 'correzione' })
                 setFase('manuale')
               }}
@@ -291,6 +339,7 @@ export function MaterialeBlend({
             nomeFibra={nomeFibra}
             inputFoto={inputFoto}
           />
+          <Note note={note} />
 
           <div className="space-y-2 rounded-lg border border-edge bg-paper p-3">
             <p className="text-[13px] font-bold text-ink">
@@ -314,6 +363,7 @@ export function MaterialeBlend({
                       {f.nome}
                     </option>
                   ))}
+                  <option value={ALTRA}>Altra fibra / non in elenco</option>
                 </select>
                 <div className="flex items-center gap-1">
                   <input
@@ -361,7 +411,7 @@ export function MaterialeBlend({
               <Bottone
                 primario
                 disabled={!righeValide}
-                onClick={() => conferma(righeAComposizione(righeNum), !!foto)}
+                onClick={confermaManuale}
               >
                 Conferma il blend
               </Bottone>
@@ -445,11 +495,13 @@ export function MaterialeBlend({
               .sort((a, b) => b.pct - a.pct)}
             nomeFibra={nomeFibra}
           />
+          <Note note={note} />
           <div className="mt-3 flex gap-4 text-xs font-semibold">
             <button
               type="button"
               onClick={() => {
                 setRighe(Object.entries(confermata).map(([codice, pct]) => nuovaRiga({ codice, pct })))
+                setNote([])
                 setEsito({ tipo: 'correzione' })
                 setFase('manuale')
               }}
@@ -464,6 +516,18 @@ export function MaterialeBlend({
         </div>
       )}
     </div>
+  )
+}
+
+/** Avvertenze sotto il blend (percentuale dedotta, fibre sostituite). */
+function Note({ note }: { note: string[] }) {
+  if (note.length === 0) return null
+  return (
+    <ul className="mt-3 space-y-1 rounded-md bg-sun-50 px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
+      {note.map((n) => (
+        <li key={n}>ⓘ {n}</li>
+      ))}
+    </ul>
   )
 }
 
@@ -520,11 +584,7 @@ function AvvisoEsito({
       ? "Se conosci la composizione, inseriscila qui sotto; altrimenti scegli il materiale più simile."
       : esito.tipo === 'fallita'
         ? 'Prova con una foto più vicina, dritta e a fuoco, oppure inserisci tu le percentuali.'
-        : esito.tipo === 'sconosciute'
-          ? `${esito.nomi.join(', ')}: ${
-              esito.nomi.length === 1 ? 'non è tra le fibre' : 'non sono tra le fibre'
-            } del nostro metodo. Inserisci la composizione con le fibre più simili.`
-          : 'Controlla le percentuali qui sotto: il totale deve fare 100.'
+        : 'Controlla le percentuali qui sotto: il totale deve fare 100.'
   return (
     <div className="flex items-start gap-3 rounded-lg bg-sun-50 p-3">
       {foto && <Miniatura url={foto} />}

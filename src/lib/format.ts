@@ -47,7 +47,8 @@ export const formatAcqua = (litri: number): string => {
     }).format(litri / 1000)
     return `${k}k L`
   }
-  return `${new Intl.NumberFormat('it-IT').format(litri)} L`
+  // Un decimale, come l'arrotondamento di `renova_impatto_blend` nel DB.
+  return `${new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1 }).format(litri)} L`
 }
 
 /**
