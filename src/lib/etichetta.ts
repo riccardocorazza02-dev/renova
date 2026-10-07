@@ -46,6 +46,8 @@ export interface EsitoLettura {
   dedotta: boolean
   /** testo grezzo restituito dall'OCR (per il debug) */
   testo: string
+  /** fiducia media (0–100) di ogni passata OCR, per il banco di prova */
+  fiducie?: number[]
 }
 
 // ── 1. Sinonimi → codici della tabella `fibre` ───────────────────
@@ -92,7 +94,7 @@ const FUORI_TABELLA: Record<string, string[]> = {
   lino: ['lino', 'linen', 'leinen', 'linho'],
   modal: ['modal'],
   lyocell: ['lyocell', 'tencel'],
-  cashmere: ['cashmere', 'cachemire', 'kaschmir'],
+  cashmere: ['cashmere', 'cachemire', 'kaschmir', 'kashmir'],
   acetato: ['acetato', 'acetate', 'azetat'],
   polietilene: ['polietilene', 'polyethylene', 'polyethylen'],
   canapa: ['canapa', 'hemp', 'chanvre', 'hanf'],
@@ -101,8 +103,11 @@ const FUORI_TABELLA: Record<string, string[]> = {
   pelle: ['pelle', 'leather', 'cuir', 'leder'],
 }
 
-/** «Riciclato» nelle lingue più comuni sulle etichette. */
-const RICICLATO = /\b(?:ricicl\w*|recycl\w*|recicl\w*|recycel\w*|rpet)\b/
+/**
+ * «Riciclato» nelle lingue delle etichette (anche dentro parole composte:
+ * «gerecycleerde», «genbrugs», «kierrätetty», «resirkulert»).
+ */
+const RICICLATO = /ricicl|recycl|recicl|recycel|genbrug|kierratet|resirkul|rpet/
 
 /** Errori ammessi tra la parola letta e il sinonimo, in base alla lunghezza. */
 function tolleranza(lunghezza: number): number {
@@ -232,7 +237,8 @@ interface Coppia {
 function estraiCoppie(t: string, fibre: ParolaFibra[]): Coppia[] {
   const pcts: Pct[] = [...t.matchAll(/(?<!\d)(\d{1,3}(?:[.,]\d{1,2})?)\s*%/g)]
     .map((m) => ({
-      valore: Number(m[1].replace(',', '.')),
+      // «109%» non esiste: è «10%» col segno % letto come «9%».
+      valore: /^\d\d9$/.test(m[1]) ? Number(m[1].slice(0, 2)) : Number(m[1].replace(',', '.')),
       inizio: m.index,
       fine: m.index + m[0].length,
     }))
@@ -260,7 +266,13 @@ function estraiCoppie(t: string, fibre: ParolaFibra[]): Coppia[] {
   const usaDopo = votiDopo >= votiPrima
 
   return pcts.map((p, i) => {
-    const fibra = (usaDopo ? dopo(i) : prima(i)) ?? null
+    let fibra = (usaDopo ? dopo(i) : prima(i)) ?? null
+    // Una SIGLA (EL, CO, PA…) conta solo attaccata alla percentuale: lontana,
+    // è quasi sempre un pezzo di parola letto male.
+    if (fibra?.sigla) {
+      const tra = usaDopo ? t.slice(p.fine, fibra.inizio) : t.slice(fibra.fine, p.inizio)
+      if (!/^[\s:.\-–/|]{0,3}$/.test(tra)) fibra = null
+    }
     // «Riciclato» conta solo se dichiarato accanto a QUESTA fibra.
     const zona = !fibra
       ? ''
@@ -298,16 +310,25 @@ function firma(c: Candidata): string {
  *      sigla) → 100% di quella fibra, segnalato come dedotto.
  */
 export function interpretaEtichetta(testoOcr: string): EsitoLettura {
-  const t = normalizza(testoOcr)
-  const fibre = trovaFibre(t)
-  const coppie = estraiCoppie(t, fibre)
+  // Le passate OCR arrivano separate da SEPARATORE_PASSATE: ognuna si legge
+  // per conto suo (un «50%» di una passata non deve sommarsi al «50%» della
+  // successiva), poi i blocchi di tutte vanno insieme al voto.
+  const segmenti = testoOcr.split(SEPARATORE_PASSATE).map(normalizza)
+  const t = segmenti.join('\n')
+  const fibre: ParolaFibra[] = []
+  const coppie: Array<Coppia & { nuovoSegmento: boolean }> = []
+  for (const seg of segmenti) {
+    const f = trovaFibre(seg)
+    fibre.push(...f)
+    estraiCoppie(seg, f).forEach((c, i) => coppie.push({ ...c, nuovoSegmento: i === 0 }))
+  }
 
   // (a) blocchi da 100
   const blocchi: Candidata[] = []
   let corrente: Candidata = new Map()
   let somma = 0
   for (const c of coppie) {
-    if (somma + c.pct > 100.5) {
+    if (c.nuovoSegmento || somma + c.pct > 100.5) {
       corrente = new Map()
       somma = 0
     }
@@ -355,12 +376,20 @@ export function interpretaEtichetta(testoOcr: string): EsitoLettura {
   }
 
   // (c) una sola fibra nominata, percentuale illeggibile → 100%
-  const nominate = new Set(
-    fibre.filter((f) => !f.sigla).map((f) => f.codice ?? `!${f.nome}`),
-  )
+  // Contano solo i NOMI (non le sigle) letti almeno due volte: sulle etichette
+  // vere la fibra è ripetuta in più lingue, mentre una parola letta male
+  // («LANNE» → laine) è isolata.
+  const occorrenze = new Map<string, number>()
+  for (const f of fibre) {
+    if (f.sigla) continue
+    const k = f.codice ?? `!${f.nome}`
+    occorrenze.set(k, (occorrenze.get(k) ?? 0) + 1)
+  }
+  const nominate = new Set(occorrenze.keys())
+  const ripetute = [...occorrenze.values()].some((n) => n >= 2)
   let dedotta = false
   const sommaScelta = scelta ? [...scelta.values()].reduce((s, v) => s + v, 0) : 0
-  if (Math.abs(sommaScelta - 100) >= 0.5 && nominate.size === 1) {
+  if (Math.abs(sommaScelta - 100) >= 0.5 && nominate.size === 1 && ripetute) {
     const [unica] = nominate
     const k =
       unica === 'PET' && fibre.some((f) => f.codice === 'PET') && RICICLATO.test(t) ? 'rPET' : unica
@@ -385,6 +414,9 @@ export function interpretaEtichetta(testoOcr: string): EsitoLettura {
     testo: testoOcr,
   }
 }
+
+/** Separa il testo delle passate OCR (carattere «form feed», mai nel testo letto). */
+export const SEPARATORE_PASSATE = '\f'
 
 /** Somma delle percentuali, arrotondata ai centesimi. */
 export function sommaRighe(righe: Array<{ pct: number }>): number {
@@ -440,59 +472,158 @@ interface Riquadro {
 }
 
 /**
- * Trova l'etichetta nella foto: a bassa risoluzione, cerca i blocchi «chiari
- * e fitti di bordi» (testo scuro su fondo chiaro), ne prende la regione
- * connessa più ricca e restituisce il riquadro con un margine. Il tessuto
- * scuro, la mano o un lenzuolo bianco liscio non passano il filtro.
+ * Come leggere l'etichetta: dove sta (riquadro), di quanto sono inclinate le
+ * righe di testo (radianti) e se è scura con la scritta chiara.
  */
-function trovaEtichetta(bmp: ImageBitmap): Riquadro | null {
-  const LATO = 1000
-  const B = 20 // lato del blocco, in pixel della miniatura
-  const s = LATO / Math.max(bmp.width, bmp.height)
-  const w = Math.round(bmp.width * s)
-  const h = Math.round(bmp.height * s)
+interface Vista {
+  r: Riquadro
+  angolo: number
+  scura: boolean
+}
+
+/** Centri delle «lettere» trovate in una miniatura (coordinate della miniatura). */
+interface Lettere {
+  w: number
+  h: number
+  /** fattore miniatura / originale */
+  scala: number
+  cx: Float32Array
+  cy: Float32Array
+}
+
+/**
+ * Cerca nel riquadro le forme grandi come LETTERE: piccole macchie di
+ * inchiostro (più scure del 20% della media locale) su CARTA chiara e poco
+ * colorata. È il criterio che distingue il testo da tutto il resto della
+ * foto: bordi e cuciture sono macchie lunghe, la trama del tessuto e le dita
+ * stanno su sfondo scuro o colorato. Con `scura` la luminanza è invertita
+ * (etichette scure con la scritta chiara).
+ */
+function trovaLettere(bmp: ImageBitmap, r: Riquadro, lato: number, scura: boolean): Lettere | null {
+  // Mai ingrandire: nelle immagini piccole le lettere diventerebbero «troppo
+  // grandi per essere lettere».
+  const scala = Math.min(1, lato / Math.max(r.w, r.h))
+  const w = Math.max(1, Math.round(r.w * scala))
+  const h = Math.max(1, Math.round(r.h * scala))
   const canvas = document.createElement('canvas')
   canvas.width = w
   canvas.height = h
   const ctx = canvas.getContext('2d', { willReadFrequently: true })
   if (!ctx) return null
-  // Riduzione di qualità: senza, l'aliasing della trama del tessuto o delle
-  // pieghe di un lenzuolo crea finti «bordi» che sembrano testo.
+  // Riduzione di qualità: senza, l'aliasing della trama del tessuto crea
+  // finti dettagli che sembrano testo.
   ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(bmp, 0, 0, w, h)
+  ctx.drawImage(bmp, r.x, r.y, r.w, r.h, 0, 0, w, h)
   const d = ctx.getImageData(0, 0, w, h).data
-  const lum = new Float32Array(w * h)
+  const n = w * h
+  const lum = new Float32Array(n)
+  const sat = new Float32Array(n)
   for (let i = 0, j = 0; i < d.length; i += 4, j++) {
-    lum[j] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
+    const v = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
+    lum[j] = scura ? 255 - v : v
+    sat[j] = Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2])
   }
 
-  const bw = Math.floor(w / B)
-  const bh = Math.floor(h / B)
-  const testo = new Uint8Array(bw * bh)
-  for (let by = 0; by < bh; by++) {
-    for (let bx = 0; bx < bw; bx++) {
-      let chiari = 0
-      let bordi = 0
-      let n = 0
-      for (let y = by * B; y < (by + 1) * B; y++) {
-        for (let x = bx * B; x < (bx + 1) * B - 1; x++) {
-          const v = lum[y * w + x]
-          n++
-          if (v > 150) chiari++
-          if (Math.abs(v - lum[y * w + x + 1]) > 40) bordi++
-        }
+  // Medie locali (finestra ~ 3 altezze di lettera) con immagini integrali.
+  const W = w + 1
+  const iLum = new Float64Array(W * (h + 1))
+  const iSat = new Float64Array(W * (h + 1))
+  for (let y = 0; y < h; y++) {
+    let rl = 0
+    let rs = 0
+    for (let x = 0; x < w; x++) {
+      rl += lum[y * w + x]
+      rs += sat[y * w + x]
+      iLum[(y + 1) * W + x + 1] = iLum[y * W + x + 1] + rl
+      iSat[(y + 1) * W + x + 1] = iSat[y * W + x + 1] + rs
+    }
+  }
+  const R = Math.max(6, Math.round(Math.max(w, h) / 80))
+  const inchiostro = new Uint8Array(n)
+  for (let y = 0; y < h; y++) {
+    const y0 = Math.max(0, y - R)
+    const y1 = Math.min(h, y + R + 1)
+    for (let x = 0; x < w; x++) {
+      const x0 = Math.max(0, x - R)
+      const x1 = Math.min(w, x + R + 1)
+      const area = (x1 - x0) * (y1 - y0)
+      const somma = (I: Float64Array) =>
+        I[y1 * W + x1] - I[y0 * W + x1] - I[y1 * W + x0] + I[y0 * W + x0]
+      const media = somma(iLum) / area
+      // carta chiara (anche crema o grigia) e poco colorata
+      if (media > 100 && somma(iSat) / area < 70 && lum[y * w + x] < media * 0.8) {
+        inchiostro[y * w + x] = 1
       }
-      testo[by * bw + bx] = chiari / n > 0.45 && bordi / n > 0.04 ? 1 : 0
     }
   }
 
-  // Dilatazione di un blocco, poi la componente connessa con più testo.
+  // Componenti connesse dell'inchiostro: si tengono solo quelle «da lettera».
+  const visto = new Uint8Array(n)
+  const cx: number[] = []
+  const cy: number[] = []
+  const maxLato = Math.max(6, Math.max(w, h) / 15)
+  const pila: number[] = []
+  for (let i = 0; i < n; i++) {
+    if (!inchiostro[i] || visto[i]) continue
+    pila.push(i)
+    visto[i] = 1
+    let area = 0
+    let sx = 0
+    let sy = 0
+    let x0 = w
+    let y0 = h
+    let x1 = 0
+    let y1 = 0
+    while (pila.length) {
+      const k = pila.pop()!
+      const kx = k % w
+      const ky = (k / w) | 0
+      area++
+      sx += kx
+      sy += ky
+      if (kx < x0) x0 = kx
+      if (kx > x1) x1 = kx
+      if (ky < y0) y0 = ky
+      if (ky > y1) y1 = ky
+      if (kx > 0 && inchiostro[k - 1] && !visto[k - 1]) { visto[k - 1] = 1; pila.push(k - 1) }
+      if (kx < w - 1 && inchiostro[k + 1] && !visto[k + 1]) { visto[k + 1] = 1; pila.push(k + 1) }
+      if (ky > 0 && inchiostro[k - w] && !visto[k - w]) { visto[k - w] = 1; pila.push(k - w) }
+      if (ky < h - 1 && inchiostro[k + w] && !visto[k + w]) { visto[k + w] = 1; pila.push(k + w) }
+    }
+    const bw = x1 - x0 + 1
+    const bh = y1 - y0 + 1
+    if (area >= 3 && bw <= maxLato && bh <= maxLato && Math.max(bw, bh) / Math.min(bw, bh) <= 6) {
+      cx.push(sx / area)
+      cy.push(sy / area)
+    }
+  }
+  return { w, h, scala, cx: Float32Array.from(cx), cy: Float32Array.from(cy) }
+}
+
+/**
+ * Trova l'etichetta nella foto: conta le lettere per blocco su una miniatura
+ * di 1000 px, unisce i blocchi vicini (anche i paragrafi separati da spazi)
+ * e prende la regione con più lettere, con un margine. Null se non c'è
+ * abbastanza testo: si leggerà la foto intera.
+ */
+function trovaEtichetta(bmp: ImageBitmap, scura = false): Riquadro | null {
+  const intera = { x: 0, y: 0, w: bmp.width, h: bmp.height }
+  const L = trovaLettere(bmp, intera, 1000, scura)
+  if (!L) return null
+  const B = 20
+  const bw = Math.ceil(L.w / B)
+  const bh = Math.ceil(L.h / B)
+  const conta = new Uint16Array(bw * bh)
+  for (let k = 0; k < L.cx.length; k++) conta[((L.cy[k] / B) | 0) * bw + ((L.cx[k] / B) | 0)]++
+  const testo = new Uint8Array(bw * bh)
+  for (let i = 0; i < testo.length; i++) testo[i] = conta[i] >= 3 ? 1 : 0
+
   const dil = new Uint8Array(bw * bh)
   for (let y = 0; y < bh; y++) {
     for (let x = 0; x < bw; x++) {
       if (!testo[y * bw + x]) continue
-      for (let dy = -1; dy <= 1; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -2; dy <= 2; dy++) {
+        for (let dx = -2; dx <= 2; dx++) {
           const yy = y + dy
           const xx = x + dx
           if (yy >= 0 && yy < bh && xx >= 0 && xx < bw) dil[yy * bw + xx] = 1
@@ -511,11 +642,13 @@ function trovaEtichetta(bmp: ImageBitmap): Riquadro | null {
       const k = pila.pop()!
       const kx = k % bw
       const ky = (k / bw) | 0
-      r.n += testo[k]
-      r.x0 = Math.min(r.x0, kx)
-      r.x1 = Math.max(r.x1, kx)
-      r.y0 = Math.min(r.y0, ky)
-      r.y1 = Math.max(r.y1, ky)
+      if (testo[k]) {
+        r.n += conta[k]
+        r.x0 = Math.min(r.x0, kx)
+        r.x1 = Math.max(r.x1, kx)
+        r.y0 = Math.min(r.y0, ky)
+        r.y1 = Math.max(r.y1, ky)
+      }
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = kx + dx
         const ny = ky + dy
@@ -527,17 +660,92 @@ function trovaEtichetta(bmp: ImageBitmap): Riquadro | null {
         }
       }
     }
-    if (!migliore || r.n > migliore.n) migliore = r
+    if (r.x1 >= 0 && (!migliore || r.n > migliore.n)) migliore = r
   }
-  // Troppo poco testo: meglio leggere la foto intera.
-  if (!migliore || migliore.n < 6) return null
+  // Troppo poche lettere («100% PURE WOOL» ne ha già una ventina): meglio
+  // leggere la foto intera.
+  if (!migliore || migliore.n < 12) return null
 
-  const inv = 1 / s
-  const x = Math.max(0, (migliore.x0 - 1) * B * inv)
-  const y = Math.max(0, (migliore.y0 - 1) * B * inv)
-  const x2 = Math.min(bmp.width, (migliore.x1 + 2) * B * inv)
-  const y2 = Math.min(bmp.height, (migliore.y1 + 2) * B * inv)
+  // Margine (1 blocco + 4% del lato): i titoli in corpo più grande, come
+  // «100% POLYESTER», hanno meno lettere per blocco e restano ai bordi; un
+  // margine più largo però porta dentro tessuto e sfondo, che disturbano.
+  const inv = 1 / L.scala
+  const mx = B + 0.04 * (migliore.x1 - migliore.x0 + 1) * B
+  const my = B + 0.04 * (migliore.y1 - migliore.y0 + 1) * B
+  const x = Math.max(0, (migliore.x0 * B - mx) * inv)
+  const y = Math.max(0, (migliore.y0 * B - my) * inv)
+  const x2 = Math.min(bmp.width, ((migliore.x1 + 1) * B + mx) * inv)
+  const y2 = Math.min(bmp.height, ((migliore.y1 + 1) * B + my) * inv)
   return { x, y, w: x2 - x, h: y2 - y }
+}
+
+/**
+ * Inclinazione delle righe di testo nel riquadro, in [-90°, 90°): le foto
+ * arrivano spesso di traverso o storte, e Tesseract legge bene solo il testo
+ * orizzontale. Metodo dei VICINI PIÙ PROSSIMI («docstrum»): dentro una riga
+ * le lettere sono più vicine tra loro che alla riga sopra o sotto, quindi la
+ * direzione più frequente tra ogni lettera e la sua vicina più prossima è
+ * quella delle righe. (Le proiezioni non bastano: sulle etichette le tante
+ * righe brevi allineate a sinistra formano colonne più nette delle righe.)
+ * Resta l'ambiguità «dritta / capovolta», che risolve la passata a 180°.
+ */
+function stimaAngolo(bmp: ImageBitmap, r: Riquadro, scura: boolean): number {
+  const L = trovaLettere(bmp, r, 700, scura)
+  if (!L || L.cx.length < 15) return 0
+  const cella = Math.max(L.w, L.h) / 25
+  const gw = Math.ceil(L.w / cella) + 1
+  const griglia = new Map<number, number[]>()
+  for (let k = 0; k < L.cx.length; k++) {
+    const key = ((L.cy[k] / cella) | 0) * gw + ((L.cx[k] / cella) | 0)
+    const lista = griglia.get(key)
+    if (lista) lista.push(k)
+    else griglia.set(key, [k])
+  }
+  const istogramma = new Float32Array(180)
+  for (let k = 0; k < L.cx.length; k++) {
+    const gx = (L.cx[k] / cella) | 0
+    const gy = (L.cy[k] / cella) | 0
+    let best = -1
+    let bestD = Infinity
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        for (const q of griglia.get((gy + dy) * gw + gx + dx) ?? []) {
+          if (q === k) continue
+          const d = (L.cx[q] - L.cx[k]) ** 2 + (L.cy[q] - L.cy[k]) ** 2
+          if (d < bestD) {
+            bestD = d
+            best = q
+          }
+        }
+      }
+    }
+    if (best < 0) continue
+    let g = (Math.atan2(L.cy[best] - L.cy[k], L.cx[best] - L.cx[k]) * 180) / Math.PI
+    g = ((g % 180) + 180) % 180
+    istogramma[Math.min(179, Math.round(g) % 180)]++
+  }
+  // Picco dell'istogramma circolare, lisciato su ±3°.
+  let picco = 0
+  let max = -1
+  for (let g = 0; g < 180; g++) {
+    let v = 0
+    for (let t = -3; t <= 3; t++) v += istogramma[(g + t + 180) % 180] * (4 - Math.abs(t))
+    if (v > max) {
+      max = v
+      picco = g
+    }
+  }
+  // Media pesata attorno al picco, per la parte decimale.
+  let somma = 0
+  let peso = 0
+  for (let t = -4; t <= 4; t++) {
+    const v = istogramma[(picco + t + 180) % 180]
+    somma += (picco + t) * v
+    peso += v
+  }
+  let gradi = peso ? somma / peso : picco
+  if (gradi >= 90) gradi -= 180
+  return (gradi * Math.PI) / 180
 }
 
 /** Area massima (megapixel) dell'immagine passata all'OCR. */
@@ -548,29 +756,45 @@ const INGRANDIMENTO_MAX = 3
 type Modo = 'contrasto' | 'soglia'
 
 /**
- * Ritaglia, scala per AREA (le etichette sono lunghe e strette: un limite sul
- * lato lungo le rimpicciolirebbe), porta in scala di grigi e poi:
+ * Ritaglia, RADDRIZZA (ruota di −angolo, più `giro` per provare la versione
+ * capovolta), scala per AREA (le etichette sono lunghe e strette: un limite
+ * sul lato lungo le rimpicciolirebbe), porta in scala di grigi con il testo
+ * sempre scuro su chiaro (le viste «scure» sono invertite) e poi:
  *  - «contrasto»: stira la luminanza tra il 2° e il 98° percentile;
  *  - «soglia»: binarizzazione locale di Bradley (media su una finestra),
  *    robusta a pieghe, ombre e stampa grigia sbiadita.
  */
-function prepara(bmp: ImageBitmap, r: Riquadro, modo: Modo): HTMLCanvasElement {
-  const s = Math.min(Math.sqrt((MEGAPIXEL_OCR * 1e6) / (r.w * r.h)), INGRANDIMENTO_MAX)
-  const w = Math.round(r.w * s)
-  const h = Math.round(r.h * s)
+function prepara(bmp: ImageBitmap, vista: Vista, modo: Modo, giro = 0): HTMLCanvasElement {
+  const { r, scura } = vista
+  const theta = -vista.angolo + giro
+  const c = Math.abs(Math.cos(theta))
+  const sn = Math.abs(Math.sin(theta))
+  const larg1 = r.w * c + r.h * sn
+  const alt1 = r.w * sn + r.h * c
+  const s = Math.min(Math.sqrt((MEGAPIXEL_OCR * 1e6) / (larg1 * alt1)), INGRANDIMENTO_MAX)
+  const w = Math.round(larg1 * s)
+  const h = Math.round(alt1 * s)
   const canvas = document.createElement('canvas')
   canvas.width = w
   canvas.height = h
   const ctx = canvas.getContext('2d', { willReadFrequently: true })
   if (!ctx) throw new Error('Canvas non disponibile')
+  // Sfondo del colore della carta: bianco, o nero per le etichette scure
+  // (che poi vengono invertite).
+  ctx.fillStyle = scura ? '#000' : '#fff'
+  ctx.fillRect(0, 0, w, h)
   ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(bmp, r.x, r.y, r.w, r.h, 0, 0, w, h)
+  ctx.translate(w / 2, h / 2)
+  ctx.rotate(theta)
+  ctx.drawImage(bmp, r.x, r.y, r.w, r.h, (-r.w * s) / 2, (-r.h * s) / 2, r.w * s, r.h * s)
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
 
   const img = ctx.getImageData(0, 0, w, h)
   const px = img.data
   const lum = new Uint8ClampedArray(w * h)
   for (let i = 0, j = 0; i < px.length; i += 4, j++) {
-    lum[j] = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]
+    const v = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]
+    lum[j] = scura ? 255 - v : v
   }
 
   const scrivi = (j: number, v: number) => {
@@ -590,9 +814,12 @@ function prepara(bmp: ImageBitmap, r: Riquadro, modo: Modo): HTMLCanvasElement {
       return 255
     }
     const basso = soglia(0.02)
-    const alto = Math.max(soglia(0.98), basso + 1)
-    const k = 255 / (alto - basso)
-    for (let j = 0; j < lum.length; j++) scrivi(j, (lum[j] - basso) * k)
+    const alto = soglia(0.98)
+    // Con poco inchiostro su tanta carta i due percentili coincidono: lo
+    // «stiramento» annerirebbe tutto, quindi si lascia il contrasto com'è.
+    const k = alto - basso >= 40 ? 255 / (alto - basso) : 1
+    const zero = alto - basso >= 40 ? basso : 0
+    for (let j = 0; j < lum.length; j++) scrivi(j, (lum[j] - zero) * k)
   } else {
     // Bradley–Roth: nero se più scuro del 15% rispetto alla media locale.
     const W = w + 1
@@ -644,16 +871,17 @@ export interface ProgressoLettura {
 }
 
 /**
- * Le passate, in ordine di costo: si passa alla successiva solo se la
- * composizione non è ancora completa. Il testo di tutte le passate viene
- * interpretato INSIEME, così le ripetizioni lette bene da una passata
- * rafforzano il voto.
+ * Fiducia (0–100) sotto cui una PAROLA non partecipa al voto comune: il
+ * testo nel verso sbagliato o sul tessuto produce parole spazzatura a bassa
+ * fiducia, che inventerebbero percentuali e «fibre».
  */
-const PASSATE: Array<{ modo: Modo; psm: '3' | '11' }> = [
-  { modo: 'contrasto', psm: '3' }, // automatica: basta per le etichette nitide
-  { modo: 'soglia', psm: '3' }, // stampa grigia, pieghe, ombre
-  { modo: 'soglia', psm: '11' }, // testo sparso (etichette affollate)
-]
+const FIDUCIA_MINIMA = 45
+
+/** Massimo di passate OCR per una foto (le foto facili si fermano alla prima). */
+const MAX_PASSATE = 8
+
+/** Sotto questa inclinazione (≈3°) «raddrizzare» non cambia nulla. */
+const ANGOLO_TRASCURABILE = (3 * Math.PI) / 180
 
 /**
  * Legge l'etichetta e restituisce le righe proposte. `onProgresso` riceve la
@@ -677,7 +905,14 @@ export async function leggiEtichetta(
       import('tesseract.js'),
       createImageBitmap(file, { imageOrientation: 'from-image' }),
     ])
-    const riquadro = trovaEtichetta(bmp) ?? { x: 0, y: 0, w: bmp.width, h: bmp.height }
+    const intera: Riquadro = { x: 0, y: 0, w: bmp.width, h: bmp.height }
+    const rChiara = trovaEtichetta(bmp) ?? intera
+    const rScura = trovaEtichetta(bmp, true)
+    const chiara: Vista = { r: rChiara, angolo: stimaAngolo(bmp, rChiara, false), scura: false }
+    const scura: Vista | null = rScura
+      ? { r: rScura, angolo: stimaAngolo(bmp, rScura, true), scura: true }
+      : null
+    const dritta = Math.abs(chiara.angolo) < ANGOLO_TRASCURABILE
 
     let passata = 0
     const base = cartellaTesseract()
@@ -689,24 +924,97 @@ export async function leggiEtichetta(
       cacheMethod: 'none',
       logger: (m) => {
         if (m.status === 'recognizing text') {
-          onProgresso?.({ fase: 'leggo', p: (passata + m.progress) / PASSATE.length })
+          onProgresso?.({ fase: 'leggo', p: Math.min(1, (passata + m.progress) / MAX_PASSATE) })
         } else {
           onProgresso?.({ fase: 'carico', p: m.progress })
         }
       },
     })
+    const w = worker
 
-    const testi: string[] = []
+    const letture: Array<{ testo: string; buono: string; fiducia: number }> = []
     let esito = interpretaEtichetta('')
-    try {
-      for (; passata < PASSATE.length; passata++) {
-        const { modo, psm } = PASSATE[passata]
-        await worker.setParameters({ tessedit_pageseg_mode: psm as never })
-        const { data } = await worker.recognize(prepara(bmp, riquadro, modo))
-        testi.push(data.text)
-        esito = interpretaEtichetta(testi.join('\n'))
-        if (esito.completa && !esito.dedotta) break
+    /**
+     * Una passata OCR; `fatto` se la composizione è ormai trovata. Una
+     * passata che DA SOLA dà una composizione completa vince subito;
+     * altrimenti votano insieme le passate lette con fiducia sufficiente:
+     * quelle nel verso sbagliato danno testo spazzatura, che inquinerebbe
+     * il voto con percentuali e «fibre» inventate.
+     */
+    const leggi = async (v: Vista, giro: number, modo: Modo, psm: '3' | '4' | '11') => {
+      await w.setParameters({ tessedit_pageseg_mode: psm as never })
+      const { data } = await w.recognize(prepara(bmp, v, modo, giro), {}, { text: true, tsv: true })
+      passata++
+      // Dal TSV (una riga per parola: livello … fiducia testo) ricaviamo il
+      // testo «buono», fatto solo delle parole lette con fiducia sufficiente,
+      // e il numero di parole SICURE, che dice se il verso è quello giusto.
+      const righe = new Map<string, string[]>()
+      let sicure = 0
+      for (const riga of (data.tsv ?? '').split('\n')) {
+        const c = riga.split('\t')
+        if (c[0] !== '5' || c.length < 12) continue // 5 = parola
+        const conf = Number(c[10])
+        const parola = c[11].trim()
+        if (!parola || conf < FIDUCIA_MINIMA) continue
+        if (conf >= 70 && /[\p{L}\d]{3}/u.test(parola)) sicure++
+        const chiave = `${c[2]}.${c[3]}.${c[4]}` // blocco.paragrafo.riga
+        righe.set(chiave, [...(righe.get(chiave) ?? []), parola])
       }
+      const buono = [...righe.values()].map((r) => r.join(' ')).join('\n')
+      letture.push({ testo: data.text, buono, fiducia: data.confidence })
+      const fiducie = letture.map((l) => Math.round(l.fiducia))
+      const sola = interpretaEtichetta(buono)
+      if (sola.completa && !sola.dedotta) {
+        esito = { ...sola, fiducie }
+      } else {
+        esito = {
+          ...interpretaEtichetta(letture.map((l) => l.buono).join(SEPARATORE_PASSATE)),
+          testo: letture.map((l) => l.testo).join(SEPARATORE_PASSATE),
+          fiducie,
+        }
+      }
+      return { sicure, fatto: esito.completa && !esito.dedotta }
+    }
+
+    // Ordine delle passate, dalla più probabile; ci si ferma appena la
+    // composizione è completa. Il testo di TUTTE le passate va insieme al
+    // voto, ma ogni passata è letta per conto suo (SEPARATORE_PASSATE).
+    try {
+      // 1. Foto dritta e nitida, impaginazione automatica (Tesseract regge
+      //    anche un po' di testo verticale): il caso più comune.
+      if ((await leggi({ ...chiara, angolo: 0 }, 0, 'contrasto', '3')).fatto) return esito
+
+      // 2. Raddrizzata nei due versi possibili (l'angolo stimato non dice se
+      //    il testo è dritto o capovolto): vince il verso con più parole
+      //    lette con sicurezza (capovolto, il testo non ne dà quasi mai).
+      let verso = 0
+      if (!dritta) {
+        const a = await leggi(chiara, 0, 'contrasto', '3')
+        if (a.fatto) return esito
+        const b = await leggi(chiara, Math.PI, 'contrasto', '3')
+        if (b.fatto) return esito
+        verso = b.sicure > a.sicure ? Math.PI : 0
+      } else {
+        // dritta ma forse capovolta
+        const b = await leggi(chiara, Math.PI, 'contrasto', '3')
+        if (b.fatto) return esito
+      }
+
+      // 3. Nel verso migliore: colonna singola (l'impaginazione naturale di
+      //    un'etichetta) e soglia locale (stampa grigia, pieghe, ombre).
+      if ((await leggi(chiara, verso, 'contrasto', '4')).fatto) return esito
+      if ((await leggi(chiara, verso, 'soglia', '3')).fatto) return esito
+      // Fibra letta senza percentuale: altre passate non la aggiungerebbero.
+      if (esito.dedotta) return esito
+
+      // 4. Etichetta scura con la scritta chiara, nei due versi.
+      if (scura) {
+        if ((await leggi(scura, 0, 'contrasto', '4')).fatto) return esito
+        if ((await leggi(scura, Math.PI, 'contrasto', '4')).fatto) return esito
+      }
+
+      // 5. Ritaglio sbagliato: tutta la foto, testo sparso.
+      await leggi({ r: intera, angolo: 0, scura: false }, 0, 'soglia', '11')
     } finally {
       bmp.close()
     }
@@ -723,3 +1031,6 @@ export async function leggiEtichetta(
     if (w) await w.terminate().catch(() => {})
   }
 }
+
+/** Solo per il banco di prova (strumenti/prova-etichette): diagnosi dei passaggi interni. */
+export const interniPerProve = { trovaEtichetta, stimaAngolo, prepara }

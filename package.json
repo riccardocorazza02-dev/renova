@@ -3,14 +3,15 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Renova — marketplace B2B2C per lo scambio di materiale tecnico sportivo di seconda mano, con metriche ESG.",
+  "description": "Renova \u2014 marketplace B2B2C per lo scambio di materiale tecnico sportivo di seconda mano, con metriche ESG.",
   "scripts": {
     "predev": "node scripts/copia-tesseract.mjs",
     "dev": "vite",
     "prebuild": "node scripts/copia-tesseract.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "tsc -b --noEmit"
+    "lint": "tsc -b --noEmit",
+    "prova:interprete": "node strumenti/prova-etichette/interprete.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Banco di prova · lettura etichette</title>
+    <style>
+      body { font: 13px system-ui, sans-serif; margin: 16px; background: #fafafa; }
+      table { border-collapse: collapse; width: 100%; }
+      td, th { border-bottom: 1px solid #ddd; padding: 4px 6px; text-align: left; vertical-align: top; }
+      .ok { color: #0a7a3c; font-weight: 700; } .ko { color: #b00020; font-weight: 700; }
+      code { font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Banco di prova · lettura etichette</h1>
+    <p>Foto in <code>public/__etichette/</code> (escluse da git), composizioni attese in
+      <code>strumenti/prova-etichette/atteso.json</code>. Solo sviluppo: <code>npm run dev</code> →
+      <code>/strumenti/prova-etichette/</code>.</p>
+    <p id="stato">Avvio…</p>
+    <table><thead><tr><th>Foto</th><th>Atteso</th><th>Letto</th><th>Esito</th><th>s</th><th>Fiducia passate</th></tr></thead><tbody id="righe"></tbody></table>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

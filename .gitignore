@@ -29,3 +29,6 @@ dist-ssr
 
 # File di tesseract.js copiati da scripts/copia-tesseract.mjs
 public/tesseract/
+
+# Foto del banco di prova della lettura etichette (strumenti/prova-etichette)
+public/__etichette/

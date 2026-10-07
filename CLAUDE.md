@@ -64,6 +64,7 @@ anche la `lg:`.
 | `npm run dev`     | Dev server (http://localhost:5173) |
 | `npm run build`   | Type-check + build di produzione |
 | `npm run lint`    | Solo type-check (`tsc -b`)       |
+| `npm run prova:interprete` | Test dell'interprete etichette (1 s, vedi `strumenti/prova-etichette/`) |
 
 Verifica sempre con `npm run build` prima di considerare un lavoro finito.
 `predev`/`prebuild` lanciano `scripts/copia-tesseract.mjs`, che copia in
@@ -285,18 +286,28 @@ scheda articolo mostra «Verificata da etichetta»).
   dati). tesseract.js (ita+eng) è importato dinamicamente solo quando l'utente
   aggiunge la foto; worker, core WASM (varianti LSTM) e lingue arrivano da
   `public/tesseract/` del NOSTRO dominio (mai CDN: `workerPath`/`corePath`/
-  `langPath` sono espliciti). Pipeline tarata su foto REALI (iPhone, ott
-  2026): ritaglio automatico sull'etichetta (blocchi «chiari e fitti di
-  bordi» su miniatura 1000 px — la riduzione DEVE essere
-  `imageSmoothingQuality='high'`, altrimenti l'aliasing del tessuto sembra
-  testo) → scala per AREA (5 MP, max ×3: le etichette sono lunghe e strette)
-  → fino a 3 passate (contrasto/PSM 3 → soglia Bradley/PSM 3 → soglia/PSM
-  11), ci si ferma appena la composizione è completa; timeout 120 s →
-  parser: nomi fibre in ~30 lingue con tolleranza agli errori OCR
-  (Levenshtein ≤1–2, sigle ISO solo esatte; `rPET` solo se dichiarato
-  «riciclato/recycled») → VOTO tra le ripetizioni multilingua (vince la
-  composizione letta più spesso, poi la moda per fibra) → se si legge UNA
-  sola fibra senza percentuale, 100% «dedotto» (con nota da verificare).
+  `langPath` sono espliciti). Pipeline tarata su ~30 foto REALI (ott 2026,
+  banco di prova in `strumenti/prova-etichette/`: 19/27 corrette, ZERO
+  composizioni sbagliate — misurare SEMPRE prima e dopo una modifica):
+  (1) «lettere» = piccole macchie d'inchiostro su carta chiara e POCO
+  COLORATA (miniatura mai ingrandita, riduzione `imageSmoothingQuality=
+  'high'`); (2) ritaglio = regione con più lettere (vista «chiara», più una
+  vista «scura» a luminanza invertita per le etichette nere); (3) angolo
+  delle righe dai VICINI PIÙ PROSSIMI tra lettere (non dalle proiezioni:
+  le righe brevi allineate a sinistra formano colonne); (4) passate OCR,
+  ci si ferma appena la composizione è completa: dritta PSM 3 → raddrizzata
+  nei due versi PSM 3 (vince il verso con più parole a fiducia ≥70) → quel
+  verso in PSM 4 (colonna singola) e con soglia di Bradley → vista scura
+  → foto intera PSM 11; timeout 120 s. (5) Dal TSV di Tesseract restano
+  solo le parole con fiducia ≥45 (il testo capovolto è spazzatura che
+  inventerebbe percentuali); ogni passata è interpretata per conto suo
+  (`SEPARATORE_PASSATE`) e poi si vota. Parser: nomi fibre in ~30 lingue
+  con tolleranza OCR (Levenshtein ≤1–2), SIGLE solo esatte e attaccate
+  alla percentuale; «109%» → 10%; `rPET` solo se dichiarato riciclato
+  (anche genbrugs/gerecycleerde/kierrätetty/resirkulert); VOTO tra le
+  ripetizioni multilingua; una sola fibra senza percentuale letta almeno
+  DUE volte → 100% «dedotto» (con nota). `npm run prova:interprete` testa
+  l'interprete in 1 s.
   Fibre fuori tabella o illeggibili, e «Altra fibra» nelle righe manuali,
   si contano come la fibra a MINOR impatto (`fibraMinimoImpatto`: CO₂ +
   acqua normalizzate, escluse le fibre senza dato idrico → oggi `rPET`),
