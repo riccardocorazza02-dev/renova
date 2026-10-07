@@ -429,6 +429,19 @@ export function Metodologia() {
             livello appartiene.
           </P>
           <P>
+            Fibre non riconosciute: se l'etichetta indica una fibra assente
+            dalla Tabella 1 (per esempio seta, lino o modal), oppure una fibra
+            il cui nome non è leggibile, la sua percentuale viene attribuita
+            alla fibra della tabella con l'impatto ambientale minore. Questa è
+            individuata confrontando CO₂ e consumo idrico, ciascuno rapportato
+            al valore massimo della tabella, ed escludendo le fibre prive di
+            dato idrico, che risulterebbero «a zero acqua» solo per mancanza
+            di dato; con i valori attuali è il poliestere riciclato.
+            L'utente vede la sostituzione al momento del caricamento: senza
+            una prova sull'impatto reale di quella fibra, il sistema sceglie
+            sempre il valore più basso.
+          </P>
+          <P>
             Il confine viene sottostimato per scelta: il cradle-to-gate di
             fibra esclude l'impatto della manifattura e della lavorazione delle
             fibre, quindi il valore è già conservativo (§2).

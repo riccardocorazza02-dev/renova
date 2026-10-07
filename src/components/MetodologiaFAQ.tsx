@@ -177,6 +177,8 @@ export function MetodologiaFAQ() {
                   <strong>Asimmetria prudenziale:</strong> in caso di dubbio
                   assumiamo il materiale a impatto idrico più basso (sintetico); il
                   cotone si conta solo con una prova (tua indicazione o etichetta).
+                  Una fibra che non conosciamo, o che non si legge, si conta come
+                  quella a impatto più basso della nostra tabella.
                 </li>
                 <li>
                   <strong>Confine sottostimato per scelta:</strong> consideriamo
