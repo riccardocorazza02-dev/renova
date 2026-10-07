@@ -430,7 +430,7 @@ export function Metodologia() {
           </P>
           <P>
             Fibre non riconosciute: se l'etichetta indica una fibra assente
-            dalla Tabella 1 (per esempio seta, lino o modal), oppure una fibra
+            dalla tabella dei fattori (§3; per esempio seta, lino o modal), oppure una fibra
             il cui nome non è leggibile, la sua percentuale viene attribuita
             alla fibra della tabella con l'impatto ambientale minore. Questa è
             individuata confrontando CO₂ e consumo idrico, ciascuno rapportato
