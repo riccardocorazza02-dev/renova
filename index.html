@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/renova.svg" />
+    <!-- Icona per «Aggiungi a schermata Home»: iOS non accetta SVG né
+         trasparenza (la riempirebbe di nero) → PNG su fondo bianco in
+         public/icone/; Android la prende dal manifest. -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icone/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="renova" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#fafaf8" />
     <!-- 2A · Neutral (Helvetica): l'UI usa Helvetica di sistema; l'unico font
