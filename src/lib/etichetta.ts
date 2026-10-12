@@ -254,7 +254,9 @@ function estraiCoppie(t: string, fibre: ParolaFibra[]): Coppia[] {
     return fibre.filter((f) => f.inizio >= inizio && f.fine <= pcts[i].inizio).at(-1)
   }
 
-  const adiacente = (s: string) => /^[\s:.\-–/|]*$/.test(s)
+  // Ammessi uno o due caratteri spuri in mezzo: «80%\nN - COTONE» (la «N» è
+  // il resto di un «COTTON» letto male) è comunque fibra DOPO la percentuale.
+  const adiacente = (s: string) => /^[\s:.\-–/|]*(?:[a-z0-9]{1,2}[\s:.\-–/|]+)?$/.test(s)
   let votiDopo = 0
   let votiPrima = 0
   pcts.forEach((p, i) => {

@@ -287,7 +287,7 @@ scheda articolo mostra «Verificata da etichetta»).
   aggiunge la foto; worker, core WASM (varianti LSTM) e lingue arrivano da
   `public/tesseract/` del NOSTRO dominio (mai CDN: `workerPath`/`corePath`/
   `langPath` sono espliciti). Pipeline tarata su ~30 foto REALI (ott 2026,
-  banco di prova in `strumenti/prova-etichette/`: 19/27 corrette, ZERO
+  banco di prova in `strumenti/prova-etichette/`: 20/29 corrette, ZERO
   composizioni sbagliate — misurare SEMPRE prima e dopo una modifica):
   (1) «lettere» = piccole macchie d'inchiostro su carta chiara e POCO
   COLORATA (miniatura mai ingrandita, riduzione `imageSmoothingQuality=
